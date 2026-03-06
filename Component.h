@@ -2,9 +2,12 @@
 #include <SFML/Graphics.hpp>
 
 
-
 class Component
 {
+
+private:
+	
+
 public:
 
 	Component()
