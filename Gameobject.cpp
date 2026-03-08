@@ -1,21 +1,24 @@
 #include "Gameobject.h"
 #include "GameEssentials.h"
 
+
 void Gameobject::Destroy()
 {
+	if (this == GameEssentialsGlobals::WorldRoot)
+		return;
 	for (auto& component : components)
 	{
 		component->OnDestroy();
 	}
 
-	for (auto& child : Children)
+	while (!Children.empty())
 	{
-		child->Destroy();
+		Children.back()->Destroy();
 	}
 
 	if (Parent != nullptr)
 	{
-
+		Parent->RemoveChildObject(this);
 	}
 	GameEssentialsGlobals::RemoveGameObject(this);
 
@@ -46,10 +49,6 @@ void Gameobject::OnAlive()
 	}
 }
 
-
-
-
-
 Gameobject::Gameobject()
 	{
 		this->transform = sf::Transformable();
@@ -61,6 +60,8 @@ Gameobject::Gameobject()
 		}
 
 		GameEssentialsGlobals::InstansiateGameObject(this);
+		this->SetParent(GameEssentialsGlobals::WorldRoot);
+
 	}
 
 Gameobject::Gameobject(bool Enabled = true)
@@ -74,6 +75,7 @@ Gameobject::Gameobject(bool Enabled = true)
 		}
 
 		GameEssentialsGlobals::InstansiateGameObject(this);
+		this->SetParent(GameEssentialsGlobals::WorldRoot);
 	}
 
 Gameobject::Gameobject(sf::Transformable transform, bool Enabled = true)
@@ -86,14 +88,25 @@ Gameobject::Gameobject(sf::Transformable transform, bool Enabled = true)
 			OnAlive();
 		}
 		GameEssentialsGlobals::InstansiateGameObject(this);
+		this->SetParent(GameEssentialsGlobals::WorldRoot);
 	}
 
-Gameobject::Gameobject(sf::Vector2f position, sf::Angle rotation = sf::Angle::Zero, bool Enabled = true)
+Gameobject::Gameobject(sf::Vector2f position = sf::Vector2f(0,0), sf::Angle rotation = sf::Angle::Zero, bool Enabled = true, Gameobject* parent = nullptr)
 {
 	this->transform = sf::Transformable();
 	transform.setPosition(position);
 	transform.rotate(rotation);
 	this->Enabled = Enabled;
+
+	if (parent != nullptr) 
+	{
+		this->SetParent(parent);
+	}
+	else 
+	{
+		this->SetParent(GameEssentialsGlobals::WorldRoot);
+	}
+
 
 	if (Enabled)
 	{
@@ -129,7 +142,7 @@ sf::Transformable& Gameobject::GetTransform()
 	return transform;
 }
 
-std::vector<Gameobject*> Gameobject::GetChildren()
+const std::vector<Gameobject*>& Gameobject::GetChildren() const
 {
 	return Children;
 }
@@ -138,26 +151,105 @@ Gameobject* Gameobject::AddChild(Gameobject* Child)
 {
 	Children.push_back(Child);
 
+
+	if (Child->GetParent() != this) 
+	{
+		Child->SetParent(this);
+	}
+
 	return Child;
 }
 
-template<typename T, typename... Args>
-T* Gameobject::AddComponent(Args&&... args)
-{
-	components.push_back(
-		std::make_unique<T>(std::forward<Args>(args)...)
-	);
 
-	return static_cast<T*>(components.back().get());
-}
 
 Gameobject* Gameobject::GetParent()
 {
 	return Parent;
 }
 
-Gameobject* Gameobject::SetParent(Gameobject* Parent)
+void Gameobject::RemoveChildObject(Gameobject* Child)
 {
-	this->Parent = Parent;
-	return Parent;
+	Children.erase(std::remove(Children.begin(), Children.end(), Child), Children.end());
+
 }
+
+
+Gameobject* Gameobject::SetParent(Gameobject* parent)
+{
+	if (this->Parent != nullptr)
+	{
+		this->Parent->RemoveChildObject(this);
+	}
+
+	this->Parent = parent;
+
+	if (parent != nullptr)
+	{
+		parent->AddChild(this);
+	}
+
+	return parent;
+}
+
+void Gameobject::UpdateWorldTransform()
+{
+	this->WorldPosition = LocalPosition;
+	this->WorldRotation = LocalRotation;
+
+	if (Parent != nullptr)
+	{
+		this->WorldPosition += Parent->GetTransform().getPosition();
+		this->WorldRotation += Parent->GetTransform().getRotation();
+	}
+
+	transform.setPosition(this->WorldPosition);
+	transform.setRotation(this->WorldRotation);
+
+	for (auto child : Children)
+	{
+		child->UpdateWorldTransform();
+	}
+
+
+}
+
+void Gameobject::MoveTo(sf::Vector2f worldPos)
+{
+	if (Parent != nullptr)
+	{
+		LocalPosition = worldPos - Parent->GetTransform().getPosition();
+	}
+	else
+	{
+		LocalPosition = worldPos;
+	}
+
+	UpdateWorldTransform();
+}
+
+void Gameobject::RotateTo(sf::Angle worldRot)
+{
+	if (Parent != nullptr)
+	{
+		LocalRotation = worldRot - Parent->GetTransform().getRotation();
+	}
+	else
+	{
+		LocalRotation = worldRot;
+	}
+
+	UpdateWorldTransform();
+}
+
+void Gameobject::SetlocalRotation(sf::Angle LocalRot) 
+{
+	this->LocalRotation = LocalRot;
+	UpdateWorldTransform();
+}
+
+void Gameobject::SetlocalPosition(sf::Vector2f LocalPos)
+{
+	this->LocalPosition = LocalPos;
+	UpdateWorldTransform();
+}
+

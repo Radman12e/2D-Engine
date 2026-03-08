@@ -8,7 +8,7 @@ class GameEssentialsGlobals
 public:
 
 	GameEssentialsGlobals();
-	static Gameobject WorldRoot;
+	static Gameobject* WorldRoot;
 
 	static std::vector<Gameobject*> GameObjectContainer;
 
@@ -20,9 +20,11 @@ public:
 
 	sf::Clock clock;
 
-	void OnGameTick();
+	static void OnGameTick();
 
-	void OnPhysicsTick();
+	static void OnPhysicsTick();
+
+	static void OutputSceneGraph(Gameobject* obj, int depth = 0);
 };
 
 

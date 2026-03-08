@@ -4,6 +4,10 @@
 #include "Component.h"
 #include "GameEssentials.h"
 
+#include <iostream>
+#include <memory>
+#include <vector>
+
 class Gameobject
 {
 
@@ -19,13 +23,22 @@ private:
 
 	bool Started = false;
 
-	
-	
+protected:
 
+	sf::Vector2f LocalPosition = sf::Vector2f(0,0);
+
+	sf::Angle LocalRotation = sf::degrees(0.0);
+
+	sf::Vector2f WorldPosition = sf::Vector2f(0, 0);
+
+	sf::Angle WorldRotation = sf::degrees(0.0);
 
 
 
 public:
+
+	std::string Name = "Empty";
+
 	void Destroy();
 
 	void OnUpdate(float dt);
@@ -40,7 +53,7 @@ public:
 
 	Gameobject(sf::Transformable transform, bool Enabled);
 
-	Gameobject(sf::Vector2f position, sf::Angle rotation, bool Enabled);
+	Gameobject(sf::Vector2f position, sf::Angle rotation, bool Enabled, Gameobject* parent);
 
 	void Ready();
 
@@ -50,16 +63,81 @@ public:
 
 	sf::Transformable& GetTransform();
 
-	std::vector<Gameobject*> GetChildren();
+	const std::vector<Gameobject*>& GetChildren() const;
 
 	Gameobject* AddChild(Gameobject* Child);
 
+
 	template<typename T, typename... Args>
-	T* AddComponent(Args&&... args);
+	T* AddComponent(Args&&... args)
+	{
+		T* compTemp = GetComponent<T>();
+		if (compTemp != nullptr)
+		{
+			return compTemp;
+		}
+
+		auto comp = std::make_unique<T>(std::forward<Args>(args)...);
+		comp->SetGameObject(this);
+
+		T* ptr = comp.get();
+		components.push_back(std::move(comp));
+
+		return ptr;
+	}
+
+	template<typename T>
+	T* GetComponent()
+	{
+		for (auto& comp : components)
+		{
+			if (auto existing = dynamic_cast<T*>(comp.get()))
+			{
+				return existing;
+			}
+
+		}
+		return nullptr;
+	}
+
+	template<typename T>
+	bool HasComponent()
+	{
+		
+		return (GetComponent<T>() != nullptr);
+	}
+
+	template<typename T>
+	void RemoveComponent()
+	{
+		for (auto it = components.begin(); it != components.end(); ++it)
+		{
+			if (dynamic_cast<T*>(it->get()))
+			{
+				components.erase(it);
+				return;
+			}
+		}
+	}
+
+	const std::vector<std::unique_ptr<Component>>& GetComponents() const
+	{
+		return components;
+	}
 
 	Gameobject* GetParent();
 
 	Gameobject* SetParent(Gameobject* Parent);
+
+	void RemoveChildObject(Gameobject* Child);
+
+	void UpdateWorldTransform();
+
+	void MoveTo(sf::Vector2f worldPos);
+	void RotateTo(sf::Angle worldRot);
+	
+	void SetlocalRotation(sf::Angle LocalRot);
+	void SetlocalPosition(sf::Vector2f LocalPos);
 
 };
 

@@ -1,55 +1,29 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+class Gameobject;
+
+
 
 
 class Component
 {
 
 private:
-	
+	Gameobject* GameObject = nullptr;
 
 public:
 
-	Component()
-	{
-	}
-	Component(bool enabled) 
-	{
-		this->Enabled = enabled;
-	}
+	void SetGameObject(Gameobject* ga);
 
-	virtual void OnUpdate(float deltaTime) 
-	{
-		if (!this->Enabled) 
-		{
-			return;
-		}
-	}
+	Component(bool enabled = true);
+
+	virtual void OnUpdate(float deltaTime);
 	
-	virtual void OnDestroy() 
-	{
-		if (!this->Enabled)
-		{
-			return;
-		}
-	}
+	virtual void OnDestroy();
 
-	virtual void OnStart()
-	{
-		if (!this->Enabled)
-		{
-			return;
-		}
-	}
+	virtual void OnStart();
 
-	virtual void OnAlive()
-
-	{
-		if (!this->Enabled)
-		{
-			return;
-		}
-	}
+	virtual void OnAlive();
 
 	bool Enabled = true;
 };
