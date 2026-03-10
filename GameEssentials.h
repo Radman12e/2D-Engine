@@ -16,7 +16,11 @@ public:
 
 	static Gameobject* InstansiateGameObject(Gameobject* gameObject);
 	
-	static float TicksPerSecond;
+	static float tickLength;
+
+	static float physicsTimeStep;
+
+	static float Timescale;
 
 	sf::Clock clock;
 
@@ -24,7 +28,11 @@ public:
 
 	static void OnPhysicsTick();
 
+	static void OnFreeTick();
+
 	static void OutputSceneGraph(Gameobject* obj, int depth = 0);
+
+	static void GameStart();
 };
 
 

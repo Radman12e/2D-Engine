@@ -18,6 +18,8 @@ public:
 	Component(bool enabled = true);
 
 	virtual void OnUpdate(float deltaTime);
+
+	virtual void OnPhysicsUpdate(float deltaTime);
 	
 	virtual void OnDestroy();
 

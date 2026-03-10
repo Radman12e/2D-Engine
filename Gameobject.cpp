@@ -33,6 +33,14 @@ void Gameobject::OnUpdate(float dt)
 	}
 }
 
+void Gameobject::OnPhysicsUpdate(float dt)
+{
+	for (auto& component : components)
+	{
+		component->OnPhysicsUpdate(dt);
+	}
+}
+
 void Gameobject::OnStart()
 {
 	for (auto& component : components)

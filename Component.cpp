@@ -21,6 +21,14 @@ void Component::OnUpdate(float deltaTime)
 	}
 }
 
+void Component::OnPhysicsUpdate(float deltaTime)
+{
+	if (!this->Enabled)
+	{
+		return;
+	}
+}
+
 void Component::OnDestroy()
 {
 	if (!this->Enabled)

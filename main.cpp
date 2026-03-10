@@ -34,7 +34,7 @@ int WinMain()
     Test3->Name = "Test3";
 
     TestComponent* tc = Test->AddComponent<TestComponent>();
-    tc->Enabled = false;
+    tc->Enabled = true;
 
 
     std::cout << "\n\nRootChildren: ";
@@ -57,6 +57,7 @@ int WinMain()
 
     while (window.isOpen())
     {
+
         while (const std::optional event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
@@ -64,7 +65,7 @@ int WinMain()
         }
 
         GameEssentialsGlobals::OnGameTick();
-
+        GameEssentialsGlobals::OnPhysicsTick();
         window.clear();
         window.draw(shape);
         window.display();

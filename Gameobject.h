@@ -42,6 +42,7 @@ public:
 	void Destroy();
 
 	void OnUpdate(float dt);
+	void OnPhysicsUpdate(float dt);
 
 	void OnStart();
 
