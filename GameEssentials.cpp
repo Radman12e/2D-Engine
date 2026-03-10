@@ -47,11 +47,11 @@ void GameEssentialsGlobals::OutputSceneGraph(Gameobject* obj, int depth)
 
     if (depth > 0)
     {
-        indent = std::string((depth - 1) * 4, ' ');
-        branch = "      |--- ";
+        indent = "\n"+ std::string((depth - 1) * 12, ' ');
+        branch = "    |--- ";
     }
 
-    std::cout << indent << branch << "(GameObject) " << obj->Name << "\n";
+    std::cout << indent << branch << "(GameObject) " << obj->Name << "      ";
 
     // Components
     const auto& comps = obj->GetComponents();
@@ -59,7 +59,7 @@ void GameEssentialsGlobals::OutputSceneGraph(Gameobject* obj, int depth)
     {
         for (auto& comp : comps)
         {
-            std::cout << indent << "                |--- (Component) [" << typeid(*comp).name() << "]\n";
+            std::cout << "(Component) [" << typeid(*comp).name() << "]  ";
         }
     }
 
