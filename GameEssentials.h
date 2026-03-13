@@ -1,9 +1,10 @@
 #pragma once
 #include <vector>
 #include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
 class Gameobject;
 
-class GameEssentialsGlobals
+static class GameEssentialsGlobals
 {
 public:
 
@@ -24,7 +25,13 @@ public:
 
 	sf::Clock clock;
 
+	static sf::RenderWindow* Renderwindow;
+
 	static void OnGameTick();
+	static void SetRenderWindow(sf::RenderWindow* rwin) 
+	{
+		Renderwindow = rwin;
+	}
 
 	static void OnPhysicsTick();
 

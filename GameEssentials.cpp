@@ -27,6 +27,8 @@ float GameEssentialsGlobals::tickLength = 8333.3f;
 
 float GameEssentialsGlobals::physicsTimeStep = 33333.3f;
 
+sf::RenderWindow* GameEssentialsGlobals::Renderwindow = nullptr;
+
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
 std::chrono::steady_clock::time_point currentTime;
 
@@ -43,6 +45,9 @@ float GameEssentialsGlobals::Timescale = 1.0f;
 
 void GameEssentialsGlobals::OnGameTick() 
 {
+
+    Renderwindow->clear();
+
     currentTime = std::chrono::steady_clock::now();
 	dt = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - lastTime).count();
     lastTime = currentTime;
@@ -60,6 +65,8 @@ void GameEssentialsGlobals::OnGameTick()
 		gameObject->OnUpdate((TimeSinceUpdate/1000000)*Timescale);
 	}
     TimeSinceUpdate = 0;
+
+    Renderwindow->display();
 }
 
 void GameEssentialsGlobals::OnPhysicsTick()

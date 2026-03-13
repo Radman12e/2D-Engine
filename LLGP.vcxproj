@@ -140,6 +140,7 @@
     <ClCompile Include="GameEssentials.cpp" />
     <ClCompile Include="Gameobject.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SpriteRendererComponent.cpp" />
     <ClCompile Include="TestComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +248,7 @@
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowBase.hpp" />
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowEnums.hpp" />
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowHandle.hpp" />
+    <ClInclude Include="SpriteRendererComponent.h" />
     <ClInclude Include="TestComponent.h" />
   </ItemGroup>
   <ItemGroup>

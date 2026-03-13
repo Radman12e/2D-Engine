@@ -4,6 +4,7 @@
 #include "TestComponent.h"
 #include "GameEssentials.h"
 #include <iostream>
+#include "SpriteRendererComponent.h"
 /*
     This version of the SFML "hello world" is statically linked, you may wish to try the dynamically linked version as well.
 */
@@ -37,12 +38,35 @@ int WinMain()
     tc->Enabled = true;
 
 
+    //Create A stupid rectangle!!
+    sf::Texture texture("ParentTest.png");
+    sf::IntRect rect({0,0}, {60,60});
+    SpriteRendererComponent* src = Test->AddComponent<SpriteRendererComponent>(texture, rect);
+    
+    Test->MoveTo(sf::Vector2f(300, 200));
+    src->Sprite->setColor(sf::Color(0, 255, 0));
+
+
+    sf::Texture texture2("ChildTest.png");
+    sf::IntRect rect2({ 0,0 }, { 60,60 });
+    SpriteRendererComponent* src2 = Test3->AddComponent<SpriteRendererComponent>(texture2, rect2);
+
+    Test3->SetlocalPosition(sf::Vector2f(100, 0));
+
+    Test->MoveTo(sf::Vector2f(100, 300));
+
+    //-aaaaaaaaaaaaaaaaaaab-----------------
+
     std::cout << "\n\nRootChildren: ";
 
     for (auto children : Root->GetChildren())
     {
         std::cout << children->Name << ",";
     }
+    
+
+   
+
 
     std::cout << "\n\nFound Componnet TestComponent: " << Test->HasComponent<TestComponent>();
 
@@ -52,8 +76,12 @@ int WinMain()
     sf::Vector2 v2(10,10);
 
     sf::RenderWindow window(sf::VideoMode({ 400, 400 }), "SFML works!");
+
+    GameEssentialsGlobals::SetRenderWindow(& window);
+
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
+    //src->Sprite = shape.spr;
 
     while (window.isOpen())
     {
@@ -64,12 +92,14 @@ int WinMain()
                 window.close();
         }
 
-        window.clear();
+        //window.clear();
+
+        //window.draw(shape);
 
         GameEssentialsGlobals::OnGameTick();
         GameEssentialsGlobals::OnPhysicsTick();
         
-        window.draw(shape);
-        window.display();
+        
+        //window.display();
     }
 }

@@ -37,6 +37,11 @@ protected:
 
 public:
 
+	sf::Vector2f getLocalPos() { return LocalPosition; }
+	sf::Angle getLocalRot() { return LocalRotation; }
+	sf::Vector2f getWorldPos() { return WorldPosition; }
+	sf::Angle getWorldRot() { return WorldRotation; }
+
 	std::string Name = "Empty";
 
 	void Destroy();

@@ -8,7 +8,7 @@ class Gameobject;
 class Component
 {
 
-private:
+protected:
 	Gameobject* GameObject = nullptr;
 
 public:
