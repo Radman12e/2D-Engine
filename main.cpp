@@ -64,9 +64,11 @@ int WinMain()
                 window.close();
         }
 
+        window.clear();
+
         GameEssentialsGlobals::OnGameTick();
         GameEssentialsGlobals::OnPhysicsTick();
-        window.clear();
+        
         window.draw(shape);
         window.display();
     }
