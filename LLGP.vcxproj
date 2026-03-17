@@ -137,6 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="GameEssentials.cpp" />
     <ClCompile Include="Gameobject.cpp" />
     <ClCompile Include="main.cpp" />
@@ -145,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h" />
+    <ClInclude Include="EventHandler.h" />
     <ClInclude Include="GameEssentials.h" />
     <ClInclude Include="Gameobject.h" />
     <ClInclude Include="packages\SFML\include\SFML\Audio.hpp" />

@@ -2,6 +2,8 @@
 #include <vector>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
+#include "EventHandler.h"
+
 class Gameobject;
 
 static class GameEssentialsGlobals
@@ -40,6 +42,11 @@ public:
 	static void OutputSceneGraph(Gameobject* obj, int depth = 0);
 
 	static void GameStart();
+
+
+	static EventHandler EventH;
+	static InputEventHandler InputEventH;
+
 };
 
 

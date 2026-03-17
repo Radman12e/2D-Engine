@@ -17,6 +17,7 @@ void GameEssentialsGlobals::RemoveGameObject(Gameobject* GameObject)
 Gameobject* GameEssentialsGlobals::InstansiateGameObject(Gameobject* gameObject)
 {
 	GameObjectContainer.push_back(gameObject);
+
 	return gameObject;
 
 }
@@ -43,8 +44,13 @@ float TimeSincePhys;
 
 float GameEssentialsGlobals::Timescale = 1.0f;
 
+InputEventHandler GameEssentialsGlobals::InputEventH;
+EventHandler GameEssentialsGlobals::EventH;
+
 void GameEssentialsGlobals::OnGameTick() 
 {
+
+    InputEventH.OnGameTick();
 
     Renderwindow->clear();
 

@@ -6,6 +6,7 @@ Component::Component(bool enabled)
 {
 	
 	Enabled = enabled;
+	this->OnAlive();
 }
 
 void Component::SetGameObject(Gameobject* ga) 
@@ -52,4 +53,5 @@ void Component::OnAlive()
 	{
 		return;
 	}
+	//std::cout << "StartedComp!!--------------------------";
 }

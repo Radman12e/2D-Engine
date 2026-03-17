@@ -14,7 +14,9 @@ int main()
 int WinMain()
 #endif
 {
-    
+    //Define view
+    sf::View view({ 200, 200 }, { 400, 400 });
+
     Gameobject* Root = GameEssentialsGlobals::WorldRoot;
 
     Gameobject* Test = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
@@ -64,7 +66,7 @@ int WinMain()
         std::cout << children->Name << ",";
     }
     
-
+   
    
 
 
@@ -76,6 +78,8 @@ int WinMain()
     sf::Vector2 v2(10,10);
 
     sf::RenderWindow window(sf::VideoMode({ 400, 400 }), "SFML works!");
+
+    window.setView(view);
 
     GameEssentialsGlobals::SetRenderWindow(& window);
 
