@@ -53,6 +53,10 @@ int WinMain()
     sf::IntRect rect2({ 0,0 }, { 60,60 });
     SpriteRendererComponent* src2 = Test3->AddComponent<SpriteRendererComponent>(texture2, rect2);
 
+    //SpriteRendererComponent* src100 = Test3->GetComponent<SpriteRendererComponent>();
+
+    std::cout << "\n\n Component found in: " << GameEssentialsGlobals::FindFirstComponent<SpriteRendererComponent>()->GetGameObject()->Name;
+
     Test3->SetlocalPosition(sf::Vector2f(100, 0));
 
     Test->MoveTo(sf::Vector2f(100, 300));
@@ -67,7 +71,7 @@ int WinMain()
     }
     
    
-   
+    //Test->Destroy();
 
 
     std::cout << "\n\nFound Componnet TestComponent: " << Test->HasComponent<TestComponent>();

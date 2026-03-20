@@ -3,8 +3,10 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include "EventHandler.h"
+#include "Gameobject.h"
+//#include "PlayerController.h"
 
-class Gameobject;
+//class Gameobject;
 
 static class GameEssentialsGlobals
 {
@@ -18,8 +20,13 @@ public:
 	static void RemoveGameObject(Gameobject* GameObject);
 
 	static Gameobject* InstansiateGameObject(Gameobject* gameObject);
+
 	
 	static float tickLength;
+
+	template<typename T>
+	static T* FindFirstComponent();
+
 
 	static float physicsTimeStep;
 
@@ -48,5 +55,19 @@ public:
 	static InputEventHandler InputEventH;
 
 };
+template<typename T>
+T* GameEssentialsGlobals::FindFirstComponent()
+{
+	T* ComponentT = nullptr;
+	for (auto& Gameo : GameObjectContainer)
+	{
+		ComponentT = Gameo->template GetComponent<T>();
+		if (ComponentT != nullptr)
+		{
+			return ComponentT;
+		}
+	}
 
 
+	return nullptr;
+}

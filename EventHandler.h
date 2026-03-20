@@ -10,12 +10,12 @@ class EventHandler
 {
 private:
 	
-	std::unordered_map<std::string, std::vector<std::function<void()>>> Events;
+	std::unordered_map<std::string, std::vector<std::function<void()>*>> Events;
 	std::unordered_map<std::string, bool> EventStatus;
 	
 public:
 
-	void BindEvent(std::string str, std::function<void()> func)
+	void BindEvent(std::string str, std::function<void()>* func)
 	{
 		Events[str].push_back(func);
 	}
@@ -30,7 +30,7 @@ public:
 		for (auto& element : Events[str])
 		{
 			if (element != nullptr)
-			element();
+			(*element)();
 
 		}
 	}
@@ -57,8 +57,10 @@ class InputEventHandler
 {
 private:
 
-	std::unordered_map<sf::Keyboard::Key, std::vector<std::function<void(InputArgs)>>> KeyboardEvents;
-	std::unordered_map<sf::Mouse::Button, std::vector<std::function<void(InputArgs)>>> MouseEvents;
+	std::unordered_map<sf::Keyboard::Key, std::vector<std::function<void(InputArgs)>*>> KeyboardEvents;
+	std::unordered_map<sf::Mouse::Button, std::vector<std::function<void(InputArgs)>*>> MouseEvents;
+
+	std::vector <std::function<void(InputArgs)>> fnStorage;
 
 	std::unordered_map<sf::Keyboard::Key, bool> KeyStatus;
 	std::unordered_map<sf::Mouse::Button, bool> MouseButtonStatus;
@@ -67,21 +69,24 @@ public:
 
 	void BindEvent(sf::Mouse::Button str, std::function<void(InputArgs)> func)
 	{
-		MouseEvents[str].push_back(func);
+		fnStorage.push_back(func);
+		
+		MouseEvents[str].push_back(&fnStorage[ fnStorage.size()-1]);
 		MouseButtonStatus[str] = false;
 		
 	}
 	void BindEvent(sf::Keyboard::Key str, std::function<void(InputArgs)> func)
 	{
-		KeyboardEvents[str].push_back(func);
+		fnStorage.push_back(func);
+		KeyboardEvents[str].push_back(&fnStorage[fnStorage.size() - 1]);
 		KeyStatus[str] = false;
 	}
 
-	void UnBindEvent(sf::Keyboard::Key str, std::function<void(InputArgs)> func)
+	void UnBindEvent(sf::Keyboard::Key str, std::function<void(InputArgs)>* func)
 	{
 		KeyboardEvents[str].erase(std::remove(KeyboardEvents[str].begin(), KeyboardEvents[str].end(), func), KeyboardEvents[str].end());
 	}
-	void UnBindEvent(sf::Mouse::Button str, std::function<void(InputArgs)> func)
+	void UnBindEvent(sf::Mouse::Button str, std::function<void(InputArgs)>* func)
 	{
 		MouseEvents[str].erase(std::remove(MouseEvents[str].begin(), MouseEvents[str].end(), func), MouseEvents[str].end());
 	}
@@ -91,7 +96,7 @@ public:
 		for (auto& element : KeyboardEvents[str])
 		{
 			if (element != nullptr)
-				element(arg);
+				(*element)(arg);
 
 		}
 	}
@@ -100,7 +105,17 @@ public:
 		for (auto& element : MouseEvents[str])
 		{
 			if (element != nullptr)
-				element(arg);
+			{
+				try
+				{
+					(*element)(arg);
+				}
+				catch (const std::exception&)
+				{
+					
+				}
+				
+			}
 
 		}
 	}

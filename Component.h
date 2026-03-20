@@ -28,5 +28,11 @@ public:
 	virtual void OnAlive();
 
 	bool Enabled = true;
+
+	Gameobject* GetGameObject() 
+	{
+		return GameObject;
+	}
+
 };
 

@@ -141,8 +141,10 @@
     <ClCompile Include="GameEssentials.cpp" />
     <ClCompile Include="Gameobject.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="SpriteRendererComponent.cpp" />
     <ClCompile Include="TestComponent.cpp" />
+    <ClCompile Include="UserInputService.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h" />
@@ -250,8 +252,10 @@
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowBase.hpp" />
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowEnums.hpp" />
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowHandle.hpp" />
+    <ClInclude Include="PlayerController.h" />
     <ClInclude Include="SpriteRendererComponent.h" />
     <ClInclude Include="TestComponent.h" />
+    <ClInclude Include="UserInputService.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages\SFML\include\SFML\Audio\SoundFileFactory.inl" />

@@ -1,5 +1,6 @@
 ﻿#include "GameEssentials.h"
 #include "Gameobject.h"
+#include "UserInputService.h"
 
 GameEssentialsGlobals::GameEssentialsGlobals()
 {
@@ -11,6 +12,7 @@ Gameobject* GameEssentialsGlobals::WorldRoot = new Gameobject(true);
 void GameEssentialsGlobals::RemoveGameObject(Gameobject* GameObject)
 {
 	GameObjectContainer.erase(std::remove(GameObjectContainer.begin(), GameObjectContainer.end(), GameObject), GameObjectContainer.end());
+    //delete(GameObject);
 
 }
 

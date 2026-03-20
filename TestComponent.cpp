@@ -66,7 +66,16 @@ void TestComponent::OnAlive()
 	//std::cout << "StartedComp!!--------------------------";
 	Component::OnAlive();
 	std::cout << "StartedComp!!--------------------------";
-	GameEssentialsGlobals::InputEventH.BindEvent(sf::Keyboard::Key::W, [this](InputArgs IA) {OnWPressed(IA); });
+
+	
+
+	std::function<void(InputArgs IA)> OnWPressedfn = [this](InputArgs IA)
+		{
+			//if (!this) return;
+			this->OnWPressed(IA);
+		};
+
+	GameEssentialsGlobals::InputEventH.BindEvent(sf::Keyboard::Key::W, OnWPressedfn);
 }
 
 TestComponent::TestComponent()

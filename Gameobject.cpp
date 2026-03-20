@@ -21,8 +21,8 @@ void Gameobject::Destroy()
 		Parent->RemoveChildObject(this);
 	}
 	GameEssentialsGlobals::RemoveGameObject(this);
-
 	delete this;
+	
 }
 
 void Gameobject::OnUpdate(float dt)
