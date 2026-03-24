@@ -28,7 +28,7 @@ void TestComponent::OnWPressed(InputArgs args)
 {
 	if (args.phase == InputPhase::Started) 
 	{
-		GameObject->MoveTo(GameObject->getWorldPos() + sf::Vector2f(10, 0));
+		GameObject->MoveTo(GameObject->getWorldPos() + sf::Vector2f(0, -10));
 		//GameObject->MoveTo(sf::Vector2f(300, 200));
 	}
 

@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="GameEssentials.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="UserInputService.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="GameEssentials.h" />

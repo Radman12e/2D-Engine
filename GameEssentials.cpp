@@ -38,6 +38,8 @@ std::chrono::steady_clock::time_point currentTime;
 std::chrono::steady_clock::time_point PhyslastTime = std::chrono::steady_clock::now();
 std::chrono::steady_clock::time_point PhyscurrentTime;
 
+
+
 float dt = 0;
 float pdt = 0;
 
@@ -48,6 +50,7 @@ float GameEssentialsGlobals::Timescale = 1.0f;
 
 InputEventHandler GameEssentialsGlobals::InputEventH;
 EventHandler GameEssentialsGlobals::EventH;
+UserInputService GameEssentialsGlobals::InputService;
 
 void GameEssentialsGlobals::OnGameTick() 
 {

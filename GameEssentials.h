@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "EventHandler.h"
 #include "Gameobject.h"
+#include "UserInputService.h"
 //#include "PlayerController.h"
 
 //class Gameobject;
@@ -53,6 +54,7 @@ public:
 
 	static EventHandler EventH;
 	static InputEventHandler InputEventH;
+	static UserInputService InputService;
 
 };
 template<typename T>
