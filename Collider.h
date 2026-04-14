@@ -15,7 +15,7 @@ class Collider : public Component
 
 private:
     ColliderType typeOfCollider;
-    
+    size_t id;
 
 
 public:
@@ -29,7 +29,7 @@ public:
             RectOffset = sf::Vector2f((Temp->getRect().size) / 2);
             Radius = (Temp->getRect().size / 2).x;
         }
-        
+        id = GameEssentialsGlobals::AddCollider(this);
     }
     
     void OnUpdate(float dt) override

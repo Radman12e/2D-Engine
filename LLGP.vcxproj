@@ -137,18 +137,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="CollisionEventsinterface.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="GameEssentials.cpp" />
     <ClCompile Include="Gameobject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="SpriteRendererComponent.cpp" />
     <ClCompile Include="TestComponent.cpp" />
-    <ClCompile Include="UserInputService.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="CollisionEventsinterface.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="GameEssentials.h" />
@@ -255,9 +257,9 @@
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowEnums.hpp" />
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="SpriteRendererComponent.h" />
     <ClInclude Include="TestComponent.h" />
-    <ClInclude Include="UserInputService.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages\SFML\include\SFML\Audio\SoundFileFactory.inl" />

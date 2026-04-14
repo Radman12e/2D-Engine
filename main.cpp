@@ -78,6 +78,7 @@ int WinMain()
 
     std::cout << "\n\nScene: \n";
     GameEssentialsGlobals::OutputSceneGraph(Root);
+    //GameEssentialsGlobals::InputService->Init();
 
     sf::Vector2 v2(10,10);
 

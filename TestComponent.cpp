@@ -75,7 +75,25 @@ void TestComponent::OnAlive()
 			this->OnWPressed(IA);
 		};
 
-	GameEssentialsGlobals::InputEventH.BindEvent(sf::Keyboard::Key::W, OnWPressedfn);
+	std::function<void()> EventTest = [this]()
+		{
+			//if (!this) return;
+			std::cout << "Triggered External";
+		};
+
+	std::function<void(InputArgs IA)> OnWPressedfn2 = [this](InputArgs IA)
+		{
+			GameObject->Destroy();
+		};
+
+
+	this->bindEvent(sf::Keyboard::Key::W, OnWPressedfn);
+	this->bindEvent(sf::Keyboard::Key::A, OnWPressedfn2);
+	this->bindEvent("TestEvent1", EventTest);
+
+	//GameEssentialsGlobals::InputEventH.BindEvent(sf::Keyboard::Key::W, OnWPressedfn);
+	//GameEssentialsGlobals::InputEventH.BindEvent(sf::Keyboard::Key::D, OnWPressedfn2);
+	//GameEssentialsGlobals::InputEventH.UnBindEvent(sf::Keyboard::Key::W, Event);
 }
 
 TestComponent::TestComponent()

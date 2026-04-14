@@ -10,28 +10,45 @@ class EventHandler
 {
 private:
 	
-	std::unordered_map<std::string, std::vector<std::function<void()>*>> Events;
+	struct EventBinding
+	{
+		size_t ID;
+		std::function<void()> Eventfn;
+	};
+
+	size_t nextId = 0;
+
+	std::unordered_map<std::string,std::vector<EventBinding>> Events;
 	std::unordered_map<std::string, bool> EventStatus;
 	
 public:
 
-	void BindEvent(std::string str, std::function<void()>* func)
+	size_t BindEvent(std::string str, std::function<void()> func)
 	{
-		Events[str].push_back(func);
+		size_t id = nextId++;
+		Events[str].push_back({ id, std::move(func) });
+		return id;
 	}
 
-	void UnBindEvent(std::string str, void(*func))
+	void UnBindEvent(std::string str, size_t id)
 	{
-		Events[str].erase(std::remove(Events[str].begin(), Events[str].end(), func), Events[str].end());		
+		auto& vec = Events[str];
+
+		vec.erase(
+			std::remove_if(vec.begin(), vec.end(),
+				[id](const EventBinding& b) { return b.ID == id; }),
+			vec.end()
+		);
 	}
 
 	void FireEvent(std::string str)
 	{
-		for (auto& element : Events[str])
-		{
-			if (element != nullptr)
-			(*element)();
+		auto it = Events.find(str);
+		if (it == Events.end()) return;
 
+		for (auto& b : Events[str])
+		{
+			if (b.Eventfn) b.Eventfn();
 		}
 	}
 
@@ -53,70 +70,86 @@ struct InputArgs
 };
 
 
+
 class InputEventHandler
 {
+
+	struct EventBinding
+	{
+		size_t ID;
+		std::function<void(InputArgs)> Eventfn;
+	};
+
 private:
 
-	std::unordered_map<sf::Keyboard::Key, std::vector<std::function<void(InputArgs)>*>> KeyboardEvents;
-	std::unordered_map<sf::Mouse::Button, std::vector<std::function<void(InputArgs)>*>> MouseEvents;
+	std::unordered_map<sf::Keyboard::Key, std::vector<EventBinding>> KeyboardEvents;
+	std::unordered_map<sf::Mouse::Button, std::vector<EventBinding>> MouseEvents;
 
-	std::vector <std::function<void(InputArgs)>> fnStorage;
+	
 
 	std::unordered_map<sf::Keyboard::Key, bool> KeyStatus;
 	std::unordered_map<sf::Mouse::Button, bool> MouseButtonStatus;
+	size_t nextId = 0;
 
 public:
 
-	void BindEvent(sf::Mouse::Button str, std::function<void(InputArgs)> func)
+	size_t BindEvent(sf::Mouse::Button str, std::function<void(InputArgs)> func)
 	{
-		fnStorage.push_back(func);
-		
-		MouseEvents[str].push_back(&fnStorage[ fnStorage.size()-1]);
+		//fnStorage.push_back(func);
+		size_t id = nextId++;
+		MouseEvents[str].push_back({ id, std::move(func) });
 		MouseButtonStatus[str] = false;
-		
+		return id;
 	}
-	void BindEvent(sf::Keyboard::Key str, std::function<void(InputArgs)> func)
+	size_t BindEvent(sf::Keyboard::Key str, std::function<void(InputArgs)> func)
 	{
-		fnStorage.push_back(func);
-		KeyboardEvents[str].push_back(&fnStorage[fnStorage.size() - 1]);
+		//fnStorage.push_back(func);
+		size_t id = nextId++;
+		KeyboardEvents[str].push_back({ id, std::move(func) });
 		KeyStatus[str] = false;
+		return id;
 	}
 
-	void UnBindEvent(sf::Keyboard::Key str, std::function<void(InputArgs)>* func)
+	void UnBindEvent(sf::Keyboard::Key key, size_t funcID)
 	{
-		KeyboardEvents[str].erase(std::remove(KeyboardEvents[str].begin(), KeyboardEvents[str].end(), func), KeyboardEvents[str].end());
+		auto& vec = KeyboardEvents[key];
+
+		vec.erase(
+			std::remove_if(vec.begin(), vec.end(),
+				[funcID](const EventBinding& b) { return b.ID == funcID; }),
+			vec.end()
+		);
 	}
-	void UnBindEvent(sf::Mouse::Button str, std::function<void(InputArgs)>* func)
+	void UnBindEvent(sf::Mouse::Button key, size_t funcID)
 	{
-		MouseEvents[str].erase(std::remove(MouseEvents[str].begin(), MouseEvents[str].end(), func), MouseEvents[str].end());
+		auto& vec = MouseEvents[key];
+
+		vec.erase(
+			std::remove_if(vec.begin(), vec.end(),
+				[funcID](const EventBinding& b) { return b.ID == funcID; }),
+			vec.end()
+		);
 	}
 
-	void FireEvent(sf::Keyboard::Key str, InputArgs arg)
+	void FireEvent(sf::Keyboard::Key key, InputArgs arg)
 	{
-		for (auto& element : KeyboardEvents[str])
+		auto it = KeyboardEvents.find(key);
+		if (it == KeyboardEvents.end()) return;
+
+		for (auto& b : KeyboardEvents[key])
 		{
-			if (element != nullptr)
-				(*element)(arg);
-
+			if (b.Eventfn) b.Eventfn(arg);
 		}
 	}
-	void FireEvent(sf::Mouse::Button str, InputArgs arg)
-	{
-		for (auto& element : MouseEvents[str])
-		{
-			if (element != nullptr)
-			{
-				try
-				{
-					(*element)(arg);
-				}
-				catch (const std::exception&)
-				{
-					
-				}
-				
-			}
 
+	void FireEvent(sf::Mouse::Button key, InputArgs arg)
+	{
+		auto it = MouseEvents.find(key);
+		if (it == MouseEvents.end()) return;
+
+		for (auto& b : MouseEvents[key])
+		{
+			if (b.Eventfn) b.Eventfn(arg);
 		}
 	}
 

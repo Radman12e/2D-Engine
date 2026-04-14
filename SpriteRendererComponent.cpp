@@ -7,6 +7,8 @@ void SpriteRendererComponent::OnUpdate(float dt)
 	Sprite->setPosition(this->GameObject->getWorldPos());
 	Sprite->setRotation(this->GameObject->getLocalRot());
 
+	//GameEssentialsGlobals::EventH.FireEvent("TestEvent1");
+
 	
 
 	if (GameEssentialsGlobals::Renderwindow != nullptr) 

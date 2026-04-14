@@ -1,11 +1,13 @@
 ﻿#include "GameEssentials.h"
 #include "Gameobject.h"
-#include "UserInputService.h"
+#include "Collider.h"
 
 GameEssentialsGlobals::GameEssentialsGlobals()
 {
 
 }
+
+std::vector<ColliderStruct> GameEssentialsGlobals::Colliders = {};
 
 Gameobject* GameEssentialsGlobals::WorldRoot = new Gameobject(true);
 
@@ -48,9 +50,31 @@ float TimeSincePhys;
 
 float GameEssentialsGlobals::Timescale = 1.0f;
 
+size_t GameEssentialsGlobals::ColliderNextID = 0;
+
 InputEventHandler GameEssentialsGlobals::InputEventH;
 EventHandler GameEssentialsGlobals::EventH;
-UserInputService GameEssentialsGlobals::InputService;
+
+
+size_t GameEssentialsGlobals::AddCollider(Collider* collider)
+{
+    ColliderStruct collider2 = { collider , ColliderNextID++ };
+    Colliders.push_back(collider2);
+    return ColliderNextID;
+
+}
+void GameEssentialsGlobals::RemoveCollider(size_t id)
+{
+    auto it = std::remove_if(Colliders.begin(), Colliders.end(),
+        [id](const ColliderStruct& c) { return c.id == id; });
+
+    if (it != Colliders.end())
+    {
+        Colliders.erase(it, Colliders.end());
+    }
+
+}
+
 
 void GameEssentialsGlobals::OnGameTick() 
 {

@@ -4,14 +4,30 @@
 #include <SFML/Graphics.hpp>
 #include "EventHandler.h"
 #include "Gameobject.h"
-#include "UserInputService.h"
+
+
 //#include "PlayerController.h"
 
-//class Gameobject;
+class Gameobject;
+
+class Collider;
+
+struct ColliderStruct
+{
+	Collider* collider;
+	size_t id;
+};
 
 static class GameEssentialsGlobals
 {
 public:
+
+	
+	static void RemoveCollider(size_t id);
+
+	static std::vector<ColliderStruct> Colliders;
+
+	static size_t AddCollider(Collider* collider);
 
 	GameEssentialsGlobals();
 	static Gameobject* WorldRoot;
@@ -54,7 +70,8 @@ public:
 
 	static EventHandler EventH;
 	static InputEventHandler InputEventH;
-	static UserInputService InputService;
+
+	static size_t ColliderNextID;
 
 };
 template<typename T>
@@ -73,3 +90,7 @@ T* GameEssentialsGlobals::FindFirstComponent()
 
 	return nullptr;
 }
+
+
+
+
