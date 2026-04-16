@@ -13,9 +13,16 @@ private:
 
 
 public:
+
+
 	sf::Sprite* Sprite = nullptr;//("");
 	void OnUpdate(float dt) override;
 	SpriteRendererComponent(sf::Texture texture, sf::IntRect rect);
+
+	~SpriteRendererComponent() 
+	{
+		delete Sprite;
+	}
 
 	void SetTexture(sf::Texture texture, sf::IntRect rect);
 

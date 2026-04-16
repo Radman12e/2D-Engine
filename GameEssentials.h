@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include "EventHandler.h"
 #include "Gameobject.h"
+#include "Rigidbody.h"
+#include "Collider.h"
 
 
 //#include "PlayerController.h"
@@ -18,14 +20,26 @@ struct ColliderStruct
 	size_t id;
 };
 
+struct RigidbodyStruct
+{
+	Rigidbody* Rb;
+	size_t id;
+};
+
 static class GameEssentialsGlobals
 {
 public:
 
 	
+	static void RemoveRB(size_t id);
+
 	static void RemoveCollider(size_t id);
 
 	static std::vector<ColliderStruct> Colliders;
+
+	static std::vector<RigidbodyStruct> Rigidbodies;
+
+	static size_t AddRigidbody(Rigidbody* rb);
 
 	static size_t AddCollider(Collider* collider);
 
@@ -72,6 +86,9 @@ public:
 	static InputEventHandler InputEventH;
 
 	static size_t ColliderNextID;
+	static size_t rbNextID;
+
+	static void StartGame();
 
 };
 template<typename T>

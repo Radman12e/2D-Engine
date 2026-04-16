@@ -1,13 +1,17 @@
 ﻿#include "GameEssentials.h"
 #include "Gameobject.h"
 #include "Collider.h"
+#include "Rigidbody.h"
 
 GameEssentialsGlobals::GameEssentialsGlobals()
 {
 
 }
 
+
+
 std::vector<ColliderStruct> GameEssentialsGlobals::Colliders = {};
+std::vector<RigidbodyStruct> GameEssentialsGlobals::Rigidbodies = {};
 
 Gameobject* GameEssentialsGlobals::WorldRoot = new Gameobject(true);
 
@@ -52,9 +56,17 @@ float GameEssentialsGlobals::Timescale = 1.0f;
 
 size_t GameEssentialsGlobals::ColliderNextID = 0;
 
+size_t GameEssentialsGlobals::rbNextID = 0;
+
 InputEventHandler GameEssentialsGlobals::InputEventH;
 EventHandler GameEssentialsGlobals::EventH;
 
+size_t GameEssentialsGlobals::AddRigidbody(Rigidbody* rb) 
+{
+    RigidbodyStruct collider2 = { rb , rbNextID++ };
+    Rigidbodies.push_back(collider2);
+    return rbNextID;
+}
 
 size_t GameEssentialsGlobals::AddCollider(Collider* collider)
 {
@@ -71,6 +83,18 @@ void GameEssentialsGlobals::RemoveCollider(size_t id)
     if (it != Colliders.end())
     {
         Colliders.erase(it, Colliders.end());
+    }
+
+}
+
+void GameEssentialsGlobals::RemoveRB(size_t id)
+{
+    auto it = std::remove_if(Rigidbodies.begin(), Rigidbodies.end(),
+        [id](const RigidbodyStruct& c) { return c.id == id; });
+
+    if (it != Rigidbodies.end())
+    {
+        Rigidbodies.erase(it, Rigidbodies.end());
     }
 
 }

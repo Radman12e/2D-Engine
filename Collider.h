@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "GameEssentials.h"
 #include "SpriteRendererComponent.h"
+#include "Gameobject.h"
 
 enum ColliderType
 {
@@ -19,23 +20,18 @@ private:
 
 
 public:
-    Collider(ColliderType CT = ColliderType::Box, bool isTrigger = false)
+    Collider(ColliderType CT = ColliderType::Box, bool isTrigger = false);
+
+    ~Collider();
+    
+
+    size_t GetID() 
     {
-        IsTrigger = true;
-        SpriteRendererComponent* Temp = GameObject->GetComponent<SpriteRendererComponent>();
-        if (Temp != nullptr) 
-        {
-            BoxRect = (sf::FloatRect)Temp->getRect();
-            RectOffset = sf::Vector2f((Temp->getRect().size) / 2);
-            Radius = (Temp->getRect().size / 2).x;
-        }
-        id = GameEssentialsGlobals::AddCollider(this);
+        return id;
     }
     
-    void OnUpdate(float dt) override
-    {
-        BoxRect.position = GameObject->getWorldPos() + RectOffset;
-    }
+    void OnUpdate(float dt) override;
+    
     
     bool CheckCollision(Collider* OtherCollider)
     {

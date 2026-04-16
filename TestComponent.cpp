@@ -13,8 +13,9 @@ void TestComponent::OnPhysicsUpdate(float dt)
 {
 	Component::OnPhysicsUpdate(dt);
 	if (this->Enabled == false) return;
+	
 
-	//std::cout << "\n PHYSICSTICK: " << dt;
+	std::cout << "\n PHYSICSTICK: " << dt;
 
 }
 
