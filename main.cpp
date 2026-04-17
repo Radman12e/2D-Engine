@@ -92,6 +92,8 @@ int WinMain()
     shape.setFillColor(sf::Color::Green);
     //src->Sprite = shape.spr;
 
+    GameEssentialsGlobals::StartGame();
+
     while (window.isOpen())
     {
 

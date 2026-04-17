@@ -1,25 +1,26 @@
 #pragma once
 #include "Component.h"
 
-
+struct ColliderStruct;
 class Rigidbody : public Component
 {
 private:
 
-	std::vector<size_t> Colliders = {};
+	
 
     size_t id;
 
-    std::vector<size_t> GetAllColliders(Gameobject* CurrentObject);
+    std::vector<ColliderStruct> GetAllColliders(Gameobject* CurrentObject);
 
 protected:
 
     sf::Vector2f Velocity = sf::Vector2f(0.f, 0.f);
+    
 
 public:
     Rigidbody();
     ~Rigidbody();
-    
+    std::vector<ColliderStruct> Colliders = {};
 
     void InitRB() 
     {
@@ -38,8 +39,18 @@ public:
     
     }
 
-    void OnPhysicsUpdate(float detlatime) override;
+    bool FindCollider(size_t ID) {
+       
+        if (Colliders.empty()) {
+            return false;
+        }
 
+       
+        return std::find(Colliders.begin(), Colliders.end(), ID) != Colliders.end();
+    }
+
+    void OnPhysicsUpdate(float detlatime) override;
+    void OnUpdate(float detlatime) override;
 
 };
 

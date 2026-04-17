@@ -3,19 +3,19 @@
 #include "Collider.h" 
 #include "Gameobject.h"
 
-std::vector<size_t> Rigidbody::GetAllColliders(Gameobject* CurrentObject)
+std::vector<ColliderStruct> Rigidbody::GetAllColliders(Gameobject* CurrentObject)
 {
-    std::vector<size_t> colliders;
+    std::vector<ColliderStruct> colliders;
 
     Collider* col = CurrentObject->GetComponent<Collider>();
     if (col != nullptr)
     {
-        colliders.push_back(col->GetID());
+        colliders.push_back({col, col->GetID()});
     }
 
     for (Gameobject* child : CurrentObject->GetChildren())
     {
-        std::vector<size_t> childColliders = GetAllColliders(child);
+        std::vector<ColliderStruct> childColliders = GetAllColliders(child);
 
         colliders.insert(
             colliders.end(),
@@ -38,6 +38,14 @@ Rigidbody::~Rigidbody()
 }
 
 void Rigidbody::OnPhysicsUpdate(float detlatime)
+{
+    
+
+
+}
+
+
+void Rigidbody::OnUpdate(float detlatime)
 {
     GameObject->MoveTo(GameObject->getWorldPos() + (Velocity * detlatime));
 

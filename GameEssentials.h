@@ -79,7 +79,7 @@ public:
 
 	static void OutputSceneGraph(Gameobject* obj, int depth = 0);
 
-	static void GameStart();
+	
 
 
 	static EventHandler EventH;
@@ -90,7 +90,53 @@ public:
 
 	static void StartGame();
 
+	static sf::Vector2f CollisionCheckRB(Rigidbody* rb) 
+	{
+		sf::Vector2f CollisionResolve = { 0,0 };
+
+		for (ColliderStruct coll : rb->Colliders)
+		{
+			CollisionResolve += CollisionCheckCollider(coll.collider, rb->Colliders);
+		}
+
+		
+	}
+
+	static sf::Vector2f CollisionCheckCollider(Collider* collider, std::vector<ColliderStruct> excludedColliders)
+	{
+
+		sf::Vector2f collisionOff = { 0,0 };
+		for (ColliderStruct coll : Colliders)
+		{
+			sf::Vector2f collisionOffTemp;
+			bool IsExcluded = false;
+			for (ColliderStruct coll2 : excludedColliders)
+			{
+				if (coll.id == coll2.id)
+				{
+					IsExcluded = true;
+					break;
+				}
+			}
+
+			if (IsExcluded) continue;
+
+			collisionOffTemp = collider->CheckCollision(coll.collider);
+			if (collisionOffTemp.length() > 0 && collider->IsTrigger)
+			{
+				//TriggerTrigger!!
+			}
+
+
+		}
+	}
+
 };
+
+
+
+
+
 template<typename T>
 T* GameEssentialsGlobals::FindFirstComponent()
 {

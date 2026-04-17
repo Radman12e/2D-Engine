@@ -180,5 +180,15 @@ void GameEssentialsGlobals::OutputSceneGraph(Gameobject* obj, int depth)
     {
         OutputSceneGraph(child, depth + 1);
     }
+
+
+}
+
+void GameEssentialsGlobals::StartGame() 
+{
+    for (RigidbodyStruct rb : GameEssentialsGlobals::Rigidbodies) 
+    {
+        rb.Rb->InitRB();
+    }
 }
 
