@@ -29,7 +29,7 @@ void TestComponent::OnWPressed(InputArgs args)
 {
 	if (args.phase == InputPhase::Started) 
 	{
-		GameObject->MoveTo(GameObject->getWorldPos() + sf::Vector2f(0, -10));
+		GameObject->GetComponent<Rigidbody>()->Velocity = { GameObject->GetComponent<Rigidbody>()->Velocity.x,GameObject->GetComponent<Rigidbody>()->Velocity.y - 30 };
 		//GameObject->MoveTo(sf::Vector2f(300, 200));
 	}
 
@@ -38,7 +38,7 @@ void TestComponent::OnAPressed(InputArgs args)
 {
 	if (args.phase == InputPhase::Started)
 	{
-		GameObject->MoveTo(GameObject->getWorldPos() + sf::Vector2f(0, -10));
+		GameObject->GetComponent<Rigidbody>()->Velocity = { GameObject->GetComponent<Rigidbody>()->Velocity.x - 30,GameObject->GetComponent<Rigidbody>()->Velocity.y };
 		//GameObject->MoveTo(sf::Vector2f(300, 200));
 	}
 
@@ -47,7 +47,8 @@ void TestComponent::OnSPressed(InputArgs args)
 {
 	if (args.phase == InputPhase::Started)
 	{
-		GameObject->MoveTo(GameObject->getWorldPos() - sf::Vector2f(10, 0));
+		GameObject->GetComponent<Rigidbody>()->Velocity = { GameObject->GetComponent<Rigidbody>()->Velocity.x,GameObject->GetComponent<Rigidbody>()->Velocity.y + 30 };
+
 		//GameObject->MoveTo(sf::Vector2f(300, 200));
 	}
 
@@ -56,7 +57,8 @@ void TestComponent::OnDPressed(InputArgs args)
 {
 	if (args.phase == InputPhase::Started)
 	{
-		GameObject->MoveTo(GameObject->getWorldPos() + sf::Vector2f(0, 10));
+		GameObject->GetComponent<Rigidbody>()->Velocity = { GameObject->GetComponent<Rigidbody>()->Velocity.x + 30 ,GameObject->GetComponent<Rigidbody>()->Velocity.y };
+
 		//GameObject->MoveTo(sf::Vector2f(300, 200));
 	}
 
@@ -82,14 +84,24 @@ void TestComponent::OnAlive()
 			std::cout << "Triggered External";
 		};
 
-	std::function<void(InputArgs IA)> OnWPressedfn2 = [this](InputArgs IA)
+	std::function<void(InputArgs IA)> OnAPressedfn = [this](InputArgs IA)
 		{
-			GameObject->Destroy();
+			this->OnAPressed(IA);
 		};
 
+	std::function<void(InputArgs IA)> OnSPressedfn = [this](InputArgs IA)
+		{
+			this->OnSPressed(IA);
+		};
+	std::function<void(InputArgs IA)> OnDPressedfn = [this](InputArgs IA)
+		{
+			this->OnDPressed(IA);
+		};
 
 	this->bindEvent(sf::Keyboard::Key::W, OnWPressedfn);
-	this->bindEvent(sf::Keyboard::Key::A, OnWPressedfn2);
+	this->bindEvent(sf::Keyboard::Key::A, OnAPressedfn);
+	this->bindEvent(sf::Keyboard::Key::D, OnDPressedfn);
+	this->bindEvent(sf::Keyboard::Key::S, OnSPressedfn);
 	this->bindEvent("TestEvent1", EventTest);
 
 	//GameEssentialsGlobals::InputEventH.BindEvent(sf::Keyboard::Key::W, OnWPressedfn);
@@ -99,5 +111,5 @@ void TestComponent::OnAlive()
 
 TestComponent::TestComponent()
 {
-	this->OnAlive();
+	
 }

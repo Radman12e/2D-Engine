@@ -85,9 +85,11 @@ public:
 
 		auto comp = std::make_unique<T>(std::forward<Args>(args)...);
 		comp->SetGameObject(this);
+		comp->OnAlive();
 
 		T* ptr = comp.get();
 		components.push_back(std::move(comp));
+		
 
 		return ptr;
 	}

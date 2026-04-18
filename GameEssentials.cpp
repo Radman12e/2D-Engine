@@ -152,6 +152,8 @@ void GameEssentialsGlobals::OnPhysicsTick()
     
 }
 
+
+
 void GameEssentialsGlobals::OutputSceneGraph(Gameobject* obj, int depth)
 {
     if (!obj) return;
@@ -190,5 +192,57 @@ void GameEssentialsGlobals::StartGame()
     {
         rb.Rb->InitRB();
     }
+}
+
+sf::Vector2f GameEssentialsGlobals::CollisionCheckRB(Rigidbody* rb)
+{
+    sf::Vector2f CollisionResolve = { 0,0 };
+
+    for (ColliderStruct coll : rb->Colliders)
+    {
+        CollisionResolve += CollisionCheckCollider(coll.collider, rb->Colliders);
+        //std::cout << "\n\nCOLLIDER!!";
+    }
+    return (CollisionResolve);
+
+
+}
+
+sf::Vector2f GameEssentialsGlobals::CollisionCheckCollider(Collider* collider, std::vector<ColliderStruct> excludedColliders)
+{
+
+    sf::Vector2f collisionOff = { 0,0 };
+    for (ColliderStruct coll : Colliders)
+    {
+        sf::Vector2f collisionOffTemp;
+        bool IsExcluded = false;
+        for (ColliderStruct coll2 : excludedColliders)
+        {
+            if (coll.collider == coll2.collider)
+            {
+                IsExcluded = true;
+                break;
+            }
+           
+        }
+
+        if (IsExcluded) continue;
+
+        collisionOffTemp = collider->CheckCollision(coll.collider);
+        std::cout << collider << ", ";
+        std::cout << coll.collider;
+        if (collisionOffTemp.length() > 0 && (collider->IsTrigger || coll.collider->IsTrigger))
+        {
+            std::cout << "TRIGGER";
+        }
+        else
+        {
+            std::cout << "NON TRIGGERS";
+            collisionOff += collisionOffTemp;
+        }
+
+
+    }
+    return (collisionOff);
 }
 

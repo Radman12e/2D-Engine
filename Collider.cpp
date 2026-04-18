@@ -1,7 +1,9 @@
 #include "Collider.h"
-Collider::Collider(ColliderType CT, bool isTrigger)
+
+void Collider::SetupCollider(ColliderType CT, bool isTrigger)
 {
-    IsTrigger = true;
+    std::cout << "Collider madep1!";
+    IsTrigger = isTrigger;
     SpriteRendererComponent* Temp = GameObject->GetComponent<SpriteRendererComponent>();
     if (Temp != nullptr)
     {
@@ -9,10 +11,19 @@ Collider::Collider(ColliderType CT, bool isTrigger)
         RectOffset = sf::Vector2f((Temp->getRect().size) / 2);
         Radius = (Temp->getRect().size / 2).x;
     }
+    std::cout << "Collider madep2!";
     id = GameEssentialsGlobals::AddCollider(this);
+    std::cout << "Collider made!";
+
 
     
 }
+
+void Collider::OnAlive() 
+{
+
+}
+
 Collider::~Collider()
 {
     GameEssentialsGlobals::RemoveCollider(id);

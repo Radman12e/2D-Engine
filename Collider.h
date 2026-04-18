@@ -4,6 +4,7 @@
 #include "GameEssentials.h"
 #include "SpriteRendererComponent.h"
 #include "Gameobject.h"
+#include <iostream>
 
 enum ColliderType
 {
@@ -15,12 +16,12 @@ class Collider : public Component
 {
 
 private:
-    ColliderType typeOfCollider;
-    size_t id;
+    ColliderType typeOfCollider = ColliderType::Box;
+    size_t id = 0;
 
 
 public:
-    Collider(ColliderType CT = ColliderType::Box, bool isTrigger = false);
+    Collider() {}
 
     ~Collider();
     
@@ -31,6 +32,11 @@ public:
     }
     
     void OnUpdate(float dt) override;
+
+    void OnAlive() override;
+
+    void SetupCollider(ColliderType CT = ColliderType::Box, bool isTrigger = false);
+   
     
     //returns collision correction for x,y
     sf::Vector2f CheckCollision(Collider* OtherCollider)
@@ -56,29 +62,35 @@ public:
     {
        
       
-       
-        if (BoxRect.findIntersection(OtherCollider->BoxRect)) 
+        std::cout << "\n\nCheckingCollision!";
+        auto intersection = BoxRect.findIntersection(OtherCollider->BoxRect);
+
+        if (intersection)
         {
-            float OverlapL = (BoxRect.position.x + BoxRect.size.x) - OtherCollider->BoxRect.position.x;
-            float OverlapR = (OtherCollider->BoxRect.position.x + OtherCollider->BoxRect.size.x) - BoxRect.position.x;
-            float OverlapT = (BoxRect.position.y + BoxRect.size.y) - OtherCollider->BoxRect.position.y;
-            float OverlapB = (OtherCollider->BoxRect.position.y + OtherCollider->BoxRect.size.y) - BoxRect.position.y;
+            const sf::FloatRect& overlap = *intersection;
 
-            bool fromLeft = std::abs(OverlapL) < std::abs(OverlapR);
-            bool fromTop = std::abs(OverlapT) < std::abs(OverlapB);
+            std::cout << "\n\n collision found!!";
 
-            float minX = fromLeft ? OverlapL : -OverlapR;
-            float minY = fromTop ? OverlapT : -OverlapB;
-
-            if (std::abs(minX) < std::abs(minY)) 
+            if (overlap.size.x < overlap.size.y)
             {
-                return { -minX,0 };
+                if (BoxRect.position.x < OtherCollider->BoxRect.position.x) {
+                    std::cout << "\n\n YEET OVER HERE!! " << -overlap.size.x;
+                    return { -overlap.size.x, 0 };
+                }
+                else 
+                {
+                    std::cout << "\n\n YEET OVER HERE Y!! " << -overlap.size.y;
+                    return { overlap.size.x, 0 };
+                }
             }
             else
             {
-                return { 0, -minY };
+                if (BoxRect.position.y < OtherCollider->BoxRect.position.y)
+                    return { 0, -overlap.size.y };
+                else
+                    return { 0, overlap.size.y };
             }
-
+            
         }
         return { 0,0 };
 
@@ -94,9 +106,9 @@ public:
 
 
     bool IsTrigger = false;
-    float Radius;
-    sf::Vector2f RectOffset;
-    sf::FloatRect BoxRect;
+    float Radius = 0;
+    sf::Vector2f RectOffset = {0,0};
+    sf::FloatRect BoxRect = sf::FloatRect();
 
 };
 

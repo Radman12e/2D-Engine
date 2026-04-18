@@ -33,10 +33,12 @@ int WinMain()
     Gameobject* Test2 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
     Test2->Name = "Test2";
 
-    Gameobject* Test3 = new Gameobject(sf::Vector2f(), sf::Angle(), true, Test);
+    Gameobject* Test3 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
     Test3->Name = "Test3";
 
     TestComponent* tc = Test->AddComponent<TestComponent>();
+    
+    
     tc->Enabled = true;
 
 
@@ -53,11 +55,18 @@ int WinMain()
     sf::IntRect rect2({ 0,0 }, { 60,60 });
     SpriteRendererComponent* src2 = Test3->AddComponent<SpriteRendererComponent>(texture2, rect2);
 
+    Collider* collider = Test->AddComponent<Collider>();
+    collider->SetupCollider();
+    Rigidbody* rb = Test->AddComponent<Rigidbody>();
+
     //SpriteRendererComponent* src100 = Test3->GetComponent<SpriteRendererComponent>();
 
     std::cout << "\n\n Component found in: " << GameEssentialsGlobals::FindFirstComponent<SpriteRendererComponent>()->GetGameObject()->Name;
 
-    Test3->SetlocalPosition(sf::Vector2f(100, 0));
+    Test3->MoveTo(sf::Vector2f(200, 300));
+
+    Collider* collider2 = Test3->AddComponent<Collider>();
+    collider2->SetupCollider();
 
     Test->MoveTo(sf::Vector2f(100, 300));
 

@@ -14,10 +14,12 @@ private:
 
 protected:
 
-    sf::Vector2f Velocity = sf::Vector2f(0.f, 0.f);
+    
     
 
 public:
+    sf::Vector2f Velocity = sf::Vector2f(0.f, 0.f);
+    sf::Vector2f AppliedVelocity = sf::Vector2f(0.f, 0.f);
     Rigidbody();
     ~Rigidbody();
     std::vector<ColliderStruct> Colliders = {};
@@ -39,15 +41,7 @@ public:
     
     }
 
-    bool FindCollider(size_t ID) {
-       
-        if (Colliders.empty()) {
-            return false;
-        }
-
-       
-        return std::find(Colliders.begin(), Colliders.end(), ID) != Colliders.end();
-    }
+    bool FindCollider(size_t ID);
 
     void OnPhysicsUpdate(float detlatime) override;
     void OnUpdate(float detlatime) override;

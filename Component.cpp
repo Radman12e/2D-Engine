@@ -8,7 +8,7 @@ Component::Component(bool enabled)
 {
 	
 	Enabled = enabled;
-	this->OnAlive();
+	
 }
 
 void Component::SetGameObject(Gameobject* ga) 

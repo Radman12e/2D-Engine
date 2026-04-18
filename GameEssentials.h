@@ -18,12 +18,15 @@ struct ColliderStruct
 {
 	Collider* collider;
 	size_t id;
+
+	
 };
 
 struct RigidbodyStruct
 {
 	Rigidbody* Rb;
 	size_t id;
+	
 };
 
 static class GameEssentialsGlobals
@@ -90,46 +93,11 @@ public:
 
 	static void StartGame();
 
-	static sf::Vector2f CollisionCheckRB(Rigidbody* rb) 
-	{
-		sf::Vector2f CollisionResolve = { 0,0 };
+	static sf::Vector2f CollisionCheckRB(Rigidbody* rb);
 
-		for (ColliderStruct coll : rb->Colliders)
-		{
-			CollisionResolve += CollisionCheckCollider(coll.collider, rb->Colliders);
-		}
-
-		
-	}
-
-	static sf::Vector2f CollisionCheckCollider(Collider* collider, std::vector<ColliderStruct> excludedColliders)
-	{
-
-		sf::Vector2f collisionOff = { 0,0 };
-		for (ColliderStruct coll : Colliders)
-		{
-			sf::Vector2f collisionOffTemp;
-			bool IsExcluded = false;
-			for (ColliderStruct coll2 : excludedColliders)
-			{
-				if (coll.id == coll2.id)
-				{
-					IsExcluded = true;
-					break;
-				}
-			}
-
-			if (IsExcluded) continue;
-
-			collisionOffTemp = collider->CheckCollision(coll.collider);
-			if (collisionOffTemp.length() > 0 && collider->IsTrigger)
-			{
-				//TriggerTrigger!!
-			}
-
-
-		}
-	}
+	static sf::Vector2f CollisionCheckCollider(Collider* collider, std::vector<ColliderStruct> excludedColliders);
+	
+	
 
 };
 
