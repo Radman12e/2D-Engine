@@ -62,24 +62,24 @@ public:
     {
        
       
-        std::cout << "\n\nCheckingCollision!";
+        //std::cout << "\n\nCheckingCollision!";
         auto intersection = BoxRect.findIntersection(OtherCollider->BoxRect);
 
         if (intersection)
         {
             const sf::FloatRect& overlap = *intersection;
 
-            std::cout << "\n\n collision found!!";
+            //std::cout << "\n\n collision found!!";
 
             if (overlap.size.x < overlap.size.y)
             {
                 if (BoxRect.position.x < OtherCollider->BoxRect.position.x) {
-                    std::cout << "\n\n YEET OVER HERE!! " << -overlap.size.x;
+                    //std::cout << "\n\n YEET OVER HERE!! " << -overlap.size.x;
                     return { -overlap.size.x, 0 };
                 }
                 else 
                 {
-                    std::cout << "\n\n YEET OVER HERE Y!! " << -overlap.size.y;
+                    //std::cout << "\n\n YEET OVER HERE Y!! " << -overlap.size.y;
                     return { overlap.size.x, 0 };
                 }
             }
@@ -104,6 +104,7 @@ public:
         return { 0,0 };
     }
 
+    void UpdateColliderPos();
 
     bool IsTrigger = false;
     float Radius = 0;

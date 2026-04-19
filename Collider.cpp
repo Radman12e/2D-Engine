@@ -31,5 +31,10 @@ Collider::~Collider()
 
 void Collider::OnUpdate(float dt)
 {
+    UpdateColliderPos();
+}
+
+void Collider::UpdateColliderPos()
+{
     BoxRect.position = GameObject->getWorldPos() + RectOffset;
 }

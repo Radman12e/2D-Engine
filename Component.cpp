@@ -4,7 +4,7 @@
 //#include "EventHandler.h"
 #include "GameEssentials.h"
 
-Component::Component(bool enabled)
+Component::Component(bool enabled) 
 {
 	
 	Enabled = enabled;

@@ -43,16 +43,20 @@ void Rigidbody::OnPhysicsUpdate(float dt)
 
     sf::Vector2f movement = AppliedVelocity * dt;
 
-    sf::Vector2f correction = GameEssentialsGlobals::CollisionCheckRB(this);
-
-    std::cout << "Correction: " << correction.x << ", " << correction.y;
-
     sf::Vector2f currentPos = GameObject->getWorldPos();
 
-    // Treat correction as positional displacement constraint
-    sf::Vector2f targetPos = currentPos + movement + correction;
+
+    sf::Vector2f targetPos = currentPos + movement;
 
     GameObject->MoveTo(targetPos);
+    UpdateColliderPositions();
+
+    sf::Vector2f correction = GameEssentialsGlobals::CollisionCheckRB(this);
+
+    //std::cout << "Correction: " << correction.x << ", " << correction.y;
+
+
+    GameObject->MoveTo(GameObject->getWorldPos() + correction);
 }
 
 
@@ -60,7 +64,7 @@ void Rigidbody::OnUpdate(float detlatime)
 {
     //GameObject->MoveTo(GameObject->getWorldPos() + (AppliedVelocity * detlatime));
     AppliedVelocity = Velocity;
-
+  
 }
 
 bool Rigidbody::FindCollider(size_t ID)
@@ -73,4 +77,13 @@ bool Rigidbody::FindCollider(size_t ID)
         [ID](const ColliderStruct& c) {
             return c.id == ID;
         }) != Colliders.end();
+}
+
+
+void Rigidbody::UpdateColliderPositions()
+{
+    for (ColliderStruct c : Colliders)
+    {
+        c.collider->UpdateColliderPos();
+    }
 }

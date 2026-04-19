@@ -46,5 +46,7 @@ public:
     void OnPhysicsUpdate(float detlatime) override;
     void OnUpdate(float detlatime) override;
 
+    void UpdateColliderPositions();
+
 };
 

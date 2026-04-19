@@ -200,7 +200,12 @@ sf::Vector2f GameEssentialsGlobals::CollisionCheckRB(Rigidbody* rb)
 
     for (ColliderStruct coll : rb->Colliders)
     {
-        CollisionResolve += CollisionCheckCollider(coll.collider, rb->Colliders);
+        sf::Vector2f Collisionc = CollisionCheckCollider(coll.collider, rb->Colliders);
+        if (CollisionResolve.length() < Collisionc.length())
+        {
+            CollisionResolve = Collisionc;
+        }
+        //CollisionResolve += CollisionCheckCollider(coll.collider, rb->Colliders);
         //std::cout << "\n\nCOLLIDER!!";
     }
     return (CollisionResolve);
@@ -229,15 +234,15 @@ sf::Vector2f GameEssentialsGlobals::CollisionCheckCollider(Collider* collider, s
         if (IsExcluded) continue;
 
         collisionOffTemp = collider->CheckCollision(coll.collider);
-        std::cout << collider << ", ";
-        std::cout << coll.collider;
+        //std::cout << collider << ", ";
+        //std::cout << coll.collider;
         if (collisionOffTemp.length() > 0 && (collider->IsTrigger || coll.collider->IsTrigger))
         {
-            std::cout << "TRIGGER";
+            //std::cout << "TRIGGER";
         }
         else
         {
-            std::cout << "NON TRIGGERS";
+           // std::cout << "NON TRIGGERS";
             collisionOff += collisionOffTemp;
         }
 

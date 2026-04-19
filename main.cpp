@@ -36,6 +36,9 @@ int WinMain()
     Gameobject* Test3 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
     Test3->Name = "Test3";
 
+    Gameobject* Test4 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
+    Test4->Name = "Test4";
+
     TestComponent* tc = Test->AddComponent<TestComponent>();
     
     
@@ -55,6 +58,10 @@ int WinMain()
     sf::IntRect rect2({ 0,0 }, { 60,60 });
     SpriteRendererComponent* src2 = Test3->AddComponent<SpriteRendererComponent>(texture2, rect2);
 
+    sf::Texture texture3("ParentTest.png");
+    sf::IntRect rect3({ 0,0 }, { 60,60 });
+    SpriteRendererComponent* src3 = Test4->AddComponent<SpriteRendererComponent>(texture3, rect3);
+
     Collider* collider = Test->AddComponent<Collider>();
     collider->SetupCollider();
     Rigidbody* rb = Test->AddComponent<Rigidbody>();
@@ -68,7 +75,14 @@ int WinMain()
     Collider* collider2 = Test3->AddComponent<Collider>();
     collider2->SetupCollider();
 
+    Collider* collider3 = Test4->AddComponent<Collider>();
+    collider3->SetupCollider();
+    Rigidbody* rb2 = Test4->AddComponent<Rigidbody>();
+
     Test->MoveTo(sf::Vector2f(100, 300));
+
+    Test4->MoveTo(sf::Vector2f(20, 300));
+    //Test4->SetParent(Test);
 
     //-aaaaaaaaaaaaaaaaaaab-----------------
 

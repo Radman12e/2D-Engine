@@ -70,7 +70,7 @@ struct InputArgs
 };
 
 
-
+// Stuff for inputs specifically, has to be done by frame because sfml doesnt have an input event thingy
 class InputEventHandler
 {
 
@@ -95,7 +95,7 @@ public:
 
 	size_t BindEvent(sf::Mouse::Button str, std::function<void(InputArgs)> func)
 	{
-		//fnStorage.push_back(func);
+	
 		size_t id = nextId++;
 		MouseEvents[str].push_back({ id, std::move(func) });
 		MouseButtonStatus[str] = false;
@@ -103,7 +103,7 @@ public:
 	}
 	size_t BindEvent(sf::Keyboard::Key str, std::function<void(InputArgs)> func)
 	{
-		//fnStorage.push_back(func);
+	
 		size_t id = nextId++;
 		KeyboardEvents[str].push_back({ id, std::move(func) });
 		KeyStatus[str] = false;

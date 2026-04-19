@@ -11,7 +11,7 @@ class Gameobject;
 
 
 
-class Component
+class Component : public CollisionEventsinterface
 {
 
 	
