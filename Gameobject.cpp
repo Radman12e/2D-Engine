@@ -29,7 +29,8 @@ void Gameobject::OnUpdate(float dt)
 {
 	for (auto& component : components)
 	{
-		component->OnUpdate(dt);
+		component->OnTrueUpdate(dt);
+		//component->OnUpdate(dt);
 	}
 }
 

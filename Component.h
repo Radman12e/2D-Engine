@@ -11,12 +11,12 @@ class Gameobject;
 
 
 
-class Component : public CollisionEventsinterface
+class Component
 {
 
-	
 
-private: 
+
+private:
 
 	struct ComponentEvent
 	{
@@ -40,27 +40,48 @@ private:
 	std::vector<ComponentInputKeyEvent> ComponentInputKeyEvents = {};
 	std::vector<ComponentInpuMouseEvent> ComponentInputMouseEvents = {};
 
+	std::vector< std::function<void()>> FunctionQueueNextFrame = {};
+
 protected:
 	Gameobject* GameObject = nullptr;
 	void UnbindAllEvents();
-	
-	
+
+
 	size_t bindEvent(std::string Key, std::function<void()> fn);
 
 	size_t bindEvent(sf::Keyboard::Key Key, std::function<void(InputArgs)> fn);
-	
+
 	size_t bindEvent(sf::Mouse::Button Key, std::function<void(InputArgs)> fn);
-	
+
 
 
 public:
 
+	void OnTrueUpdate(float deltaTime)
+	{
+		if (!FunctionQueueNextFrame.empty()) 
+		{
+			for (auto& fn : FunctionQueueNextFrame)
+			{
+				fn();
+			}
+			FunctionQueueNextFrame.clear();
+		}
+		OnUpdate(deltaTime);
+		
+	}
+
 	void SetGameObject(Gameobject* ga);
 
 	Component(bool enabled = true);
-	~Component() 
+	~Component()
 	{
 		UnbindAllEvents();
+	}
+
+	void RunFunctionOnNectFrame(std::function<void()> fn)
+	{
+		FunctionQueueNextFrame.push_back(fn);
 	}
 
 	virtual void OnUpdate(float deltaTime);
@@ -72,6 +93,12 @@ public:
 	virtual void OnStart();
 
 	virtual void OnAlive();
+
+	virtual void OnCollisionEntered(collision& CollisionObject) {};
+	virtual void OnCollisionStay(collision& CollisionObject)  {};
+	virtual void OnCollisionExited(collision& CollisionObject) {};
+
+	
 
 	bool Enabled = true;
 

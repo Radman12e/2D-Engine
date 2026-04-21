@@ -8,7 +8,9 @@
 #include <memory>
 #include <vector>
 
-class Gameobject
+#include "CollisionEventsinterface.h"
+
+class Gameobject //: public CollisionEventsinterface
 {
 
 private:
@@ -43,6 +45,38 @@ public:
 	sf::Angle getWorldRot() { return WorldRotation; }
 
 	std::string Name = "Empty";
+
+	void OnCollisionEntered(collision& CollisionObject) 
+	{
+		for (Gameobject* c : Children)
+		{
+
+			//std::vector<std::unique_ptr<Component>> a =  c->GetComponents();
+
+			//for (auto&& comp : a)
+			//{
+
+			//	std::function<void()> fn = [&comp, &CollisionObject]()
+			//		{
+						//comp->OnCollisionEntered(CollisionObject);
+			//		};
+
+				
+			//	comp->RunFunctionOnNectFrame(fn);
+				
+			//}
+		}
+	}
+	void OnCollisionStay(collision& CollisionObject) 
+	{
+		
+	
+	}
+	void OnCollisionExited(collision& CollisionObject)
+	{
+		
+
+	}
 
 	void Destroy();
 
@@ -128,7 +162,7 @@ public:
 		}
 	}
 
-	const std::vector<std::unique_ptr<Component>>& GetComponents() const
+	std::vector<std::unique_ptr<Component>>& GetComponents()
 	{
 		return components;
 	}
