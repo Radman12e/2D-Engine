@@ -48,6 +48,9 @@ public:
 
 	void OnCollisionEntered(collision& CollisionObject) 
 	{
+
+		std::cout << "Collider!!" << Name;
+
 		for (Gameobject* c : Children)
 		{
 
@@ -75,6 +78,17 @@ public:
 	void OnCollisionExited(collision& CollisionObject)
 	{
 		
+
+	}
+
+	void OnTriggerEnter(collision& CollisionObject)
+	{
+
+
+	}
+	void OnOnTriggerExited(collision& CollisionObject)
+	{
+
 
 	}
 

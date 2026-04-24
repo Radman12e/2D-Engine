@@ -71,9 +71,13 @@ public:
 
             //std::cout << "\n\n collision found!!";
 
+            sf::Vector2f c1 = { BoxRect.position.x + BoxRect.size.x * 0.5f,  BoxRect.position.y + BoxRect.size.y * 0.5f };
+            sf::Vector2f c2 = { OtherCollider->BoxRect.position.x + OtherCollider->BoxRect.size.x * 0.5f,  OtherCollider->BoxRect.position.y + OtherCollider->BoxRect.size.y * 0.5f };
+
             if (overlap.size.x < overlap.size.y)
             {
-                if (BoxRect.position.x < OtherCollider->BoxRect.position.x) {
+                if (c1.x < c2.x) {
+                    
                     //std::cout << "\n\n YEET OVER HERE!! " << -overlap.size.x;
                     return { -overlap.size.x, 0 };
                 }
@@ -85,7 +89,7 @@ public:
             }
             else
             {
-                if (BoxRect.position.y < OtherCollider->BoxRect.position.y)
+                if (c1.y < c2.y)
                     return { 0, -overlap.size.y };
                 else
                     return { 0, overlap.size.y };

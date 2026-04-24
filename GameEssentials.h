@@ -95,7 +95,7 @@ public:
 
 	static sf::Vector2f CollisionCheckRB(Rigidbody* rb);
 
-	static sf::Vector2f CollisionCheckCollider(Collider* collider, std::vector<ColliderStruct> excludedColliders);
+	static sf::Vector2f CollisionCheckCollider(Collider* collider, std::vector<ColliderStruct> excludedColliders, Rigidbody* rb = nullptr);
 	
 	
 

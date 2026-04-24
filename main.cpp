@@ -5,6 +5,7 @@
 #include "GameEssentials.h"
 #include <iostream>
 #include "SpriteRendererComponent.h"
+#include "AnimatorComponent.h"
 /*
     This version of the SFML "hello world" is statically linked, you may wish to try the dynamically linked version as well.
 */
@@ -15,7 +16,7 @@ int WinMain()
 #endif
 {
     //Define view
-    sf::View view({ 200, 200 }, { 400, 400 });
+    sf::View view({ 200, 200 }, { 384, 256 });
 
     Gameobject* Root = GameEssentialsGlobals::WorldRoot;
 
@@ -46,12 +47,26 @@ int WinMain()
 
 
     //Create A stupid rectangle!!
-    sf::Texture texture("ParentTest.png");
-    sf::IntRect rect({0,0}, {60,60});
+    sf::Texture texture("Assets/Spaceship.png");
+    sf::IntRect rect({0,0}, {23,11});
     SpriteRendererComponent* src = Test->AddComponent<SpriteRendererComponent>(texture, rect);
+    AnimatorComponent* amc = Test->AddComponent<AnimatorComponent>();
+    sf::IntRect arect({ 0,0 }, { 23,11 });
+    sf::IntRect arect2({ 0,23 }, { 23,11 });
+    sf::IntRect arect3({ 0,46 }, { 23,11 });
+    sf::IntRect arect4({ 0,69 }, { 23,11 });
+    AnimationFrame am0 = { arect, 5 };
+    AnimationFrame am1 = { arect2, 5 };
+    AnimationFrame am2 = { arect3, 5 };
+    AnimationFrame am3 = { arect4, 5 };
+    Animationstrip ams = { {am0,am1,am2,am3,am2,am1}, true };
+    amc->AddAnimation(ams, "idle");
+    amc->PlayAnim("idle");
+
+    
     
     Test->MoveTo(sf::Vector2f(300, 200));
-    src->Sprite->setColor(sf::Color(0, 255, 0));
+    src->Sprite->setColor(sf::Color(255, 255, 255));
 
 
     sf::Texture texture2("ChildTest.png");
@@ -105,7 +120,7 @@ int WinMain()
 
     sf::Vector2 v2(10,10);
 
-    sf::RenderWindow window(sf::VideoMode({ 400, 400 }), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode({ 384, 256 }), "SFML works!");
 
     window.setView(view);
 

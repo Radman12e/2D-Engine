@@ -182,7 +182,10 @@ void GameEssentialsGlobals::OutputSceneGraph(Gameobject* obj, int depth)
     {
         OutputSceneGraph(child, depth + 1);
     }
-
+    if (depth == 0) 
+    {
+        std::cout << "\n\n\n ";
+    }
 
 }
 
@@ -213,7 +216,7 @@ sf::Vector2f GameEssentialsGlobals::CollisionCheckRB(Rigidbody* rb)
 
 }
 
-sf::Vector2f GameEssentialsGlobals::CollisionCheckCollider(Collider* collider, std::vector<ColliderStruct> excludedColliders)
+sf::Vector2f GameEssentialsGlobals::CollisionCheckCollider(Collider* collider, std::vector<ColliderStruct> excludedColliders, Rigidbody* rb)
 {
 
     sf::Vector2f collisionOff = { 0,0 };
@@ -234,16 +237,19 @@ sf::Vector2f GameEssentialsGlobals::CollisionCheckCollider(Collider* collider, s
         if (IsExcluded) continue;
 
         collisionOffTemp = collider->CheckCollision(coll.collider);
-        //std::cout << collider << ", ";
-        //std::cout << coll.collider;
+        collision c = { coll.collider, collider, rb };
+        
         if (collisionOffTemp.length() > 0 && (collider->IsTrigger || coll.collider->IsTrigger))
         {
             //std::cout << "TRIGGER";
+           
+            coll.collider->GetGameObject()->OnTriggerEnter(c);
         }
-        else
+        else if (collisionOffTemp.length() > 0 && (!collider->IsTrigger && !coll.collider->IsTrigger))
         {
            // std::cout << "NON TRIGGERS";
             collisionOff += collisionOffTemp;
+            coll.collider->GetGameObject()->OnCollisionEntered(c);
         }
 
 
