@@ -32,12 +32,14 @@ public:
     void OnUpdate(float dt) override 
     {
         if (!Enabled) return;
+        
         if (SpriteRenderer == nullptr) 
         {
             SpriteRenderer = GameObject->GetComponent<SpriteRendererComponent>();
         }
         if (CurrentAnimation != nullptr && SpriteRenderer != nullptr)
         {
+            SpriteRenderer->SetRect(CurrentAnimation->Frames[CurrentFrameIndex].Frame);
             if (FramesUntilNextFrame <= 0)
             {
                 CurrentFrameIndex++;
@@ -49,7 +51,11 @@ public:
                     
                 }
                 
-                if (CurrentAnimation != nullptr) SpriteRenderer->SetRect(CurrentAnimation->Frames[CurrentFrameIndex].Frame);
+                if (CurrentAnimation != nullptr)
+                {
+                    SpriteRenderer->SetRect(CurrentAnimation->Frames[CurrentFrameIndex].Frame);
+                    FramesUntilNextFrame = CurrentAnimation->Frames[CurrentFrameIndex].FramesDelay;
+                }
                 
                 
             }
@@ -64,10 +70,11 @@ public:
     
     void PlayAnim(std::string AnimName)
     {
+
         CurrentAnimation = &Anims[AnimName];
         FramesUntilNextFrame = CurrentAnimation->Frames[0].FramesDelay;
         CurrentFrameIndex = 0;
-        SpriteRenderer->SetRect(CurrentAnimation->Frames[0].Frame);
+        
     }
     
 };

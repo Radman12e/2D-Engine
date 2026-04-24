@@ -30,14 +30,11 @@ public:
 
 	void SetRect(sf::IntRect rect)
 	{
-		std::cout << "Rect: " << Rect.position.x;
+		Rect = rect;
+		//std::cout << "Rect: " << Rect.position.x;
 		//Rect = sf::IntRect();
-		Rect.position.x = rect.position.x;
-		Rect.position.y = rect.position.y;
-		Rect.size.y = rect.size.y;
-		Rect.size.y = rect.size.y;
 		Sprite->setTextureRect(Rect);
-		Sprite->setOrigin((sf::Vector2f)Rect.getCenter());
+		//Sprite->setOrigin((sf::Vector2f)Rect.getCenter());
 	}
 
 	sf::IntRect getRect() 

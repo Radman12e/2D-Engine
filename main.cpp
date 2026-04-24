@@ -46,20 +46,24 @@ int WinMain()
     tc->Enabled = true;
 
 
-    //Create A stupid rectangle!!
+    //Creates the ship sprite!!
     sf::Texture texture("Assets/Spaceship.png");
     sf::IntRect rect({0,0}, {23,11});
     SpriteRendererComponent* src = Test->AddComponent<SpriteRendererComponent>(texture, rect);
     AnimatorComponent* amc = Test->AddComponent<AnimatorComponent>();
+
+    //Animation clip
     sf::IntRect arect({ 0,0 }, { 23,11 });
-    sf::IntRect arect2({ 0,23 }, { 23,11 });
-    sf::IntRect arect3({ 0,46 }, { 23,11 });
-    sf::IntRect arect4({ 0,69 }, { 23,11 });
-    AnimationFrame am0 = { arect, 5 };
-    AnimationFrame am1 = { arect2, 5 };
-    AnimationFrame am2 = { arect3, 5 };
-    AnimationFrame am3 = { arect4, 5 };
-    Animationstrip ams = { {am0,am1,am2,am3,am2,am1}, true };
+    sf::IntRect arect2({ 0,11 }, { 23,11 });
+    sf::IntRect arect3({ 0,22 }, { 23,11 });
+    sf::IntRect arect4({ 0,33 }, { 23,11 });
+    AnimationFrame am0 = { arect, 50 };
+    AnimationFrame am1 = { arect2, 50 };
+    AnimationFrame am2 = { arect3, 50 };
+    AnimationFrame am3 = { arect4, 50 };
+    Animationstrip ams = { {am0,am1,am2,am3}, true };
+
+    //Adds the anim and plays
     amc->AddAnimation(ams, "idle");
     amc->PlayAnim("idle");
 
@@ -147,6 +151,7 @@ int WinMain()
 
         GameEssentialsGlobals::OnGameTick();
         GameEssentialsGlobals::OnPhysicsTick();
+        
         
         
         //window.display();
