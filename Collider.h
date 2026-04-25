@@ -36,6 +36,8 @@ public:
     void OnAlive() override;
 
     void SetupCollider(ColliderType CT = ColliderType::Box, bool isTrigger = false);
+
+    void SetupFromClone();
    
     
     //returns collision correction for x,y
@@ -114,6 +116,14 @@ public:
     float Radius = 0;
     sf::Vector2f RectOffset = {0,0};
     sf::FloatRect BoxRect = sf::FloatRect();
+
+    std::unique_ptr<Component> CloneComponent() override
+    {
+        auto c = std::make_unique<Collider>(*this);
+        c->SetupFromClone();
+
+        return c;
+    }
 
 };
 

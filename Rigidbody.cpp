@@ -39,32 +39,34 @@ Rigidbody::~Rigidbody()
 
 void Rigidbody::OnPhysicsUpdate(float dt)
 {
-    AppliedVelocity = Velocity;
-
-    sf::Vector2f movement = AppliedVelocity * dt;
-
-    sf::Vector2f currentPos = GameObject->getWorldPos();
-
-
-    sf::Vector2f targetPos = currentPos + movement;
-
-    GameObject->MoveTo(targetPos);
+    //AppliedVelocity = Velocity;
+    GameObject->MoveTo(GameObject->getWorldPos() + AppliedVelocity * dt);
     UpdateColliderPositions();
 
     sf::Vector2f correction = GameEssentialsGlobals::CollisionCheckRB(this);
 
-    //std::cout << "Correction: " << correction.x << ", " << correction.y;
+    // Apply correction FIRST (not after movement)
+    if (correction.x != 0.f || correction.y != 0.f)
+    {
+        GameObject->MoveTo(GameObject->getWorldPos() + correction);
+        UpdateColliderPositions();
+        //UpdateColliderPositions();
 
-
-    GameObject->MoveTo(GameObject->getWorldPos() + correction);
+        if (correction.y != 0.f) AppliedVelocity.y = 0.f;
+        if (correction.x != 0.f) AppliedVelocity.x = 0.f;
+    }
+    else
+    {
+        AppliedVelocity = Velocity;
+    }
 }
 
 
 void Rigidbody::OnUpdate(float detlatime)
 {
-    //GameObject->MoveTo(GameObject->getWorldPos() + (AppliedVelocity * detlatime));
+
     AppliedVelocity = Velocity;
-  
+    
 }
 
 bool Rigidbody::FindCollider(size_t ID)
@@ -86,4 +88,12 @@ void Rigidbody::UpdateColliderPositions()
     {
         c.collider->UpdateColliderPos();
     }
+}
+std::unique_ptr<Component> Rigidbody::CloneComponent()
+{
+    auto c = std::make_unique<Rigidbody>(*this);
+    c->id = GameEssentialsGlobals::AddRigidbody(c.get());
+    c->InitRB();
+
+    return c;
 }

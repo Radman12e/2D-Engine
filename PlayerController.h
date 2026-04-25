@@ -29,6 +29,10 @@ public:
     {
 
     }
+    virtual std::unique_ptr<Component> CloneComponent()
+    {
+        return std::make_unique<PlayerController>(*this);
+    }
 
 
 };

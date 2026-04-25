@@ -6,6 +6,7 @@
 #include <iostream>
 #include "SpriteRendererComponent.h"
 #include "AnimatorComponent.h"
+#include "CameraComponent.h"
 /*
     This version of the SFML "hello world" is statically linked, you may wish to try the dynamically linked version as well.
 */
@@ -17,6 +18,7 @@ int WinMain()
 {
     //Define view
     sf::View view({ 200, 200 }, { 384, 256 });
+    view.setCenter({ 190 ,200});
 
     Gameobject* Root = GameEssentialsGlobals::WorldRoot;
 
@@ -34,8 +36,7 @@ int WinMain()
     Gameobject* Test2 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
     Test2->Name = "Test2";
 
-    Gameobject* Test3 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
-    Test3->Name = "Test3";
+    
 
     Gameobject* Test4 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
     Test4->Name = "Test4";
@@ -52,7 +53,7 @@ int WinMain()
     SpriteRendererComponent* src = Test->AddComponent<SpriteRendererComponent>(texture, rect);
     AnimatorComponent* amc = Test->AddComponent<AnimatorComponent>();
 
-    //Animation clip
+    //Animation clip forPlayer
     sf::IntRect arect({ 0,0 }, { 23,11 });
     sf::IntRect arect2({ 0,11 }, { 23,11 });
     sf::IntRect arect3({ 0,22 }, { 23,11 });
@@ -62,10 +63,20 @@ int WinMain()
     AnimationFrame am2 = { arect3, 50 };
     AnimationFrame am3 = { arect4, 50 };
     Animationstrip ams = { {am0,am1,am2,am3}, true };
+    //--------------------------------------------------------------
 
     //Adds the anim and plays
     amc->AddAnimation(ams, "idle");
     amc->PlayAnim("idle");
+
+
+
+
+
+    CameraComponent* CameraComp = Test->AddComponent<CameraComponent>();
+    CameraComp->SetupCameraComp(view);
+   
+
 
     
     
@@ -73,9 +84,44 @@ int WinMain()
     src->Sprite->setColor(sf::Color(255, 255, 255));
 
 
-    sf::Texture texture2("ChildTest.png");
-    sf::IntRect rect2({ 0,0 }, { 60,60 });
+
+    //Set up enemy test
+    Gameobject* Test3 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
+    Test3->Name = "Test3";
+    sf::Texture texture2("Assets/Drone1.png");
+    sf::IntRect rect2({ 0,0 }, { 20,20 });
     SpriteRendererComponent* src2 = Test3->AddComponent<SpriteRendererComponent>(texture2, rect2);
+    AnimatorComponent* AnimCompE = Test3->AddComponent<AnimatorComponent>();
+    Collider* collider2 = Test3->AddComponent<Collider>();
+    collider2->SetupCollider();
+    Rigidbody* rb2 = Test3->AddComponent<Rigidbody>();
+    Test3->MoveTo(sf::Vector2f(200, 300));
+
+
+    //Enemy1 animation clip
+    sf::IntRect e1rect1({ 0,0 }, { 20,20 });
+    sf::IntRect e1rect2({ 0,20 }, { 20,20 });
+    sf::IntRect e1rect3({ 0,40 }, { 20,20 });
+    sf::IntRect e1rect4({ 20,0 }, { 20,20 });
+    sf::IntRect e1rect5({ 20,20 }, { 20,20 });
+    AnimationFrame Eam0 = { e1rect1, 20 };
+    AnimationFrame Eam1 = { e1rect4, 20 };
+    AnimationFrame Eam2 = { e1rect2, 20 };
+    AnimationFrame Eam3 = { e1rect5, 20 };
+    AnimationFrame Eam4 = { e1rect3, 20 };
+    Animationstrip Eams = { {Eam0,Eam1,Eam2,Eam3,Eam4}, true };
+    AnimCompE->AddAnimation(Eams, "idle");
+    AnimCompE->PlayAnim("idle");
+    //--------------------------------------------------------------
+    //Clone
+    Gameobject* EClone = Test3->Clone();
+    EClone->MoveTo(sf::Vector2f(100, 300));
+    EClone->Disable();
+    EClone->Enable();
+    //---------------
+    
+
+
 
     sf::Texture texture3("ParentTest.png");
     sf::IntRect rect3({ 0,0 }, { 60,60 });
@@ -89,14 +135,13 @@ int WinMain()
 
     std::cout << "\n\n Component found in: " << GameEssentialsGlobals::FindFirstComponent<SpriteRendererComponent>()->GetGameObject()->Name;
 
-    Test3->MoveTo(sf::Vector2f(200, 300));
+    
 
-    Collider* collider2 = Test3->AddComponent<Collider>();
-    collider2->SetupCollider();
+   
 
     Collider* collider3 = Test4->AddComponent<Collider>();
     collider3->SetupCollider();
-    Rigidbody* rb2 = Test4->AddComponent<Rigidbody>();
+    
 
     Test->MoveTo(sf::Vector2f(100, 300));
 
@@ -126,7 +171,7 @@ int WinMain()
 
     sf::RenderWindow window(sf::VideoMode({ 384, 256 }), "SFML works!");
 
-    window.setView(view);
+    window.setView(CameraComp->CameraView);
 
     GameEssentialsGlobals::SetRenderWindow(& window);
 
@@ -148,9 +193,10 @@ int WinMain()
         //window.clear();
 
         //window.draw(shape);
-
+        
         GameEssentialsGlobals::OnGameTick();
         GameEssentialsGlobals::OnPhysicsTick();
+       
         
         
         

@@ -101,6 +101,8 @@ public:
 
 	void OnAlive();
 
+	void OnLateUpdate(float dt);
+	
 	Gameobject();
 
 	Gameobject(bool Enabled);
@@ -194,6 +196,38 @@ public:
 	
 	void SetlocalRotation(sf::Angle LocalRot);
 	void SetlocalPosition(sf::Vector2f LocalPos);
+
+
+	Gameobject* Clone()
+	{
+		Gameobject* clone = new Gameobject();
+
+		clone->Name = Name;
+		clone->Enabled = Enabled;
+
+		clone->LocalPosition = LocalPosition;
+		clone->LocalRotation = LocalRotation;
+		clone->WorldPosition = WorldPosition;
+		clone->WorldRotation = WorldRotation;
+
+	
+		for (const auto& comp : components)
+		{
+			auto newComp = comp->CloneComponent();
+			newComp->SetGameObject(clone);
+
+			clone->components.push_back(std::move(newComp));
+		}
+
+		
+		for (Gameobject* child : Children)
+		{
+			Gameobject* childClone = child->Clone();
+			clone->AddChild(childClone);
+		}
+
+		return clone;
+	}
 
 };
 

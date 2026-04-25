@@ -19,6 +19,16 @@ void Collider::SetupCollider(ColliderType CT, bool isTrigger)
     
 }
 
+void Collider::SetupFromClone()
+{
+    
+    id = GameEssentialsGlobals::AddCollider(this);
+    
+
+
+
+}
+
 void Collider::OnAlive() 
 {
 

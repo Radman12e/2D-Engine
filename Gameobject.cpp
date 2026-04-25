@@ -27,6 +27,7 @@ void Gameobject::Destroy()
 
 void Gameobject::OnUpdate(float dt)
 {
+	if (!Enabled) return;
 	for (auto& component : components)
 	{
 		component->OnTrueUpdate(dt);
@@ -34,8 +35,20 @@ void Gameobject::OnUpdate(float dt)
 	}
 }
 
+
+void Gameobject::OnLateUpdate(float dt)
+{
+	if (!Enabled) return;
+	for (auto& component : components)
+	{
+		component->OnLateUpdate(dt);
+		//component->OnUpdate(dt);
+	}
+}
+
 void Gameobject::OnPhysicsUpdate(float dt)
 {
+	if (!Enabled) return;
 	for (auto& component : components)
 	{
 		component->OnPhysicsUpdate(dt);
@@ -44,6 +57,7 @@ void Gameobject::OnPhysicsUpdate(float dt)
 
 void Gameobject::OnStart()
 {
+	if (!Enabled) return;
 	for (auto& component : components)
 	{
 		component->OnStart();

@@ -15,6 +15,10 @@ public:
     void OnPhysicsUpdate(float deltaTime) override;
     void OnAlive() override;
 
+    std::unique_ptr<Component> CloneComponent() override
+    {
+        return std::make_unique<TestComponent>(*this);
+    }
     
 
 private:

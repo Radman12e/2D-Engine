@@ -98,6 +98,13 @@ public:
 	virtual void OnCollisionStay(collision& CollisionObject)  {};
 	virtual void OnCollisionExited(collision& CollisionObject) {};
 
+	virtual void OnLateUpdate(float dt) {};
+
+	virtual std::unique_ptr<Component> CloneComponent() 
+	{
+		return std::make_unique<Component>(*this);
+	}
+
 	
 
 	bool Enabled = true;

@@ -41,6 +41,9 @@ public:
     
     }
 
+    std::unique_ptr<Component> CloneComponent() override;
+    
+
     bool FindCollider(size_t ID);
 
     void OnPhysicsUpdate(float detlatime) override;
@@ -48,5 +51,6 @@ public:
 
     void UpdateColliderPositions();
 
+   
 };
 

@@ -37,6 +37,11 @@ public:
 		//Sprite->setOrigin((sf::Vector2f)Rect.getCenter());
 	}
 
+	virtual std::unique_ptr<Component> CloneComponent()
+	{
+		return std::make_unique<SpriteRendererComponent>(*this);
+	}
+
 	sf::IntRect getRect() 
 	{
 		return Rect;

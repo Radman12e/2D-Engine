@@ -121,8 +121,15 @@ void GameEssentialsGlobals::OnGameTick()
     
 	for (auto& gameObject : GameObjectContainer)
 	{
+      
 		gameObject->OnUpdate((TimeSinceUpdate/1000000)*Timescale);
 	}
+    
+
+    for (auto& gameObject : GameObjectContainer)
+    {
+        gameObject->OnLateUpdate((TimeSinceUpdate / 1000000) * Timescale);
+    }
     TimeSinceUpdate = 0;
 
     Renderwindow->display();

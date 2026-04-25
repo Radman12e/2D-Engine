@@ -76,6 +76,11 @@ public:
         CurrentFrameIndex = 0;
         
     }
+
+    std::unique_ptr<Component> CloneComponent() override
+    {
+        return std::make_unique<AnimatorComponent>(*this);
+    }
     
 };
 
