@@ -49,7 +49,7 @@ public:
 	void OnCollisionEntered(collision& CollisionObject) 
 	{
 
-		std::cout << "Collider!!" << Name;
+		//std::cout << "Collider!!" << Name;
 
 		for (Gameobject* c : Children)
 		{

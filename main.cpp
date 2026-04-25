@@ -116,10 +116,14 @@ int WinMain()
     //Clone
     Gameobject* EClone = Test3->Clone();
     EClone->MoveTo(sf::Vector2f(100, 300));
-    EClone->Disable();
     EClone->Enable();
     //---------------
-    
+    for (int i = 0; i< 100;i++) 
+    {
+        Gameobject* EClone2 = Test3->Clone();
+        EClone2->MoveTo(sf::Vector2f(100, 300));
+        EClone2->Enable();
+    }
 
 
 
@@ -194,9 +198,9 @@ int WinMain()
 
         //window.draw(shape);
         
-        GameEssentialsGlobals::OnGameTick();
+        
         GameEssentialsGlobals::OnPhysicsTick();
-       
+        GameEssentialsGlobals::OnGameTick();
         
         
         

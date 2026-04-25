@@ -34,7 +34,7 @@ std::vector<Gameobject*> GameEssentialsGlobals::GameObjectContainer = std::vecto
 
 float GameEssentialsGlobals::tickLength = 8333.3f;
 
-float GameEssentialsGlobals::physicsTimeStep = 33333.3f;
+float GameEssentialsGlobals::physicsTimeStep = 8333.3f;
 
 sf::RenderWindow* GameEssentialsGlobals::Renderwindow = nullptr;
 

@@ -1,6 +1,6 @@
 #include "SpriteRendererComponent.h"
 
-void SpriteRendererComponent::OnUpdate(float dt)
+void SpriteRendererComponent::OnLateUpdate(float dt)
 {
 	if (this->Enabled == false) return;
 

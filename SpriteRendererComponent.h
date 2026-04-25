@@ -17,7 +17,7 @@ public:
 
 	
 	sf::Sprite* Sprite = nullptr;//("");
-	void OnUpdate(float dt) override;
+	void OnLateUpdate(float dt) override;
 	SpriteRendererComponent(sf::Texture texture, sf::IntRect rect);
 
 	~SpriteRendererComponent() 
