@@ -125,5 +125,13 @@ public:
         return c;
     }
 
+    void Enable() override 
+    {
+        if (this->Enabled) return;
+        this->Enabled = true;
+        SetupFromClone();
+    }
+    void Disable() override;
+
 };
 

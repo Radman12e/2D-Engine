@@ -53,7 +53,7 @@ protected:
 
 	size_t bindEvent(sf::Mouse::Button Key, std::function<void(InputArgs)> fn);
 
-
+	
 
 public:
 
@@ -112,6 +112,15 @@ public:
 	Gameobject* GetGameObject() 
 	{
 		return GameObject;
+	}
+
+	virtual void Disable() 
+	{
+		this->Enabled = false;
+	}
+	virtual void Enable() 
+	{
+		this->Enabled = true;
 	}
 
 };

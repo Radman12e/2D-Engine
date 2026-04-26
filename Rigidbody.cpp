@@ -31,21 +31,24 @@ Rigidbody::Rigidbody() : Component()
 {
     id = GameEssentialsGlobals::AddRigidbody(this);
 }
-Rigidbody::~Rigidbody()
+Rigidbody::~Rigidbody() 
 {
+    UnbindAllEvents();
+    Colliders.clear();
     GameEssentialsGlobals::RemoveRB(this->id);
 
 }
 
 void Rigidbody::OnPhysicsUpdate(float dt)
 {
+    
     //AppliedVelocity = Velocity;
     GameObject->MoveTo(GameObject->getWorldPos() + AppliedVelocity * dt);
     UpdateColliderPositions();
 
     sf::Vector2f correction = GameEssentialsGlobals::CollisionCheckRB(this);
 
-    // Apply correction FIRST (not after movement)
+
     if (correction.x != 0.f || correction.y != 0.f)
     {
         GameObject->MoveTo(GameObject->getWorldPos() + correction);

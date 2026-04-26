@@ -4,6 +4,11 @@
 
 void Gameobject::Destroy()
 {
+	QueueForDestroy = true;
+	
+}
+void Gameobject::LateDestroy() 
+{
 	if (this == GameEssentialsGlobals::WorldRoot)
 		return;
 	for (auto& component : components)
@@ -13,7 +18,7 @@ void Gameobject::Destroy()
 
 	while (!Children.empty())
 	{
-		Children.back()->Destroy();
+		Children.back()->LateDestroy();
 	}
 
 	if (Parent != nullptr)
@@ -22,11 +27,12 @@ void Gameobject::Destroy()
 	}
 	GameEssentialsGlobals::RemoveGameObject(this);
 	delete this;
-	
 }
+
 
 void Gameobject::OnUpdate(float dt)
 {
+	
 	if (!Enabled) return;
 	for (auto& component : components)
 	{
@@ -38,6 +44,11 @@ void Gameobject::OnUpdate(float dt)
 
 void Gameobject::OnLateUpdate(float dt)
 {
+	if (QueueForDestroy) 
+	{
+		this->LateDestroy();
+	}
+
 	if (!Enabled) return;
 	for (auto& component : components)
 	{
@@ -146,6 +157,7 @@ void Gameobject::Ready()
 
 void Gameobject::Enable()
 {
+	if (Enabled == true) return;
 	this->Enabled = true;
 	OnAlive();
 	if (Started == false)
@@ -153,11 +165,22 @@ void Gameobject::Enable()
 		Started = true;
 		OnStart();
 	}
+
+	for (auto& component : components)
+	{
+		component->Enable();
+	}
+
 }
 
 void Gameobject::Disable()
 {
+	if (Enabled == false) return;
 	this->Enabled = false;
+	for (auto& component : components)
+	{
+		component->Disable();
+	}
 }
 
 sf::Transformable& Gameobject::GetTransform()

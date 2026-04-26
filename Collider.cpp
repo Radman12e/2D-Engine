@@ -19,6 +19,15 @@ void Collider::SetupCollider(ColliderType CT, bool isTrigger)
     
 }
 
+
+void Collider::Disable()
+{
+    if (this->Enabled == false) return;
+    this->Enabled = false;
+    GameEssentialsGlobals::RemoveCollider(id);
+}
+
+
 void Collider::SetupFromClone()
 {
     

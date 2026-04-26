@@ -14,6 +14,9 @@ class Gameobject //: public CollisionEventsinterface
 {
 
 private:
+
+	bool QueueForDestroy = false;
+
 	sf::Transformable transform;
 	std::vector<std::unique_ptr<Component>> components;
 
@@ -91,6 +94,9 @@ public:
 
 
 	}
+
+	void LateDestroy();
+	
 
 	void Destroy();
 

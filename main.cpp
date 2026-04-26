@@ -117,14 +117,15 @@ int WinMain()
     Gameobject* EClone = Test3->Clone();
     EClone->MoveTo(sf::Vector2f(100, 300));
     EClone->Enable();
-    //---------------
-    for (int i = 0; i< 100;i++) 
+    EClone->Destroy();
+  
+    for (int i = 0; i < 2; i++) 
     {
+    
         Gameobject* EClone2 = Test3->Clone();
-        EClone2->MoveTo(sf::Vector2f(100, 300));
-        EClone2->Enable();
+        EClone2->MoveTo(sf::Vector2f(100, 400));
+        EClone2->Destroy();
     }
-
 
 
     sf::Texture texture3("ParentTest.png");
@@ -156,10 +157,10 @@ int WinMain()
 
     std::cout << "\n\nRootChildren: ";
 
-    for (auto children : Root->GetChildren())
-    {
-        std::cout << children->Name << ",";
-    }
+    //for (auto children : Root->GetChildren())
+    //{
+    //    std::cout << children->Name << ",";
+    //}
     
    
     //Test->Destroy();
