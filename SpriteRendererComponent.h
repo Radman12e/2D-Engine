@@ -8,32 +8,37 @@ class SpriteRendererComponent : public Component
 {
 private:
 	//sf::IntRect rectSourceSprite(300, 0, 300, 400);
-	sf::Texture Texture;
-	sf::IntRect Rect = sf::IntRect({ 0,0 }, {0, 0});
-	
+	sf::Texture* Texture;
+	sf::IntRect Rect = sf::IntRect({ 0,0 }, { 0, 0 });
+
 
 
 public:
 
-	
-	sf::Sprite* Sprite = nullptr;//("");
+
+	sf::Sprite Sprite;//("");
 	void OnLateUpdate(float dt) override;
-	SpriteRendererComponent(sf::Texture texture, sf::IntRect rect);
+	SpriteRendererComponent(sf::Texture* texture, sf::IntRect rect);
 
 	~SpriteRendererComponent() 
 	{
-		std::cout << "DELETESPRITE!";
-		delete Sprite;
+		
 	}
 
-	void SetTexture(sf::Texture texture, sf::IntRect rect);
+	void OnDestroy() override 
+	{
+		//std::cout << "DELETESPRITE!";
+		
+	}
+
+	void SetTexture(sf::Texture* texture, sf::IntRect rect);
 
 	void SetRect(sf::IntRect rect)
 	{
 		Rect = rect;
 		//std::cout << "Rect: " << Rect.position.x;
 		//Rect = sf::IntRect();
-		Sprite->setTextureRect(Rect);
+		Sprite.setTextureRect(Rect);
 		//Sprite->setOrigin((sf::Vector2f)Rect.getCenter());
 	}
 
@@ -42,10 +47,9 @@ public:
 		return std::make_unique<SpriteRendererComponent>(*this);
 	}
 
-	sf::IntRect getRect() 
+	sf::IntRect getRect()
 	{
 		return Rect;
 	}
 
 };
-

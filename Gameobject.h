@@ -15,7 +15,7 @@ class Gameobject //: public CollisionEventsinterface
 
 private:
 
-	bool QueueForDestroy = false;
+	
 
 	sf::Transformable transform;
 	std::vector<std::unique_ptr<Component>> components;
@@ -41,6 +41,8 @@ protected:
 
 
 public:
+
+	bool QueueForDestroy = false;
 
 	sf::Vector2f getLocalPos() { return LocalPosition; }
 	sf::Angle getLocalRot() { return LocalRotation; }
@@ -110,6 +112,11 @@ public:
 	void OnLateUpdate(float dt);
 	
 	Gameobject();
+
+	~Gameobject() 
+	{
+		//std::cout << "DESTROYOBJECT!!!";
+	}
 
 	Gameobject(bool Enabled);
 

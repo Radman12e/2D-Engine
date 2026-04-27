@@ -48,7 +48,7 @@ int WinMain()
 
 
     //Creates the ship sprite!!
-    sf::Texture texture("Assets/Spaceship.png");
+    sf::Texture* texture = new sf::Texture("Assets/Spaceship.png");
     sf::IntRect rect({0,0}, {23,11});
     SpriteRendererComponent* src = Test->AddComponent<SpriteRendererComponent>(texture, rect);
     AnimatorComponent* amc = Test->AddComponent<AnimatorComponent>();
@@ -81,14 +81,14 @@ int WinMain()
     
     
     Test->MoveTo(sf::Vector2f(300, 200));
-    src->Sprite->setColor(sf::Color(255, 255, 255));
+    src->Sprite.setColor(sf::Color(255, 255, 255));
 
 
 
     //Set up enemy test
     Gameobject* Test3 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
     Test3->Name = "Test3";
-    sf::Texture texture2("Assets/Drone1.png");
+    sf::Texture* texture2 = new sf::Texture("Assets/Drone1.png");
     sf::IntRect rect2({ 0,0 }, { 20,20 });
     SpriteRendererComponent* src2 = Test3->AddComponent<SpriteRendererComponent>(texture2, rect2);
     AnimatorComponent* AnimCompE = Test3->AddComponent<AnimatorComponent>();
@@ -117,18 +117,29 @@ int WinMain()
     Gameobject* EClone = Test3->Clone();
     EClone->MoveTo(sf::Vector2f(100, 300));
     EClone->Enable();
-    EClone->Destroy();
+    //EClone->Destroy();
   
-    for (int i = 0; i < 2; i++) 
+    
+
+    for (int i = 0; i < 2000; i++) 
     {
     
-        Gameobject* EClone2 = Test3->Clone();
-        EClone2->MoveTo(sf::Vector2f(100, 400));
-        EClone2->Destroy();
+       Gameobject* EClone2 = Test3->Clone();
+       EClone2->MoveTo(sf::Vector2f(100, 400));
+       float x = rand() % 6000;  // width
+       float y = rand() % 7000;  // height
+
+       EClone2->MoveTo(sf::Vector2f(x, y));
     }
 
+    //
+    EClone->Destroy();
+    Test3->Destroy();
 
-    sf::Texture texture3("ParentTest.png");
+    std::cout << "\n\nSize of list: " << GameEssentialsGlobals::Colliders.size();
+
+
+    sf::Texture* texture3 = new sf::Texture("ParentTest.png");
     sf::IntRect rect3({ 0,0 }, { 60,60 });
     SpriteRendererComponent* src3 = Test4->AddComponent<SpriteRendererComponent>(texture3, rect3);
 
@@ -169,7 +180,7 @@ int WinMain()
     std::cout << "\n\nFound Componnet TestComponent: " << Test->HasComponent<TestComponent>();
 
     std::cout << "\n\nScene: \n";
-    GameEssentialsGlobals::OutputSceneGraph(Root);
+    //GameEssentialsGlobals::OutputSceneGraph(Root);
     //GameEssentialsGlobals::InputService->Init();
 
     sf::Vector2 v2(10,10);

@@ -4,6 +4,7 @@
 #include <vector>
 #include "EventHandler.h"
 #include "CollisionEventsinterface.h"
+#include <iostream>
 //#include "GameEssentials.h"
 
 class Gameobject;
@@ -76,6 +77,7 @@ public:
 	Component(bool enabled = true);
 	~Component()
 	{
+		//std::cout << "DELETED!";
 		UnbindAllEvents();
 	}
 

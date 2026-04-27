@@ -5,28 +5,45 @@
 void Gameobject::Destroy()
 {
 	QueueForDestroy = true;
-	
-}
-void Gameobject::LateDestroy() 
-{
 	if (this == GameEssentialsGlobals::WorldRoot)
 		return;
+	
+	//std::cout << "DESTROY";
+	
+
 	for (auto& component : components)
 	{
 		component->OnDestroy();
-	}
-
-	while (!Children.empty())
-	{
-		Children.back()->LateDestroy();
+		component->Disable();
+		//std::cout << "DESTROY";
 	}
 
 	if (Parent != nullptr)
 	{
+
 		Parent->RemoveChildObject(this);
 	}
+
+	while (!Children.empty())
+	{
+		std::cout << "DESTROY";
+		Children.back()->Destroy();
+		Children.pop_back();
+	}
+
+	//std::cout << "\n\nGameObjectDelete!\n\n";
+	//delete this;
 	GameEssentialsGlobals::RemoveGameObject(this);
-	delete this;
+	
+	//std::cout << "GameObjectDelete!";
+	
+	
+	
+}
+void Gameobject::LateDestroy() 
+{
+	
+	
 }
 
 
@@ -44,8 +61,10 @@ void Gameobject::OnUpdate(float dt)
 
 void Gameobject::OnLateUpdate(float dt)
 {
+	
 	if (QueueForDestroy) 
 	{
+		//std::cout << "\n\n GameObjectDelete! " << QueueForDestroy;
 		this->LateDestroy();
 	}
 
@@ -215,6 +234,7 @@ Gameobject* Gameobject::GetParent()
 
 void Gameobject::RemoveChildObject(Gameobject* Child)
 {
+	
 	Children.erase(std::remove(Children.begin(), Children.end(), Child), Children.end());
 
 }

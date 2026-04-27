@@ -33,10 +33,13 @@ static class GameEssentialsGlobals
 {
 public:
 
-	
+	static std::unordered_map<Collider*, std::vector<Collider*>> BroadPhasePairs;
+
 	static void RemoveRB(size_t id);
 
 	static void RemoveCollider(size_t id);
+	static void RemoveCollider(Collider* id);
+	static void RunCollisionPass();
 
 	static std::vector<ColliderStruct> Colliders;
 

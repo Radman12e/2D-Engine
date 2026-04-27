@@ -14,8 +14,7 @@ void Collider::SetupCollider(ColliderType CT, bool isTrigger)
     std::cout << "Collider madep2!";
     id = GameEssentialsGlobals::AddCollider(this);
     std::cout << "Collider made!";
-
-
+    
     
 }
 
@@ -25,7 +24,19 @@ void Collider::Disable()
     if (this->Enabled == false) return;
     this->Enabled = false;
     GameEssentialsGlobals::RemoveCollider(id);
+    //std::cout << "RemoveCollider";
 }
+
+void Collider::OnDestroy()
+{
+    //std::cout << "RemoveCollider";
+    //if (this->Enabled == false) return;
+    this->Enabled = false;
+    //std::cout << "\n\nRemoveCollider " << id;
+    GameEssentialsGlobals::RemoveCollider(this);
+    
+}
+
 
 
 void Collider::SetupFromClone()

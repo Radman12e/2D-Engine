@@ -6,6 +6,13 @@
 #include "Gameobject.h"
 #include <iostream>
 
+struct AABB
+{
+    float minX, maxX;
+    float minY, maxY;
+};
+
+
 enum ColliderType
 {
     Box,
@@ -30,7 +37,13 @@ public:
     {
         return id;
     }
-    
+
+    AABB GetAABB()
+    {
+        return axisAllignedBox = { BoxRect.position.x - BoxRect.size.x, BoxRect.position.x + BoxRect.size.x ,BoxRect.position.y - BoxRect.size.y, BoxRect.position.y + BoxRect.size.y };
+
+    }
+    AABB axisAllignedBox;
     void OnUpdate(float dt) override;
 
     void OnAlive() override;
@@ -39,6 +52,7 @@ public:
 
     void SetupFromClone();
    
+    void OnDestroy() override;
     
     //returns collision correction for x,y
     sf::Vector2f CheckCollision(Collider* OtherCollider)

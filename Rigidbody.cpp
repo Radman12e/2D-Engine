@@ -46,21 +46,44 @@ void Rigidbody::OnPhysicsUpdate(float dt)
     GameObject->MoveTo(GameObject->getWorldPos() + AppliedVelocity * dt);
     UpdateColliderPositions();
 
-    sf::Vector2f correction = GameEssentialsGlobals::CollisionCheckRB(this);
+    sf::Vector2f totalCorrection = { 0, 0 };
 
-
-    if (correction.x != 0.f || correction.y != 0.f)
+    for (auto& colStruct : Colliders)
     {
-        GameObject->MoveTo(GameObject->getWorldPos() + correction);
-        UpdateColliderPositions();
-        //UpdateColliderPositions();
+        Collider* myCol = colStruct.collider;
 
-        if (correction.y != 0.f) AppliedVelocity.y = 0.f;
-        if (correction.x != 0.f) AppliedVelocity.x = 0.f;
+        auto it = GameEssentialsGlobals::BroadPhasePairs.find(myCol);
+        if (it == GameEssentialsGlobals::BroadPhasePairs.end())
+            continue;
+
+        for (Collider* other : it->second)
+        {
+            sf::Vector2f offset = myCol->CheckCollision(other);
+
+            if (offset.x == 0.f && offset.y == 0.f)
+                continue;
+
+            collision c = { other, myCol, this };
+
+            if (myCol->IsTrigger || other->IsTrigger)
+            {
+                other->GetGameObject()->OnTriggerEnter(c);
+            }
+            else
+            {
+                totalCorrection += offset;
+                other->GetGameObject()->OnCollisionEntered(c);
+            }
+        }
     }
-    else
+
+    if (totalCorrection.x != 0.f || totalCorrection.y != 0.f)
     {
-        AppliedVelocity = Velocity;
+        GameObject->MoveTo(GameObject->getWorldPos() + totalCorrection);
+        UpdateColliderPositions();
+
+        if (totalCorrection.y != 0.f) AppliedVelocity.y = 0.f;
+        if (totalCorrection.x != 0.f) AppliedVelocity.x = 0.f;
     }
 }
 
