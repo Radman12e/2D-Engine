@@ -116,9 +116,38 @@ int WinMain()
     //Clone
     Gameobject* EClone = Test3->Clone();
     EClone->MoveTo(sf::Vector2f(100, 300));
-    EClone->Enable();
+    //EClone->Enable();
     //EClone->Destroy();
   
+
+    //Set up Explosion test
+    Gameobject* ExplosionTest = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
+    ExplosionTest->Name = "Test4";
+    sf::Texture* texture2e = new sf::Texture("Assets/Explosion.png");
+    sf::IntRect rect2e({ 0,0 }, { 48,48 });
+    SpriteRendererComponent* src2e = ExplosionTest->AddComponent<SpriteRendererComponent>(texture2e, rect2e);
+    AnimatorComponent* AnimCompEe = ExplosionTest->AddComponent<AnimatorComponent>();
+    ExplosionTest->MoveTo(sf::Vector2f(200, 300));
+
+
+    //Enemy1 animation clip
+    sf::IntRect e1rect1e({ 0,0 }, { 48,48 });
+    sf::IntRect e1rect2e({ 48 * 1,0 }, { 48,48 });
+    sf::IntRect e1rect3e({  48 * 2,0 }, { 48,48 });
+    sf::IntRect e1rect4e({ 48 * 3,0 }, { 48,48 });
+    sf::IntRect e1rect5e({ 48 * 4,0 }, { 48,48 });
+    sf::IntRect e1rect6e({ 48 * 5,0 }, { 48,48 });
+    AnimationFrame Eam0e = { e1rect1e, 10 };
+    AnimationFrame Eam1e = { e1rect2e, 10 };
+    AnimationFrame Eam2e = { e1rect3e, 10 };
+    AnimationFrame Eam3e = { e1rect4e, 10 };
+    AnimationFrame Eam4e = { e1rect5e, 10 };
+    AnimationFrame Eam5e = { e1rect6e, 10 };
+    Animationstrip Eamse = { {Eam0e,Eam1e,Eam2e,Eam3e,Eam4e,Eam5e}, true };
+    AnimCompEe->AddAnimation(Eamse, "ex");
+    AnimCompEe->PlayAnim("ex");
+    //--------------------------------------------------------------
+
     
 
     for (int i = 0; i < 2000; i++) 
@@ -129,7 +158,7 @@ int WinMain()
        float x = rand() % 6000;  // width
        float y = rand() % 7000;  // height
 
-       EClone2->MoveTo(sf::Vector2f(x, y));
+        EClone2->MoveTo(sf::Vector2f(x, y));
     }
 
     //
