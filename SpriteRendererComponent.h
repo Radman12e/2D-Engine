@@ -22,13 +22,13 @@ public:
 
 	~SpriteRendererComponent() 
 	{
-		
+		//std::cout << "Destroyed!!!";
 	}
 
 	void OnDestroy() override 
 	{
-		//std::cout << "DELETESPRITE!";
-		
+		//std::cout << Texture;
+		//delete this;
 	}
 
 	void SetTexture(sf::Texture* texture, sf::IntRect rect);

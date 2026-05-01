@@ -13,8 +13,9 @@ void Gameobject::Destroy()
 
 	for (auto& component : components)
 	{
-		component->OnDestroy();
 		component->Disable();
+		component->OnDestroy();
+		
 		//std::cout << "DESTROY";
 	}
 
@@ -26,7 +27,7 @@ void Gameobject::Destroy()
 
 	while (!Children.empty())
 	{
-		std::cout << "DESTROY";
+		//std::cout << "DESTROY";
 		Children.back()->Destroy();
 		Children.pop_back();
 	}

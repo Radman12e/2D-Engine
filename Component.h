@@ -45,7 +45,7 @@ private:
 
 protected:
 	Gameobject* GameObject = nullptr;
-	void UnbindAllEvents();
+	
 
 
 	size_t bindEvent(std::string Key, std::function<void()> fn);
@@ -57,7 +57,7 @@ protected:
 	
 
 public:
-
+	void UnbindAllEvents();
 	void OnTrueUpdate(float deltaTime)
 	{
 		if (!FunctionQueueNextFrame.empty()) 
@@ -75,9 +75,9 @@ public:
 	void SetGameObject(Gameobject* ga);
 
 	Component(bool enabled = true);
-	~Component()
+	virtual ~Component()
 	{
-		//std::cout << "DELETED!";
+		//std::cout << "DELETED1!";
 		UnbindAllEvents();
 	}
 

@@ -29,6 +29,11 @@ public:
         Colliders = GetAllColliders(this->GameObject);
     }
 
+    //void AddColliderToRb(ColliderStruct Collider) 
+    //{
+    //    Colliders.push_back(Collider);
+    //}
+
 	void OnAlive() override 
 	{
 		

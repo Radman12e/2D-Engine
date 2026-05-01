@@ -2,6 +2,7 @@
 #include "Gameobject.h"
 #include "Collider.h"
 #include "Rigidbody.h"
+#include <thread>
 
 GameEssentialsGlobals::GameEssentialsGlobals()
 {
@@ -81,6 +82,7 @@ void GameEssentialsGlobals::RunCollisionPass()
 void GameEssentialsGlobals::RemoveGameObject(Gameobject* GameObject)
 {
     GameObjectContainer.erase(std::remove(GameObjectContainer.begin(), GameObjectContainer.end(), GameObject), GameObjectContainer.end());
+    
     QueuedObjectsToDelete.push_back(GameObject);
     //delete(GameObject);
 
@@ -228,6 +230,7 @@ void GameEssentialsGlobals::OnGameTick()
 
 void GameEssentialsGlobals::OnPhysicsTick()
 {
+    std::cout << GameObjectContainer.size() << "\n";
     RunCollisionPass();
     PhyscurrentTime = std::chrono::steady_clock::now();
     pdt = std::chrono::duration_cast<std::chrono::microseconds>(PhyscurrentTime - PhyslastTime).count();
@@ -318,13 +321,13 @@ sf::Vector2f GameEssentialsGlobals::CollisionCheckCollider(Collider* collider, s
 {
 
     sf::Vector2f collisionOff = { 0,0 };
-    for (ColliderStruct coll : Colliders)
+    for (Collider* coll : BroadPhasePairs[collider])
     {
         sf::Vector2f collisionOffTemp;
         bool IsExcluded = false;
         for (ColliderStruct coll2 : excludedColliders)
         {
-            if (coll.collider == coll2.collider)
+            if (coll == coll2.collider)
             {
                 IsExcluded = true;
                 break;
@@ -334,20 +337,20 @@ sf::Vector2f GameEssentialsGlobals::CollisionCheckCollider(Collider* collider, s
 
         if (IsExcluded) continue;
 
-        collisionOffTemp = collider->CheckCollision(coll.collider);
-        collision c = { coll.collider, collider, rb };
+        collisionOffTemp = collider->CheckCollision(coll);
+        collision c = { coll, collider, rb };
 
-        if (collisionOffTemp.length() > 0 && (collider->IsTrigger || coll.collider->IsTrigger))
+        if (collisionOffTemp.length() > 0 && (collider->IsTrigger || coll->IsTrigger))
         {
             //std::cout << "TRIGGER";
 
-            coll.collider->GetGameObject()->OnTriggerEnter(c);
+            coll->GetGameObject()->OnTriggerEnter(c);
         }
-        else if (collisionOffTemp.length() > 0 && (!collider->IsTrigger && !coll.collider->IsTrigger))
+        else if (collisionOffTemp.length() > 0 && (!collider->IsTrigger && !coll->IsTrigger))
         {
             // std::cout << "NON TRIGGERS";
             collisionOff += collisionOffTemp;
-            coll.collider->GetGameObject()->OnCollisionEntered(c);
+            coll->GetGameObject()->OnCollisionEntered(c);
         }
 
 

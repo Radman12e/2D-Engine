@@ -92,10 +92,10 @@ int WinMain()
     sf::IntRect rect2({ 0,0 }, { 20,20 });
     SpriteRendererComponent* src2 = Test3->AddComponent<SpriteRendererComponent>(texture2, rect2);
     AnimatorComponent* AnimCompE = Test3->AddComponent<AnimatorComponent>();
-    Collider* collider2 = Test3->AddComponent<Collider>();
-    collider2->SetupCollider();
-    Rigidbody* rb2 = Test3->AddComponent<Rigidbody>();
-    Test3->MoveTo(sf::Vector2f(200, 300));
+    //Collider* collider2 = Test3->AddComponent<Collider>();
+   // collider2->SetupCollider();
+    //Rigidbody* rb2 = Test3->AddComponent<Rigidbody>();
+    //Test3->MoveTo(sf::Vector2f(200, 300));
 
 
     //Enemy1 animation clip
@@ -150,20 +150,21 @@ int WinMain()
 
     
 
-    for (int i = 0; i < 2000; i++) 
+    for (int i = 0; i < 100000; i++) 
     {
     
        Gameobject* EClone2 = Test3->Clone();
        EClone2->MoveTo(sf::Vector2f(100, 400));
-       float x = rand() % 6000;  // width
-       float y = rand() % 7000;  // height
+       float x = rand() % 60000;  // width
+       float y = rand() % 70000;  // height
 
         EClone2->MoveTo(sf::Vector2f(x, y));
+        //EClone2->Destroy();
     }
 
     //
     EClone->Destroy();
-    Test3->Destroy();
+    
 
     std::cout << "\n\nSize of list: " << GameEssentialsGlobals::Colliders.size();
 
