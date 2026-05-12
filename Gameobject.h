@@ -210,6 +210,20 @@ public:
 	void SetlocalRotation(sf::Angle LocalRot);
 	void SetlocalPosition(sf::Vector2f LocalPos);
 
+	std::vector<Gameobject*> GetDescendants()
+	{
+		std::vector<Gameobject*> result;
+
+		for (Gameobject* child : Children)
+		{
+			result.push_back(child);
+
+			auto subDescendants = child->GetDescendants();
+			result.insert(result.end(), subDescendants.begin(), subDescendants.end());
+		}
+
+		return result;
+	}
 
 	Gameobject* Clone()
 	{

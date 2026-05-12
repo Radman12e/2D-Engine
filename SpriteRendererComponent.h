@@ -4,6 +4,7 @@
 #include "GameEssentials.h"
 #include "Gameobject.h"
 #include <iostream>
+#include "UiCanvasComponent.h"
 class SpriteRendererComponent : public Component
 {
 private:
@@ -15,9 +16,10 @@ private:
 
 public:
 
+	void BindToCanvas(UiCanvasComponent* Canvas);
 
 	sf::Sprite Sprite;//("");
-	void OnLateUpdate(float dt) override;
+	void OnUpdate(float dt) override;
 	SpriteRendererComponent(sf::Texture* texture, sf::IntRect rect);
 
 	~SpriteRendererComponent() 

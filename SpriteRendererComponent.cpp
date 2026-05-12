@@ -1,6 +1,16 @@
 #include "SpriteRendererComponent.h"
 
-void SpriteRendererComponent::OnLateUpdate(float dt)
+void SpriteRendererComponent::BindToCanvas(UiCanvasComponent* Canvas)
+{
+	std::function<void()> OnSPressedfn = [this]()
+		{
+			GameEssentialsGlobals::Renderwindow->draw(this->Sprite);
+		};
+
+	this->bindEvent("CanvasUpdate"+std::to_string(Canvas->ID), OnSPressedfn);
+}
+
+void SpriteRendererComponent::OnUpdate(float dt)
 {
 	if (this->Enabled == false) return;
 

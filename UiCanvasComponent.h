@@ -1,0 +1,22 @@
+#pragma once
+#include "Component.h"
+#include "Gameobject.h"
+#include "SpriteRendererComponent.h"
+#include "GameEssentials.h"
+class UiCanvasComponent :
+    public Component
+{
+public:
+    size_t ID;
+    void OnUpdate(float dt) override;
+    
+    void OnLateUpdate(float dt) override;
+
+    UiCanvasComponent() 
+    {
+        ID = std::rand() % 65535;
+    }
+    void SetupCanvas();
+
+};
+

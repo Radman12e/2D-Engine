@@ -149,6 +149,7 @@
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="SpriteRendererComponent.cpp" />
     <ClCompile Include="TestComponent.cpp" />
+    <ClCompile Include="UiCanvasComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatorComponent.h" />
@@ -264,6 +265,7 @@
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="SpriteRendererComponent.h" />
     <ClInclude Include="TestComponent.h" />
+    <ClInclude Include="UiCanvasComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages\SFML\include\SFML\Audio\SoundFileFactory.inl" />
