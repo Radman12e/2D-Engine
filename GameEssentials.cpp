@@ -192,7 +192,7 @@ void GameEssentialsGlobals::RemoveRB(size_t id)
 
 void GameEssentialsGlobals::OnGameTick()
 {
-
+    RunCollisionPass();
     InputEventH.OnGameTick();
 
     Renderwindow->clear();
@@ -211,8 +211,11 @@ void GameEssentialsGlobals::OnGameTick()
 
     for (auto& gameObject : GameObjectContainer)
     {
-
+        //gameObject->OnUpdate((TimeSinceUpdate / 1000000) * Timescale);
         gameObject->OnUpdate((TimeSinceUpdate / 1000000) * Timescale);
+        gameObject->OnPhysicsUpdate((TimeSinceUpdate / 1000000) * Timescale);
+        
+        
     }
 
 
@@ -228,10 +231,11 @@ void GameEssentialsGlobals::OnGameTick()
     ClearDeletedObjects();
 }
 
+//Obsolite, switching to update
 void GameEssentialsGlobals::OnPhysicsTick()
 {
-    std::cout << GameObjectContainer.size() << "\n";
-    RunCollisionPass();
+    //std::cout << GameObjectContainer.size() << "\n";
+    
     PhyscurrentTime = std::chrono::steady_clock::now();
     pdt = std::chrono::duration_cast<std::chrono::microseconds>(PhyscurrentTime - PhyslastTime).count();
     PhyslastTime = PhyscurrentTime;
@@ -239,6 +243,7 @@ void GameEssentialsGlobals::OnPhysicsTick()
 
     if (TimeSincePhys > physicsTimeStep)
     {
+        RunCollisionPass();
         for (auto& gameObject : GameObjectContainer)
         {
             gameObject->OnPhysicsUpdate((TimeSincePhys / 1000000) * Timescale);

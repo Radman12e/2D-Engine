@@ -14,14 +14,34 @@ void UiCanvasComponent::OnUpdate(float dt){
     if (!Enabled) return;
     if (GameEssentialsGlobals::Renderwindow != nullptr)
     {
-        //std::cout << "Rendered!!";
+        //std::cout << "Rendered!!" << GameEssentialsGlobals::Renderwindow->getView().getCenter().x << "\n";
 
-        GameObject->MoveTo(sf::Vector2f(GameEssentialsGlobals::Renderwindow->getPosition()));
+        GameObject->MoveTo(sf::Vector2f(GameEssentialsGlobals::Renderwindow->getView().getCenter()));
+
+    }
+
+}
+
+void UiCanvasComponent::OnPhysicsUpdate(float dt) {
+    if (!Enabled) return;
+    if (GameEssentialsGlobals::Renderwindow != nullptr)
+    {
+        //std::cout << "Rendered!!" << GameEssentialsGlobals::Renderwindow->getView().getCenter().x << "\n";
+
+        GameObject->MoveTo(sf::Vector2f(GameEssentialsGlobals::Renderwindow->getView().getCenter()));
 
     }
 
 }
 void UiCanvasComponent ::OnLateUpdate(float dt)
 {
-    GameEssentialsGlobals::EventH.FireEvent("CanvasUpdate" + std::to_string(this->ID));
+    if (GameEssentialsGlobals::Renderwindow != nullptr)
+    {
+        //std::cout << "Rendered!!" << GameEssentialsGlobals::Renderwindow->getView().getCenter().x << "\n";
+
+        GameObject->MoveTo(sf::Vector2f(GameEssentialsGlobals::Renderwindow->getView().getCenter()));
+
+    }
+    //GameEssentialsGlobals::EventH.FireEvent("CanvasUpdate" + std::to_string(this->ID));
+    
 }

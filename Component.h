@@ -104,6 +104,7 @@ public:
 
 	virtual std::unique_ptr<Component> CloneComponent() 
 	{
+		//return nullptr;
 		return std::make_unique<Component>(*this);
 	}
 

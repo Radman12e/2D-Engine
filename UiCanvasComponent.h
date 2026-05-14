@@ -11,6 +11,7 @@ public:
     void OnUpdate(float dt) override;
     
     void OnLateUpdate(float dt) override;
+    void OnPhysicsUpdate(float dt) override;
 
     UiCanvasComponent() 
     {

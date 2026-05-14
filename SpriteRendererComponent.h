@@ -4,7 +4,8 @@
 #include "GameEssentials.h"
 #include "Gameobject.h"
 #include <iostream>
-#include "UiCanvasComponent.h"
+
+class UiCanvasComponent;
 class SpriteRendererComponent : public Component
 {
 private:

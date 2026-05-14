@@ -7,6 +7,8 @@
 #include "SpriteRendererComponent.h"
 #include "AnimatorComponent.h"
 #include "CameraComponent.h"
+#include "UiCanvasComponent.h"
+#include "TextRenderer.h"
 /*
     This version of the SFML "hello world" is statically linked, you may wish to try the dynamically linked version as well.
 */
@@ -17,8 +19,13 @@ int WinMain()
 #endif
 {
     //Define view
-    sf::View view({ 200, 200 }, { 384, 256 });
+    sf::View view({ 0,0 }, { 384, 256 });
     view.setCenter({ 190 ,200});
+
+    sf::Font MainFont("Assets/r-type.ttf");
+    MainFont.setSmooth(false);
+    //MainFont.
+    
 
     Gameobject* Root = GameEssentialsGlobals::WorldRoot;
 
@@ -32,6 +39,18 @@ int WinMain()
     {
         std::cout << children->Name << ",";
     }
+
+
+    //SpaceBackground
+
+    Gameobject* SpaceBg = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
+    SpaceBg->Name = "Spacebg";
+    sf::Texture* SpaceTex = new sf::Texture("Assets/SpaceBackground.png");
+    sf::IntRect SpaceRect({ 0,0 }, { 1152,256 });
+    SpriteRendererComponent* SpaceSprite = SpaceBg->AddComponent<SpriteRendererComponent>(SpaceTex, SpaceRect);
+
+    //endSpaceBackground
+
 
     Gameobject* Test2 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
     Test2->Name = "Test2";
@@ -92,9 +111,9 @@ int WinMain()
     sf::IntRect rect2({ 0,0 }, { 20,20 });
     SpriteRendererComponent* src2 = Test3->AddComponent<SpriteRendererComponent>(texture2, rect2);
     AnimatorComponent* AnimCompE = Test3->AddComponent<AnimatorComponent>();
-    //Collider* collider2 = Test3->AddComponent<Collider>();
-   // collider2->SetupCollider();
-    //Rigidbody* rb2 = Test3->AddComponent<Rigidbody>();
+    Collider* collider2 = Test3->AddComponent<Collider>();
+    collider2->SetupCollider();
+    Rigidbody* rb2 = Test3->AddComponent<Rigidbody>();
     //Test3->MoveTo(sf::Vector2f(200, 300));
 
 
@@ -148,15 +167,129 @@ int WinMain()
     AnimCompEe->PlayAnim("ex");
     //--------------------------------------------------------------
 
+
+
+    //UI START--------------------------------------------------------------
+
+
+    Gameobject* UiBgObj = new Gameobject();
+    sf::Texture* BgText = new sf::Texture("Assets/SolidWhite.png");
+
+    sf::IntRect Bgrect({ 0,0 }, { 384,40 });
+    UiBgObj->AddComponent<SpriteRendererComponent>(BgText, Bgrect)->Sprite.setColor({20,20,20});
+
+    Gameobject* BeamText = new Gameobject();
+   
+
+    TextRenderer* testtext = BeamText->AddComponent<TextRenderer>(&MainFont, "BEAM");
+
+    testtext->text.setStyle(sf::Text::Bold);
+
+    testtext->text.setFillColor({ 148, 132, 240 });
+    testtext->text.setCharacterSize(12);
     
 
-    for (int i = 0; i < 100000; i++) 
+    Gameobject* UiCanvas = new Gameobject();
+
+    UiCanvasComponent* UiCanvasComp = UiCanvas->AddComponent<UiCanvasComponent>();
+
+    BeamText->SetParent(UiCanvas);
+
+    //BeamCharge
+    Gameobject* BeamCharge = new Gameobject();
+    
+    sf::Texture* TexBeam2 = new sf::Texture("Assets/BeamChageMiddle.png");
+    sf::IntRect rectBeam2({ 0,0 }, { 80,15 });
+    BeamCharge->AddComponent<SpriteRendererComponent>(TexBeam2, rectBeam2);
+    //End
+
+
+    //BeamHolder
+    Gameobject* BeamHolder = new Gameobject();
+    BeamHolder->SetParent(UiCanvas);
+    BeamCharge->SetParent(BeamHolder);
+    sf::Texture* TexBeam = new sf::Texture("Assets/AnimatedBeamCharge.png");
+    sf::IntRect rectBeam({ 0,0 }, { 90,15 });
+    BeamHolder->AddComponent<SpriteRendererComponent>(TexBeam, rectBeam);
+    AnimatorComponent* BeamAnimComponent = BeamHolder->AddComponent<AnimatorComponent>();
+
+    //Animation clip forPlayer
+    sf::IntRect BeamChargeR1({ 0,0 }, { 90,15 });
+    sf::IntRect BeamChargeR2({ 0,15 }, { 90,15 });
+    AnimationFrame BeamChargeF1 = { BeamChargeR1, 10 };
+    AnimationFrame BeamChargeF2 = { BeamChargeR2, 10 };
+    Animationstrip ChargedFullAnim = { {BeamChargeF1,BeamChargeF2}, true };
+    Animationstrip ChargedIdleAnim = { {BeamChargeF1}, true };
+  
+
+    //Adds the anim and plays
+    BeamAnimComponent->AddAnimation(ChargedFullAnim, "ChargedFull");
+    BeamAnimComponent->AddAnimation(ChargedIdleAnim, "idle");
+    BeamAnimComponent->PlayAnim("ChargedFull");
+
+    //BeamHolderFin
+
+
+    //Heart
+    Gameobject* Heart = new Gameobject();
+    Heart->SetParent(UiCanvas);
+    sf::Texture* Hearttex = new sf::Texture("Assets/Heart.png");
+    sf::IntRect Heartrect({ 0,0 }, { 15,15 });
+    Heart->AddComponent<SpriteRendererComponent>(Hearttex, Heartrect);
+    Gameobject* Heart2 = Heart->Clone();
+    Gameobject* Heart3 = Heart->Clone();
+
+
+    Gameobject* Score = BeamText->Clone();
+    Score->Name = "Skibigidifig";
+    Score->GetComponent<TextRenderer>()->text.setString("SCORE");
+
+    Gameobject* ScoreDisplay = BeamText->Clone();
+    ScoreDisplay->Name = "Skibigidifig2";
+    ScoreDisplay->GetComponent<TextRenderer>()->text.setString("100000");
+    ScoreDisplay->SetParent(Score);
+    ScoreDisplay->GetComponent<TextRenderer>()->text.setFillColor(sf::Color::White);
+    
+
+    Gameobject* UiHoldObject = new Gameobject();
+   
+    UiBgObj->SetParent(UiHoldObject);
+    UiBgObj->SetlocalPosition({ 0,110 });
+
+    UiHoldObject->SetParent(UiCanvasComp->GetGameObject());
+    //ScoreDisplay->SetParent(UiHoldObject);
+    BeamText->SetParent(UiHoldObject);
+    Score->SetParent(UiHoldObject);
+    BeamHolder->SetParent(UiHoldObject);
+    //BeamCharge->SetParent(UiHoldObject);
+    Heart2->SetParent(UiHoldObject);
+    Heart->SetParent(UiHoldObject);
+    Heart3->SetParent(UiHoldObject);
+
+    UiHoldObject->SetlocalPosition({0,0});
+
+    UiCanvasComp->SetupCanvas();
+   
+    ScoreDisplay->SetlocalPosition({ 0,15 });
+    BeamText->SetlocalPosition({-90,105});
+    Score->SetlocalPosition({ 70,96 });
+    BeamHolder->SetlocalPosition({ 10,110 });
+    BeamCharge->SetlocalPosition({ 0,0 });
+    Heart->SetlocalPosition({ -120, 110 });
+    Heart2->SetlocalPosition({ -140, 110 });
+    Heart3->SetlocalPosition({ -160, 110 });
+
+
+    //SET UP GAME UI --------------------------------------------------------------
+
+
+    for (int i = 0; i < 1; i++) 
     {
     
        Gameobject* EClone2 = Test3->Clone();
        EClone2->MoveTo(sf::Vector2f(100, 400));
-       float x = rand() % 60000;  // width
-       float y = rand() % 70000;  // height
+       float x = rand() % 100;  // width
+       float y = rand() % 100;  // height
 
         EClone2->MoveTo(sf::Vector2f(x, y));
         //EClone2->Destroy();
@@ -210,7 +343,7 @@ int WinMain()
     std::cout << "\n\nFound Componnet TestComponent: " << Test->HasComponent<TestComponent>();
 
     std::cout << "\n\nScene: \n";
-    //GameEssentialsGlobals::OutputSceneGraph(Root);
+    GameEssentialsGlobals::OutputSceneGraph(Root);
     //GameEssentialsGlobals::InputService->Init();
 
     sf::Vector2 v2(10,10);
@@ -241,8 +374,9 @@ int WinMain()
         //window.draw(shape);
         
         
-        GameEssentialsGlobals::OnPhysicsTick();
+        
         GameEssentialsGlobals::OnGameTick();
+        //GameEssentialsGlobals::OnPhysicsTick();
         
         
         

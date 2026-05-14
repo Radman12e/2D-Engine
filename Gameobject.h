@@ -241,6 +241,7 @@ public:
 		for (const auto& comp : components)
 		{
 			auto newComp = comp->CloneComponent();
+			if (newComp == nullptr) continue;
 			newComp->SetGameObject(clone);
 
 			clone->components.push_back(std::move(newComp));
@@ -252,6 +253,8 @@ public:
 			Gameobject* childClone = child->Clone();
 			clone->AddChild(childClone);
 		}
+
+		clone->SetParent(this->Parent);
 
 		return clone;
 	}

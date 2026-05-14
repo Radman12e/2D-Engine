@@ -1,4 +1,5 @@
 #include "SpriteRendererComponent.h"
+#include "UiCanvasComponent.h"
 
 void SpriteRendererComponent::BindToCanvas(UiCanvasComponent* Canvas)
 {
