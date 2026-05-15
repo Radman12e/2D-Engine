@@ -6,13 +6,16 @@
 #include "Gameobject.h"
 #include "Rigidbody.h"
 #include "Collider.h"
-
+#include "SpriteRendererComponent.h"
+#include "Renderable.h"
 
 //#include "PlayerController.h"
 
 class Gameobject;
 
 class Collider;
+
+class Renderable;
 
 struct ColliderStruct
 {
@@ -64,6 +67,8 @@ public:
 	template<typename T>
 	static T* FindFirstComponent();
 
+	static void AddSpriteToRenderLayer(Renderable* sprite, size_t layerIndex);
+	static void ChangeRenderLayerIndex(Renderable* sprite, size_t oldIndex, size_t newIndex);
 
 	static float physicsTimeStep;
 

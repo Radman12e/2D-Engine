@@ -9,6 +9,7 @@
 #include "CameraComponent.h"
 #include "UiCanvasComponent.h"
 #include "TextRenderer.h"
+#include "ParalaxScrollingHandler.h"
 /*
     This version of the SFML "hello world" is statically linked, you may wish to try the dynamically linked version as well.
 */
@@ -25,7 +26,21 @@ int WinMain()
     sf::Font MainFont("Assets/r-type.ttf");
     MainFont.setSmooth(false);
     //MainFont.
+
+    Gameobject* ParalaxHandler = new Gameobject();
+    ParalaxScrollingHandler* psh = ParalaxHandler->AddComponent<ParalaxScrollingHandler>();
+
+   
+
+    Gameobject* SpaceBg = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
+    SpaceBg->Name = "Spacebg";
+    sf::Texture* SpaceTex = new sf::Texture("Assets/SpaceBackground.png");
+    sf::IntRect SpaceRect({ 0,0 }, { 1152,256 });
+    SpriteRendererComponent* SpaceSprite = SpaceBg->AddComponent<SpriteRendererComponent>(SpaceTex, SpaceRect,0);
+    //SpaceSprite->UpdateLayer(0);
     
+
+
 
     Gameobject* Root = GameEssentialsGlobals::WorldRoot;
 
@@ -43,12 +58,7 @@ int WinMain()
 
     //SpaceBackground
 
-    Gameobject* SpaceBg = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
-    SpaceBg->Name = "Spacebg";
-    sf::Texture* SpaceTex = new sf::Texture("Assets/SpaceBackground.png");
-    sf::IntRect SpaceRect({ 0,0 }, { 1152,256 });
-    SpriteRendererComponent* SpaceSprite = SpaceBg->AddComponent<SpriteRendererComponent>(SpaceTex, SpaceRect);
-
+    
     //endSpaceBackground
 
 
@@ -267,7 +277,8 @@ int WinMain()
     Heart3->SetParent(UiHoldObject);
 
     UiHoldObject->SetlocalPosition({0,0});
-
+    //SpaceBg->SetParent(UiCanvas);
+    //SpaceBg->SetlocalPosition({ 0,0 });
     UiCanvasComp->SetupCanvas();
    
     ScoreDisplay->SetlocalPosition({ 0,15 });
@@ -325,6 +336,12 @@ int WinMain()
     Test->MoveTo(sf::Vector2f(100, 300));
 
     Test4->MoveTo(sf::Vector2f(20, 300));
+
+    psh->FocusPoint = CameraComp;
+    psh->GetGameObject()->MoveTo(psh->FocusPoint->GetGameObject()->getWorldPos());
+    psh->AddLayer("Main", SpaceBg, 0.8, 3);
+    psh->GetGameObject()->MoveTo(Test->getWorldPos());
+
     //Test4->SetParent(Test);
 
     //-aaaaaaaaaaaaaaaaaaab-----------------

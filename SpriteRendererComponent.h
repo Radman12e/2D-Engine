@@ -3,30 +3,39 @@
 #include <SFML/Graphics.hpp>
 #include "GameEssentials.h"
 #include "Gameobject.h"
+#include "Renderable.h"
 #include <iostream>
 
 class UiCanvasComponent;
-class SpriteRendererComponent : public Component
+class SpriteRendererComponent : public Component, public Renderable
 {
 private:
 	//sf::IntRect rectSourceSprite(300, 0, 300, 400);
 	sf::Texture* Texture;
 	sf::IntRect Rect = sf::IntRect({ 0,0 }, { 0, 0 });
+	
 
 
 
 public:
-
+	bool Setup = false;
 	void BindToCanvas(UiCanvasComponent* Canvas);
 
 	sf::Sprite Sprite;//("");
 	void OnUpdate(float dt) override;
-	SpriteRendererComponent(sf::Texture* texture, sf::IntRect rect);
+
+	void Render() override;
+
+	SpriteRendererComponent(sf::Texture* texture, sf::IntRect rect, int Layer = 10);
 
 	~SpriteRendererComponent() 
 	{
 		//std::cout << "Destroyed!!!";
 	}
+
+	
+
+	
 
 	void OnDestroy() override 
 	{
@@ -45,10 +54,7 @@ public:
 		//Sprite->setOrigin((sf::Vector2f)Rect.getCenter());
 	}
 
-	virtual std::unique_ptr<Component> CloneComponent()
-	{
-		return std::make_unique<SpriteRendererComponent>(*this);
-	}
+	virtual std::unique_ptr<Component> CloneComponent();
 
 	sf::IntRect getRect()
 	{

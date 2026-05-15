@@ -17,6 +17,11 @@ public:
     {
         ID = std::rand() % 65535;
     }
+
+    ~UiCanvasComponent()
+    {
+        
+    }
     void SetupCanvas();
 
 };

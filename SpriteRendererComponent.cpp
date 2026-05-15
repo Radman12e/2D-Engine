@@ -13,6 +13,11 @@ void SpriteRendererComponent::BindToCanvas(UiCanvasComponent* Canvas)
 
 void SpriteRendererComponent::OnUpdate(float dt)
 {
+	if (Setup == false) 
+	{
+		Setup = true;
+		GameEssentialsGlobals::AddSpriteToRenderLayer(this, this->GetLayer());
+	}
 	if (this->Enabled == false) return;
 
 	Sprite.setPosition(this->GameObject->getWorldPos());
@@ -22,22 +27,40 @@ void SpriteRendererComponent::OnUpdate(float dt)
 
 	
 
-	if (GameEssentialsGlobals::Renderwindow != nullptr) 
+	
+
+}
+
+void SpriteRendererComponent::Render() 
+{
+	if (GameEssentialsGlobals::Renderwindow != nullptr)
 	{
 		//std::cout << "Rendered!!";
 		GameEssentialsGlobals::Renderwindow->draw(Sprite);
 	}
-
 }
-SpriteRendererComponent::SpriteRendererComponent(sf::Texture* texture, sf::IntRect rect) : Sprite(*texture, rect)
+
+SpriteRendererComponent::SpriteRendererComponent(sf::Texture* texture, sf::IntRect rect, int Layer) : Sprite(*texture, rect)
 {
 	Texture = texture;
 	Rect = rect;
 	Sprite = sf::Sprite(*Texture, Rect);
 	std::cout << "\n" << "------------------ sprite made ------------------------\n";
 	Sprite.setOrigin((sf::Vector2f)Rect.getCenter());
+	this->Layer = Layer;
+	GameEssentialsGlobals::AddSpriteToRenderLayer(this, Layer);
+	Setup = true;
 }
 
+
+
+std::unique_ptr<Component> SpriteRendererComponent::CloneComponent()
+{
+	std::unique_ptr<SpriteRendererComponent> SpriteRendererComponent2 = std::make_unique<SpriteRendererComponent>(*this);
+	SpriteRendererComponent2.get()->Setup = false;
+	//GameEssentialsGlobals::AddSpriteToRenderLayer(SpriteRendererComponent2.get(), this->Layer);
+	return SpriteRendererComponent2;
+}
 void SpriteRendererComponent::SetTexture(sf::Texture* texture, sf::IntRect rect)
 {
 	Texture = texture;

@@ -3,6 +3,7 @@
 #include "Collider.h"
 #include "Rigidbody.h"
 #include <thread>
+#include "Renderable.h"
 
 GameEssentialsGlobals::GameEssentialsGlobals()
 {
@@ -18,6 +19,58 @@ std::vector<Gameobject*> QueuedObjectsToDelete = {};
 
 Gameobject* GameEssentialsGlobals::WorldRoot = new Gameobject(true);
 
+std::vector<std::vector<Renderable*>> RenderLayers;
+
+void GameEssentialsGlobals::AddSpriteToRenderLayer(Renderable* sprite, size_t layerIndex)
+{
+    while (RenderLayers.size() <= layerIndex)
+    {
+        RenderLayers.push_back({});
+    }
+
+    RenderLayers[layerIndex].push_back(sprite);
+}
+
+void GameEssentialsGlobals::ChangeRenderLayerIndex(Renderable* sprite, size_t oldIndex, size_t newIndex)
+{
+    if (oldIndex >= RenderLayers.size())
+    {
+        return;
+    }
+
+    auto& oldLayer = RenderLayers[oldIndex];
+
+    for (auto it = oldLayer.begin(); it != oldLayer.end(); ++it)
+    {
+        if (*it == sprite)
+        {
+            oldLayer.erase(it);
+            break;
+        }
+    }
+
+    while (RenderLayers.size() <= newIndex)
+    {
+        RenderLayers.push_back(std::vector<Renderable*>());
+    }
+
+    RenderLayers[newIndex].push_back(sprite);
+}
+
+void RenderScene()
+{
+    for (auto& layer : RenderLayers)
+    {
+        for (auto* sprite : layer)
+        {
+            if (sprite)
+            {
+                //std::cout << "\n" << sprite->Layer;
+                sprite->Render();
+            }
+        }
+    }
+}
 
 struct SweepEntry
 {
@@ -217,7 +270,7 @@ void GameEssentialsGlobals::OnGameTick()
         
         
     }
-
+    RenderScene();
 
     for (auto& gameObject : GameObjectContainer)
     {

@@ -2,7 +2,7 @@
 #include "Component.h"
 #include "GameEssentials.h"
 class TextRenderer :
-    public Component
+    public Component, Renderable
 {
 
 public:
@@ -11,13 +11,18 @@ public:
     void OnUpdate(float dt) override 
     {
         text.setPosition(GameObject->getWorldPos());
-        GameEssentialsGlobals::Renderwindow->draw(text);
+        
     }
 
     TextRenderer(sf::Font* font, std::string str = "") : text(*font, str)
     {
 
     }
+    void Render() override 
+    {
+        GameEssentialsGlobals::Renderwindow->draw(text);
+    }
+
 
     std::unique_ptr<Component> CloneComponent() override
     {

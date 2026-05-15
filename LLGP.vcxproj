@@ -145,7 +145,9 @@
     <ClCompile Include="GameEssentials.cpp" />
     <ClCompile Include="Gameobject.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ParalaxScrollingHandler.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="SpriteRendererComponent.cpp" />
     <ClCompile Include="TestComponent.cpp" />
@@ -262,7 +264,9 @@
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowBase.hpp" />
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowEnums.hpp" />
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowHandle.hpp" />
+    <ClInclude Include="ParalaxScrollingHandler.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="Renderable.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="SpriteRendererComponent.h" />
     <ClInclude Include="TestComponent.h" />

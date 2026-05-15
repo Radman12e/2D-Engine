@@ -4,8 +4,9 @@ void UiCanvasComponent::SetupCanvas()
     for (auto& C : GameObject->GetDescendants())
     {
         SpriteRendererComponent* sr = C->GetComponent<SpriteRendererComponent>();
+        
         if (sr == nullptr) continue;
-
+        sr->UpdateLayer(2000 + sr->GetLayer());
         sr->BindToCanvas(this);
     }
 }
