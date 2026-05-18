@@ -20,9 +20,6 @@ void SpriteRendererComponent::OnUpdate(float dt)
 	}
 	if (this->Enabled == false) return;
 
-	Sprite.setPosition(this->GameObject->getWorldPos());
-	Sprite.setRotation(this->GameObject->getLocalRot());
-
 	//GameEssentialsGlobals::EventH.FireEvent("TestEvent1");
 
 	
@@ -33,9 +30,12 @@ void SpriteRendererComponent::OnUpdate(float dt)
 
 void SpriteRendererComponent::Render() 
 {
+	if (!Enabled) return;
 	if (GameEssentialsGlobals::Renderwindow != nullptr)
 	{
 		//std::cout << "Rendered!!";
+		Sprite.setPosition(this->GameObject->getWorldPos());
+		Sprite.setRotation(this->GameObject->getLocalRot());
 		GameEssentialsGlobals::Renderwindow->draw(Sprite);
 	}
 }

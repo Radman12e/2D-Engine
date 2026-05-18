@@ -1,150 +1,283 @@
 #pragma once
+
+#include <unordered_map>
+#include <vector>
+#include <string>
+#include <cmath>
+
 #include "Component.h"
 #include "Gameobject.h"
 #include "CameraComponent.h"
 #include "SpriteRendererComponent.h"
-class ParalaxScrollingHandler :
-    public Component
-{
 
+class ParalaxScrollingHandler : public Component
+{
+public:
+
+	bool Setup = false;
+
+	struct ParalaxObject
+	{
+		Gameobject* Obj = nullptr;
+		sf::Vector2f Offset = {};
+	};
+
+	struct ParalaxLayer
+	{
+		float DisplacementMulti = 1;
+
+		std::vector<ParalaxObject> Objects;
+
+		Gameobject* TemplateObject = nullptr;
+
+
+		int NumOfRepeats = 5;
+
+		int Width = 0;
+		int Height = 0;
+	};
+
+	std::unordered_map<std::string, ParalaxLayer> Layers;
+
+	CameraComponent* FocusPoint = nullptr;
 
 public:
 
 
-	struct ParalaxLayer
+	virtual std::unique_ptr<Component> CloneComponent() override
 	{
-		float DisplacementMulti = 1; // Controls how fast the layer goes past, lower number = slower scroll, higher = higher scroll
-		std::vector<Gameobject*> Objects = {};
-		Gameobject* CentralObject = nullptr;
-		Gameobject* ObjectToClone = nullptr;
-		int NumOfRepeats = 3;
-		//sf::Vector2f OrignPos;
-	};
+		auto psh = std::make_unique<ParalaxScrollingHandler>();
 
-	std::unordered_map<std::string, ParalaxLayer> Layers;
-	
-	CameraComponent* FocusPoint;
+		psh->Enabled = Enabled;
+		psh->FocusPoint = FocusPoint;
 
-	void AddLayer(std::string LayerName, Gameobject* Layer, float DisplacementMulti = 1, int NumOfRepeats = 3)
-	{
-		if (Layer == nullptr)
-			return;
-
-		Layer->Disable();
-		Layer->SetParent(GameObject);
-
-		ParalaxLayer NewLayer =
+		for (auto& [name, layer] : Layers)
 		{
-			DisplacementMulti,
-			{},
-			nullptr,
-			Layer,
-			NumOfRepeats
-		};
+			ParalaxLayer newLayer;
 
-	
-		if (Layers.find(LayerName) != Layers.end())
-		{
-			if (Layers[LayerName].ObjectToClone != nullptr)
-			{
-				Layers[LayerName].ObjectToClone->Destroy();
-			}
+			newLayer.DisplacementMulti = layer.DisplacementMulti;
+			newLayer.TemplateObject = layer.TemplateObject;
+			newLayer.NumOfRepeats = layer.NumOfRepeats;
+			newLayer.Width = layer.Width;
+			newLayer.Height = layer.Height;
 
-			for (auto& obj : Layers[LayerName].Objects)
-			{
-				if (obj != nullptr)
-					obj->Destroy();
-			}
+			newLayer.Objects.clear();
+
+			psh->Layers[name] = newLayer;
 		}
 
-		Layers[LayerName] = NewLayer;
+		psh->Setup = false;
 
-		GenerateLayer(Layers[LayerName]);
+		return psh;
+	}
+
+	void AddLayer(std::string Name, Gameobject* LayerObj, float Displacement = 1.f, int Repeats = 5)
+	{
+		if (LayerObj == nullptr) return;
+
+
+		if (Repeats < 3) Repeats = 3;
+
+		if (Repeats % 2 == 0) Repeats++;
+
+		SpriteRendererComponent* Renderer = LayerObj->GetComponent<SpriteRendererComponent>();
+
+		if (Renderer == nullptr)
+			return;
+
+		auto Bounds =
+			Renderer->Sprite.getGlobalBounds();
+
+		float Width = Bounds.size.x;
+		float Height = Bounds.size.y;
+
+		if (Width <= 0 || Height <= 0)
+			return;
+
+		LayerObj->Disable();
+
+		ParalaxLayer Layer;
+
+		Layer.DisplacementMulti = Displacement;
+		Layer.TemplateObject = LayerObj;
+		Layer.NumOfRepeats = Repeats;
+		Layer.Width = Width;
+		Layer.Height = Height;
+
+		if (Layers.find(Name) != Layers.end() && Setup == true)
+		{
+			for (auto& Obj : Layers[Name].Objects)
+			{
+				if (Obj.Obj != nullptr)
+				{
+					Obj.Obj->Destroy();
+				}
+			}
+
+		}
+		
+
+		Layers[Name] = Layer;
+		//this->GenerateLayer(Layers[Name]);
+
+
+		this->GenerateLayer(Layers[Name]);
+	
+
+		
+		
+		
 	}
 
 	void GenerateLayer(ParalaxLayer& Layer)
 	{
-		if (Layer.ObjectToClone == nullptr)
-			return;
+		if (Layer.TemplateObject == nullptr) return;
 
 		Layer.Objects.clear();
 
-		const int Half = Layer.NumOfRepeats / 2;
-
-		float Width = Layer.ObjectToClone->GetComponent<SpriteRendererComponent>()->Sprite.getTextureRect().size.x;
-			
-
-		float Height = Layer.ObjectToClone->GetComponent<SpriteRendererComponent>()->Sprite.getTextureRect().size.y;
-
-		sf::Vector2f CenterPos = FocusPoint->GetGameObject()->getWorldPos();
-
+		int Half = Layer.NumOfRepeats / 2;
 
 		for (int y = -Half; y <= Half; y++)
 		{
 			for (int x = -Half; x <= Half; x++)
 			{
-				Gameobject* Clone = Layer.ObjectToClone->Clone();
+				
+				Gameobject* Clone = Layer.TemplateObject->Clone();
+
+				if (Clone == nullptr)
+					continue;
 
 				Clone->Enable();
 
-				sf::Vector2f Pos = CenterPos;
+				
 
-				Pos.x += Width * x;
-				Pos.y += Height * y;
+				ParalaxObject Obj;
 
-				Clone->MoveTo(Pos);
+				Obj.Obj = Clone;
 
-				Layer.Objects.push_back(Clone);
-
-				if (x == 0 && y == 0)
+				Obj.Offset =
 				{
-					Layer.CentralObject = Clone;
-				}
+					static_cast<float>(x) * Layer.Width,
+					static_cast<float>(y) * Layer.Height
+				};
+				Clone->SetParent(GameObject);
 
+				Layer.Objects.push_back(Obj);
+				
 			}
 		}
-	}
 
+		
+		UpdateParalax();
+	}
 
 	void UpdateParalax()
 	{
 		if (FocusPoint == nullptr)
 			return;
 
-		sf::Vector2f CamPos = FocusPoint->GetGameObject()->getWorldPos();
+		sf::Vector2f CamPos =
+			FocusPoint->GetGameObject()->getWorldPos();
+
+	
 
 		for (auto& [Name, Layer] : Layers)
 		{
-			
-			Gameobject* Obj = Layer.CentralObject;
-			for (auto& Others : Layer.Objects)
-			{
-				if (Others == Obj || Others->GetParent() == Obj) continue;
-				Others->SetParent(Obj);
-			}
-			if (Obj == nullptr)
+	
+			if (Layer.Objects.empty())
 				continue;
 
-			sf::Vector2f Pos = Obj->getWorldPos();
+			float Width = Layer.Width;
+			float Height = Layer.Height;
 
-			Pos.x = CamPos.x * Layer.DisplacementMulti;
-			Pos.y = CamPos.y * Layer.DisplacementMulti;
+			float TotalWidth =
+				Width * static_cast<float>(Layer.NumOfRepeats);
 
-			Obj->SetlocalPosition(Pos);
+			float TotalHeight =
+				Height * static_cast<float>(Layer.NumOfRepeats);
+
+			float HalfTotalWidth =
+				TotalWidth * 0.5f;
+
+			float HalfTotalHeight =
+				TotalHeight * 0.5f;
+
+
+			sf::Vector2f LayerCenter =
+			{
+				CamPos.x * Layer.DisplacementMulti,
+				CamPos.y * Layer.DisplacementMulti
+			};
+
+			for (auto& Obj : Layer.Objects)
+			{
+				if (Obj.Obj == nullptr)
+					continue;
+
+				sf::Vector2f Pos =
+				{
+					LayerCenter.x + Obj.Offset.x,
+					LayerCenter.y + Obj.Offset.y
+				};
+
+
+				while (Pos.x < CamPos.x - HalfTotalWidth)
+				{
+					Pos.x += TotalWidth;
+				}
+
+				while (Pos.x > CamPos.x + HalfTotalWidth)
+				{
+					Pos.x -= TotalWidth;
+				}
+
+	
+				while (Pos.y < CamPos.y - HalfTotalHeight)
+				{
+					Pos.y += TotalHeight;
+				}
+
+				while (Pos.y > CamPos.y + HalfTotalHeight)
+				{
+					Pos.y -= TotalHeight;
+				}
+
+				Obj.Obj->MoveTo(Pos);
+			}
 		}
 	}
 
-	void OnUpdate(float dt) override 
+	void OnUpdate(float dt) override
 	{
+
+		if (Enabled == false) return;
+		if (Setup == false) 
+		{
+			while (GameObject->GetChildren().size() > 0)
+			{
+				GameObject->GetChildren().back()->Destroy();
+			}
+			
+			for (auto& [Name, a] : Layers) 
+			{
+				AddLayer(Name, Layers[Name].TemplateObject, Layers[Name].DisplacementMulti, Layers[Name].NumOfRepeats);
+				
+
+			}
+			Setup = true;
+
+
+		}
 		UpdateParalax();
 	}
-	
 
-
+	ParalaxScrollingHandler()
+	{
+		Setup = true;
+	}
 	~ParalaxScrollingHandler()
 	{
+
+		Layers.clear();
 	}
-
-
 };
-

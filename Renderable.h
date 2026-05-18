@@ -5,12 +5,12 @@ class Renderable
 public:
 
 	virtual void Render() = 0;
-	virtual ~Renderable() = default;
+	virtual ~Renderable();
 	int GetLayer()
 	{
 		return Layer;
 	}
-	size_t Layer = 0;
+	int Layer = 0;
 
 	void UpdateLayer(int Layer);
 };

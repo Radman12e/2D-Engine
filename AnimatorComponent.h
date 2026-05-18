@@ -20,6 +20,9 @@ struct Animationstrip
 class AnimatorComponent :
     public Component
 {
+private:
+    std::string PlayingAnim = "";
+
     float FramesUntilNextFrame = 0;
     int CurrentFrameIndex = 0;
 
@@ -29,6 +32,16 @@ class AnimatorComponent :
 
     Animationstrip* CurrentAnimation = nullptr;
 public:
+
+    void Reset() 
+    {
+        SpriteRenderer = nullptr;
+        CurrentAnimation = nullptr;
+        CurrentFrameIndex = 0;
+        FramesUntilNextFrame = 0;
+        PlayAnim(PlayingAnim);
+    }
+
     void OnUpdate(float dt) override 
     {
         if (!Enabled) return;
@@ -70,16 +83,32 @@ public:
     
     void PlayAnim(std::string AnimName)
     {
+        PlayingAnim = AnimName;
+        if (AnimName == "") { CurrentAnimation = nullptr;  return; };
+        //PlayingAnim = AnimName;
 
         CurrentAnimation = &Anims[AnimName];
         FramesUntilNextFrame = CurrentAnimation->Frames[0].FramesDelay;
         CurrentFrameIndex = 0;
         
     }
+    void StopAnim() 
+    {
+        CurrentAnimation = nullptr;
+        PlayingAnim = "";
+    }
+
+    ~AnimatorComponent()
+    {
+    
+    }
 
     std::unique_ptr<Component> CloneComponent() override
     {
-        return std::make_unique<AnimatorComponent>(*this);
+
+        std::unique_ptr <AnimatorComponent> temp = std::make_unique<AnimatorComponent>(*this);
+        temp.get()->Reset();
+        return temp;
     }
     
 };

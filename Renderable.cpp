@@ -2,6 +2,12 @@
 #include "GameEssentials.h"
 void Renderable::UpdateLayer(int Layer)
 {
+	
 	GameEssentialsGlobals::ChangeRenderLayerIndex(this, this->Layer, Layer);
-	std::cout << "LayerUpdated!" << Layer;
+	this->Layer = Layer;
+}
+
+Renderable::~Renderable()
+{
+	GameEssentialsGlobals::RemoveSprite(this, Layer);
 }

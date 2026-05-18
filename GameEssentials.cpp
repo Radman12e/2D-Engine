@@ -21,7 +21,7 @@ Gameobject* GameEssentialsGlobals::WorldRoot = new Gameobject(true);
 
 std::vector<std::vector<Renderable*>> RenderLayers;
 
-void GameEssentialsGlobals::AddSpriteToRenderLayer(Renderable* sprite, size_t layerIndex)
+void GameEssentialsGlobals::AddSpriteToRenderLayer(Renderable* sprite, int layerIndex)
 {
     while (RenderLayers.size() <= layerIndex)
     {
@@ -31,7 +31,23 @@ void GameEssentialsGlobals::AddSpriteToRenderLayer(Renderable* sprite, size_t la
     RenderLayers[layerIndex].push_back(sprite);
 }
 
-void GameEssentialsGlobals::ChangeRenderLayerIndex(Renderable* sprite, size_t oldIndex, size_t newIndex)
+void GameEssentialsGlobals::RemoveSprite(Renderable* sprite, int layerIndex)
+{
+    std::vector<Renderable*>& Layer = RenderLayers[layerIndex];
+
+    for (size_t i = 0; i < Layer.size(); i++)
+    {
+        if (Layer[i] == sprite)
+        {
+            Layer[i] = Layer.back();
+            Layer.pop_back();
+            break;
+        }
+    }
+}
+
+
+void GameEssentialsGlobals::ChangeRenderLayerIndex(Renderable* sprite, int oldIndex, int newIndex)
 {
     if (oldIndex >= RenderLayers.size())
     {
@@ -86,7 +102,7 @@ void GameEssentialsGlobals::RunCollisionPass()
     std::vector<SweepEntry> sweepList;
     sweepList.reserve(Colliders.size());
 
-    // Build AABB list
+
     for (auto& c : Colliders)
     {
         AABB box = c.collider->GetAABB();
@@ -100,23 +116,23 @@ void GameEssentialsGlobals::RunCollisionPass()
             });
     }
 
-    // Sort on X axis
+
     std::sort(sweepList.begin(), sweepList.end(),
         [](const SweepEntry& a, const SweepEntry& b)
         {
             return a.minX < b.minX;
         });
 
-    // Sweep
+
     for (size_t i = 0; i < sweepList.size(); i++)
     {
         for (size_t j = i + 1; j < sweepList.size(); j++)
         {
-            // Early exit on X
+
             if (sweepList[j].minX > sweepList[i].maxX)
                 break;
 
-            // Y pruning
+
             if (sweepList[j].minY > sweepList[i].maxY ||
                 sweepList[j].maxY < sweepList[i].minY)
                 continue;
@@ -124,7 +140,7 @@ void GameEssentialsGlobals::RunCollisionPass()
             Collider* a = sweepList[i].collider;
             Collider* b = sweepList[j].collider;
 
-            // ✅ ONLY store candidates — no collision math here
+
             BroadPhasePairs[a].push_back(b);
             BroadPhasePairs[b].push_back(a);
         }
@@ -165,6 +181,8 @@ float GameEssentialsGlobals::tickLength = 8333.3f;
 
 float GameEssentialsGlobals::physicsTimeStep = 8333.3f;
 
+
+
 sf::RenderWindow* GameEssentialsGlobals::Renderwindow = nullptr;
 
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
@@ -201,6 +219,7 @@ size_t GameEssentialsGlobals::AddCollider(Collider* collider)
 {
     ColliderStruct collider2 = { collider , ColliderNextID++ };
     Colliders.push_back(collider2);
+    std::cout << "ColliderAdded!!";
     return ColliderNextID;
 
 }
@@ -245,43 +264,46 @@ void GameEssentialsGlobals::RemoveRB(size_t id)
 
 void GameEssentialsGlobals::OnGameTick()
 {
+
+    currentTime = std::chrono::steady_clock::now();
+
+    dt = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - lastTime).count();
+
+    lastTime = currentTime;
+
+    TimeSinceUpdate += dt;
+
+   
     RunCollisionPass();
+
     InputEventH.OnGameTick();
 
     Renderwindow->clear();
 
-    currentTime = std::chrono::steady_clock::now();
-    dt = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - lastTime).count();
-    lastTime = currentTime;
-    TimeSinceUpdate += dt;
-
-    if (TimeSinceUpdate < tickLength)
-    {
-
-        return;
-    }
-
-
     for (auto& gameObject : GameObjectContainer)
     {
-        //gameObject->OnUpdate((TimeSinceUpdate / 1000000) * Timescale);
-        gameObject->OnUpdate((TimeSinceUpdate / 1000000) * Timescale);
-        gameObject->OnPhysicsUpdate((TimeSinceUpdate / 1000000) * Timescale);
-        
-        
+        float dt = (TimeSinceUpdate / 1000000.0f) * Timescale;
+
+        gameObject->OnUpdate(dt);
+        gameObject->OnPhysicsUpdate(dt);
     }
+
     RenderScene();
 
     for (auto& gameObject : GameObjectContainer)
     {
-        gameObject->OnLateUpdate((TimeSinceUpdate / 1000000) * Timescale);
+        gameObject->OnLateUpdate((TimeSinceUpdate / 1000000.0f) * Timescale);
     }
-    TimeSinceUpdate = 0;
-
-    
 
     Renderwindow->display();
+
     ClearDeletedObjects();
+
+    TimeSinceUpdate = 0;
+    
+
+
+    
 }
 
 //Obsolite, switching to update

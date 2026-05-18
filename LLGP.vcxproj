@@ -147,8 +147,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ParalaxScrollingHandler.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="PlayerShipController.cpp" />
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
+    <ClCompile Include="SideScrollerHandler.cpp" />
     <ClCompile Include="SpriteRendererComponent.cpp" />
     <ClCompile Include="TestComponent.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
@@ -266,8 +268,10 @@
     <ClInclude Include="packages\SFML\include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="ParalaxScrollingHandler.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="PlayerShipController.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="Rigidbody.h" />
+    <ClInclude Include="SideScrollerHandler.h" />
     <ClInclude Include="SpriteRendererComponent.h" />
     <ClInclude Include="TestComponent.h" />
     <ClInclude Include="TextRenderer.h" />

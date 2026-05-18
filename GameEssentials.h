@@ -67,8 +67,9 @@ public:
 	template<typename T>
 	static T* FindFirstComponent();
 
-	static void AddSpriteToRenderLayer(Renderable* sprite, size_t layerIndex);
-	static void ChangeRenderLayerIndex(Renderable* sprite, size_t oldIndex, size_t newIndex);
+	static void AddSpriteToRenderLayer(Renderable* sprite, int layerIndex);
+	static void ChangeRenderLayerIndex(Renderable* sprite, int oldIndex, int newIndex);
+	static void RemoveSprite(Renderable* sprite, int layer);
 
 	static float physicsTimeStep;
 

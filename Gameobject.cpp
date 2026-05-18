@@ -29,7 +29,7 @@ void Gameobject::Destroy()
 	{
 		//std::cout << "DESTROY";
 		Children.back()->Destroy();
-		Children.pop_back();
+		//Children.pop_back();
 	}
 
 	//std::cout << "\n\nGameObjectDelete!\n\n";

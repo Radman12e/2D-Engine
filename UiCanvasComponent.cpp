@@ -1,13 +1,16 @@
 #include "UiCanvasComponent.h"
+#include "Renderable.h";
 void UiCanvasComponent::SetupCanvas()
 {
     for (auto& C : GameObject->GetDescendants())
     {
-        SpriteRendererComponent* sr = C->GetComponent<SpriteRendererComponent>();
+        Renderable* sr = C->GetComponent<Renderable>();
+        
         
         if (sr == nullptr) continue;
+        std::cout << "RenderableFound";
         sr->UpdateLayer(2000 + sr->GetLayer());
-        sr->BindToCanvas(this);
+        //sr->BindToCanvas(this);
     }
 }
 

@@ -10,6 +10,8 @@
 #include "UiCanvasComponent.h"
 #include "TextRenderer.h"
 #include "ParalaxScrollingHandler.h"
+#include "PlayerShipController.h"
+#include "SideScrollerHandler.h"
 /*
     This version of the SFML "hello world" is statically linked, you may wish to try the dynamically linked version as well.
 */
@@ -34,10 +36,38 @@ int WinMain()
 
     Gameobject* SpaceBg = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
     SpaceBg->Name = "Spacebg";
-    sf::Texture* SpaceTex = new sf::Texture("Assets/SpaceBackground.png");
+    sf::Texture* SpaceTex = new sf::Texture("Assets/SpaceBackground1Animated.png");
     sf::IntRect SpaceRect({ 0,0 }, { 1152,256 });
     SpriteRendererComponent* SpaceSprite = SpaceBg->AddComponent<SpriteRendererComponent>(SpaceTex, SpaceRect,0);
+    AnimatorComponent* SpaceAnimator = SpaceBg->AddComponent<AnimatorComponent>();
+    //Animation clip forPlayer
+    sf::IntRect RectF1S({ 0,0 }, { 1152,256 });
+    sf::IntRect RectF2S({ 0,256 }, { 1152,256 });
+    sf::IntRect RectF3S({ 0,256*2 }, { 1152,256 });
+    sf::IntRect RectF4S({ 0,256*3 }, { 1152,256 });
+    AnimationFrame amSpace0 = { RectF1S, 30 };
+    AnimationFrame amSpace1 = { RectF2S, 30 };
+    AnimationFrame amSpace2 = { RectF3S, 30 };
+    AnimationFrame amSpace3 = { RectF4S, 30 };
+    Animationstrip amsSpace = { {amSpace0,amSpace1,amSpace2,amSpace3}, true };
+    //--------------------------------------------------------------
+
+    //Adds the anim and plays
+    SpaceAnimator->AddAnimation(amsSpace, "idle");
+    SpaceAnimator->PlayAnim("idle");
     //SpaceSprite->UpdateLayer(0);
+
+
+    Gameobject* SpaceBg2 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
+    SpaceBg2->Name = "Spacebg2";
+    sf::Texture* SpaceTex2 = new sf::Texture("Assets/SpaceBackgroundl3.png");
+    SpriteRendererComponent* SpaceSprite2 = SpaceBg2->AddComponent<SpriteRendererComponent>(SpaceTex2, SpaceRect, 0);
+
+    Gameobject* SpaceBg3 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
+    SpaceBg3->Name = "Spacebg3";
+    sf::Texture* SpaceTex3 = new sf::Texture("Assets/SpaceBackgroundl4.png");
+    SpriteRendererComponent* SpaceSprite3 = SpaceBg3->AddComponent<SpriteRendererComponent>(SpaceTex3, SpaceRect, 0);
+
     
 
 
@@ -70,7 +100,7 @@ int WinMain()
     Gameobject* Test4 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
     Test4->Name = "Test4";
 
-    TestComponent* tc = Test->AddComponent<TestComponent>();
+    PlayerShipController* tc = Test->AddComponent<PlayerShipController>();
     
     
     tc->Enabled = true;
@@ -102,49 +132,61 @@ int WinMain()
 
 
 
-    CameraComponent* CameraComp = Test->AddComponent<CameraComponent>();
+    CameraComponent* CameraComp = Test2->AddComponent<CameraComponent>();
+    Test2->AddComponent<SideScrollerHandler>()->Speed = 10;
     CameraComp->SetupCameraComp(view);
-   
-
+    
+    Gameobject* Wall1 = new Gameobject();
+    //Wall1->AddComponent<SpriteRendererComponent>(texture, rect);
+    Wall1->SetParent(Test2);
+    Collider* col = Wall1->AddComponent<Collider>();
+    col->SetupCollider();
+    col->BoxRect = { {0,0}, {400,400} };
+    Wall1->SetlocalPosition({ 192,-150 });
+    Wall1->Clone()->SetlocalPosition({ -592,-150 });
+    Wall1->Clone()->SetlocalPosition({ -192,90 });
+    Wall1->Clone()->SetlocalPosition({ -192,-528 });
 
     
     
-    Test->MoveTo(sf::Vector2f(300, 200));
+    //Test->MoveTo(sf::Vector2f(300, 200));
+    Test2->MoveTo({200,300});
+    Test->SetParent(Test2);
+    //Test->MoveTo(sf::Vector2f(600, 200));
+    //Test2->MoveTo({ 200,500 });
     src->Sprite.setColor(sf::Color(255, 255, 255));
 
+    Gameobject* ShootPoint = new Gameobject();
+    ShootPoint->SetParent(Test);
+    ShootPoint->SetlocalPosition({23,0});
+    //ShootPoint->AddComponent<SpriteRendererComponent>(texture, rect);
 
+    sf::Texture* Forcetx = new sf::Texture("Assets/Force16x19.png");
+    sf::IntRect rectF({ 0,0 }, { 16,19 });
+    Gameobject* ForcePoint = new Gameobject();
+    ForcePoint->SetParent(Test);
+    ForcePoint->SetlocalPosition({ 21,0 });
+    ForcePoint->AddComponent<SpriteRendererComponent>(Forcetx, rectF);
+    AnimatorComponent* ac1f = ForcePoint->AddComponent<AnimatorComponent>();
+    sf::IntRect Forcer1({ 0,0 }, { 16,19 });
+    sf::IntRect Forcer2({0,19 }, { 16,19 });
+    sf::IntRect Forcer3({ 16,0 }, { 16,19 });
+    sf::IntRect Forcer4({ 16,19 }, { 16,19 });
+    AnimationFrame Eam0ef = { Forcer1, 40 };
+    AnimationFrame Eam1ef = { Forcer2, 40 };
+    AnimationFrame Eam2ef = { Forcer3, 40 };
+    AnimationFrame Eam3ef = { Forcer4, 40 };
+
+    Animationstrip Eamsef = { {Eam0ef,Eam2ef,Eam1ef,Eam3ef}, true };
+    ac1f->AddAnimation(Eamsef, "Idle1");
+    ac1f->PlayAnim("Idle1");
 
     //Set up enemy test
-    Gameobject* Test3 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
-    Test3->Name = "Test3";
-    sf::Texture* texture2 = new sf::Texture("Assets/Drone1.png");
-    sf::IntRect rect2({ 0,0 }, { 20,20 });
-    SpriteRendererComponent* src2 = Test3->AddComponent<SpriteRendererComponent>(texture2, rect2);
-    AnimatorComponent* AnimCompE = Test3->AddComponent<AnimatorComponent>();
-    Collider* collider2 = Test3->AddComponent<Collider>();
-    collider2->SetupCollider();
-    Rigidbody* rb2 = Test3->AddComponent<Rigidbody>();
-    //Test3->MoveTo(sf::Vector2f(200, 300));
-
-
-    //Enemy1 animation clip
-    sf::IntRect e1rect1({ 0,0 }, { 20,20 });
-    sf::IntRect e1rect2({ 0,20 }, { 20,20 });
-    sf::IntRect e1rect3({ 0,40 }, { 20,20 });
-    sf::IntRect e1rect4({ 20,0 }, { 20,20 });
-    sf::IntRect e1rect5({ 20,20 }, { 20,20 });
-    AnimationFrame Eam0 = { e1rect1, 20 };
-    AnimationFrame Eam1 = { e1rect4, 20 };
-    AnimationFrame Eam2 = { e1rect2, 20 };
-    AnimationFrame Eam3 = { e1rect5, 20 };
-    AnimationFrame Eam4 = { e1rect3, 20 };
-    Animationstrip Eams = { {Eam0,Eam1,Eam2,Eam3,Eam4}, true };
-    AnimCompE->AddAnimation(Eams, "idle");
-    AnimCompE->PlayAnim("idle");
+   
     //--------------------------------------------------------------
     //Clone
-    Gameobject* EClone = Test3->Clone();
-    EClone->MoveTo(sf::Vector2f(100, 300));
+    //Gameobject* EClone = Test3->Clone();
+    //EClone->MoveTo(sf::Vector2f(100, 300));
     //EClone->Enable();
     //EClone->Destroy();
   
@@ -191,7 +233,7 @@ int WinMain()
     Gameobject* BeamText = new Gameobject();
    
 
-    TextRenderer* testtext = BeamText->AddComponent<TextRenderer>(&MainFont, "BEAM");
+    TextRenderer* testtext = BeamText->AddComponent<TextRenderer>(&MainFont, "BEAM",20);
 
     testtext->text.setStyle(sf::Text::Bold);
 
@@ -235,7 +277,7 @@ int WinMain()
     //Adds the anim and plays
     BeamAnimComponent->AddAnimation(ChargedFullAnim, "ChargedFull");
     BeamAnimComponent->AddAnimation(ChargedIdleAnim, "idle");
-    BeamAnimComponent->PlayAnim("ChargedFull");
+    BeamAnimComponent->PlayAnim("idle");
 
     //BeamHolderFin
 
@@ -294,20 +336,81 @@ int WinMain()
     //SET UP GAME UI --------------------------------------------------------------
 
 
-    for (int i = 0; i < 1; i++) 
-    {
-    
-       Gameobject* EClone2 = Test3->Clone();
-       EClone2->MoveTo(sf::Vector2f(100, 400));
-       float x = rand() % 100;  // width
-       float y = rand() % 100;  // height
 
-        EClone2->MoveTo(sf::Vector2f(x, y));
+    Gameobject* Test3 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
+    Test3->Name = "Test3";
+    sf::Texture* texture2 = new sf::Texture("Assets/Drone1.png");
+    sf::IntRect rect2({ 0,0 }, { 20,20 });
+    SpriteRendererComponent* src2 = Test3->AddComponent<SpriteRendererComponent>(texture2, rect2);
+    AnimatorComponent* AnimCompE = Test3->AddComponent<AnimatorComponent>();
+    Collider* collider2 = Test3->AddComponent<Collider>();
+    collider2->SetupCollider();
+    Rigidbody* rb2 = Test3->AddComponent<Rigidbody>();
+    Test3->MoveTo(sf::Vector2f(200, 300));
+
+
+    //Enemy1 animation clip
+    sf::IntRect e1rect1({ 0,0 }, { 20,20 });
+    sf::IntRect e1rect2({ 0,20 }, { 20,20 });
+    sf::IntRect e1rect3({ 0,40 }, { 20,20 });
+    sf::IntRect e1rect4({ 20,0 }, { 20,20 });
+    sf::IntRect e1rect5({ 20,20 }, { 20,20 });
+    AnimationFrame Eam0 = { e1rect1, 20 };
+    AnimationFrame Eam1 = { e1rect4, 20 };
+    AnimationFrame Eam2 = { e1rect2, 20 };
+    AnimationFrame Eam3 = { e1rect5, 20 };
+    AnimationFrame Eam4 = { e1rect3, 20 };
+    Animationstrip Eams = { {Eam0,Eam1,Eam2,Eam3,Eam4}, true };
+    AnimCompE->AddAnimation(Eams, "idle");
+    AnimCompE->PlayAnim("idle");
+
+
+    //Enemy2
+
+    Gameobject* GreenAlien = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
+    GreenAlien->Name = "Greenie";
+    sf::Texture* textureGA = new sf::Texture("Assets/Greenie3.png");
+    sf::IntRect rectGA({ 10,10 }, { 30,47 });
+    SpriteRendererComponent* srcGA = GreenAlien->AddComponent<SpriteRendererComponent>(textureGA, rectGA);
+    AnimatorComponent* AnimCompGA = GreenAlien->AddComponent<AnimatorComponent>();
+    Collider* colliderGA = GreenAlien->AddComponent<Collider>();
+    colliderGA->SetupCollider();
+    Rigidbody* rbGA = GreenAlien->AddComponent<Rigidbody>();
+    GreenAlien->MoveTo(sf::Vector2f(200, 300));
+
+
+    //Enemy1 animation clip
+    sf::IntRect e1rect1GA({ 0,0 }, { 50,67 });
+    sf::IntRect e1rect2GA({ 50,0 }, { 50,67 });
+    AnimationFrame EamGA0 = { e1rect1GA, 80 };
+    AnimationFrame EamGA1 = { e1rect2GA, 80 };
+
+    Animationstrip UpGA = { {EamGA1}, true };
+    Animationstrip IdleGA = { {EamGA0,EamGA1}, true };
+    AnimCompGA->AddAnimation(IdleGA, "idle");
+    AnimCompGA->AddAnimation(UpGA, "up");
+    AnimCompGA->PlayAnim("idle");
+
+
+
+    
+    for (int i = 0; i < 10; i++) 
+    {
+       Gameobject* aaaaaa = Test3->Clone();
+       //Gameobject* EClone2 = Test3->Clone();
+       //EClone2->MoveTo(sf::Vector2f(100, 400));
+       float x = rand() % 10000;  // width
+       float y = rand() % 10000;  // height
+
+       aaaaaa->MoveTo(sf::Vector2f(x, y));
         //EClone2->Destroy();
     }
 
     //
-    EClone->Destroy();
+    //EClone->Destroy();
+    //Test3->Destroy();
+    //Test3->Destroy();
+    
     
 
     std::cout << "\n\nSize of list: " << GameEssentialsGlobals::Colliders.size();
@@ -333,13 +436,15 @@ int WinMain()
     collider3->SetupCollider();
     
 
-    Test->MoveTo(sf::Vector2f(100, 300));
+    Test->SetlocalPosition({ -100,-60 });
 
     Test4->MoveTo(sf::Vector2f(20, 300));
 
     psh->FocusPoint = CameraComp;
     psh->GetGameObject()->MoveTo(psh->FocusPoint->GetGameObject()->getWorldPos());
-    psh->AddLayer("Main", SpaceBg, 0.8, 3);
+    psh->AddLayer("Main", SpaceBg, -0.2, 3);
+    psh->AddLayer("Main2", SpaceBg2, -0.8, 3);
+    psh->AddLayer("Main3", SpaceBg3, -1.3, 3);
     psh->GetGameObject()->MoveTo(Test->getWorldPos());
 
     //Test4->SetParent(Test);
@@ -355,7 +460,8 @@ int WinMain()
     
    
     //Test->Destroy();
-
+    //ParalaxHandler->Clone();
+    //ParalaxHandler->Destroy();
 
     std::cout << "\n\nFound Componnet TestComponent: " << Test->HasComponent<TestComponent>();
 
@@ -365,7 +471,16 @@ int WinMain()
 
     sf::Vector2 v2(10,10);
 
-    sf::RenderWindow window(sf::VideoMode({ 384, 256 }), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode({ 384, 256 }), "F-type");
+    window.setFramerateLimit(120);
+
+    auto icon = sf::Image{};
+    if (icon.loadFromFile("Assets/Spaceship.png"))
+    {
+        window.setIcon({ 23,11 }, icon.getPixelsPtr());
+    }
+
+    
 
     window.setView(CameraComp->CameraView);
 
@@ -389,7 +504,7 @@ int WinMain()
         //window.clear();
 
         //window.draw(shape);
-        
+        //window.display();
         
         
         GameEssentialsGlobals::OnGameTick();
@@ -397,6 +512,6 @@ int WinMain()
         
         
         
-        //window.display();
+        
     }
 }
