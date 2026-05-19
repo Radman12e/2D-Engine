@@ -100,6 +100,10 @@ public:
 	virtual void OnCollisionStay(collision& CollisionObject)  {};
 	virtual void OnCollisionExited(collision& CollisionObject) {};
 
+	virtual void OnTriggerEntered(collision& CollisionObject) {};
+	virtual void OnTriggerExited(collision& CollisionObject) {};
+
+
 	virtual void OnLateUpdate(float dt) {};
 
 	virtual std::unique_ptr<Component> CloneComponent() 

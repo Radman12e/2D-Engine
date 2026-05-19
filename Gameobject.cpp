@@ -320,3 +320,93 @@ void Gameobject::SetlocalPosition(sf::Vector2f LocalPos)
 	UpdateWorldTransform();
 }
 
+void Gameobject::OnCollisionEntered(collision& CollisionObject)
+{
+
+	std::vector<Gameobject*> a = GetChildren();
+	for (Gameobject* c : a)
+	{
+
+		auto& ab = c->GetComponents();
+
+		for (auto&& comp : ab)
+		{
+
+
+			comp->OnCollisionEntered(CollisionObject);
+
+
+
+
+
+		}
+	}
+}
+
+void Gameobject::OnCollisionExited(collision& CollisionObject)
+{
+
+	std::vector<Gameobject*> a = GetChildren();
+	for (Gameobject* c : a)
+	{
+
+		auto& ab = c->GetComponents();
+
+		for (auto&& comp : ab)
+		{
+
+
+			comp->OnCollisionExited(CollisionObject);
+
+
+
+
+
+		}
+	}
+}
+
+void Gameobject::OnTriggerEnter(collision& CollisionObject)
+{
+
+	std::vector<Gameobject*> a = GetChildren();
+	for (Gameobject* c : a)
+	{
+
+		auto& ab = c->GetComponents();
+
+		for (auto&& comp : ab)
+		{
+
+
+			comp->OnCollisionExited(CollisionObject);
+
+
+
+
+
+		}
+	}
+}
+void Gameobject::OnTriggerExited(collision& CollisionObject)
+{
+
+	std::vector<Gameobject*> a = GetChildren();
+	for (Gameobject* c : a)
+	{
+
+		auto& ab = c->GetComponents();
+
+		for (auto&& comp : ab)
+		{
+
+
+			comp->OnCollisionExited(CollisionObject);
+
+
+
+
+
+		}
+	}
+}

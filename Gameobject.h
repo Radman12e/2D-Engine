@@ -51,51 +51,11 @@ public:
 
 	std::string Name = "Empty";
 
-	void OnCollisionEntered(collision& CollisionObject) 
-	{
-
-		//std::cout << "Collider!!" << Name;
-
-		for (Gameobject* c : Children)
-		{
-
-			//std::vector<std::unique_ptr<Component>> a =  c->GetComponents();
-
-			//for (auto&& comp : a)
-			//{
-
-			//	std::function<void()> fn = [&comp, &CollisionObject]()
-			//		{
-						//comp->OnCollisionEntered(CollisionObject);
-			//		};
-
-				
-			//	comp->RunFunctionOnNectFrame(fn);
-				
-			//}
-		}
-	}
-	void OnCollisionStay(collision& CollisionObject) 
-	{
-		
-	
-	}
-	void OnCollisionExited(collision& CollisionObject)
-	{
-		
-
-	}
-
-	void OnTriggerEnter(collision& CollisionObject)
-	{
-
-
-	}
-	void OnOnTriggerExited(collision& CollisionObject)
-	{
-
-
-	}
+	void OnCollisionEntered(collision& CollisionObject);
+	void OnCollisionStay(collision& CollisionObject);
+	void OnCollisionExited(collision& CollisionObject);
+	void OnTriggerEnter(collision& CollisionObject);
+	void OnTriggerExited(collision& CollisionObject);
 
 	void LateDestroy();
 	

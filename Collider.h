@@ -32,6 +32,8 @@ public:
 
     ~Collider();
     
+    std::vector<std::string> ExcludedLayers = {};
+    std::string Layer = "default";
 
     size_t GetID() 
     {

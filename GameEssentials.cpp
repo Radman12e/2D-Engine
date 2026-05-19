@@ -17,9 +17,18 @@ std::vector<RigidbodyStruct> GameEssentialsGlobals::Rigidbodies = {};
 
 std::vector<Gameobject*> QueuedObjectsToDelete = {};
 
+Scene* GameEssentialsGlobals::NextScene = nullptr;
+
+bool GameEssentialsGlobals::DelayFrame = false;
+
+
+
 Gameobject* GameEssentialsGlobals::WorldRoot = new Gameobject(true);
 
 std::vector<std::vector<Renderable*>> RenderLayers;
+
+Scene* GameEssentialsGlobals::ActiveScene = nullptr;
+ResourceHandler GameEssentialsGlobals::Rh;
 
 void GameEssentialsGlobals::AddSpriteToRenderLayer(Renderable* sprite, int layerIndex)
 {
@@ -157,6 +166,7 @@ void GameEssentialsGlobals::RemoveGameObject(Gameobject* GameObject)
 
 }
 
+
 void ClearDeletedObjects() 
 {
     while (!QueuedObjectsToDelete.empty())
@@ -166,6 +176,12 @@ void ClearDeletedObjects()
         QueuedObjectsToDelete.pop_back();
     }
 }
+
+void GameEssentialsGlobals::ForceClear()
+{
+    ClearDeletedObjects();
+}
+
 
 Gameobject* GameEssentialsGlobals::InstansiateGameObject(Gameobject* gameObject)
 {
@@ -264,7 +280,15 @@ void GameEssentialsGlobals::RemoveRB(size_t id)
 
 void GameEssentialsGlobals::OnGameTick()
 {
-
+    if (DelayFrame) 
+    {
+        ClearDeletedObjects();
+        DelayFrame = false;
+        //DelayLoad();
+        
+        std::cout << "Load!!";
+        return;
+    }
     currentTime = std::chrono::steady_clock::now();
 
     dt = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - lastTime).count();
@@ -414,6 +438,26 @@ sf::Vector2f GameEssentialsGlobals::CollisionCheckCollider(Collider* collider, s
             }
 
         }
+        if (IsExcluded) continue;
+        for (std::string cexc : collider->ExcludedLayers)
+        {
+            if (coll->Layer == cexc)
+            {
+                IsExcluded = true;
+                break;
+            }
+
+        }
+        if (IsExcluded) continue;
+        for (std::string cexc : coll->ExcludedLayers)
+        {
+            if (collider->Layer == cexc)
+            {
+                IsExcluded = true;
+                break;
+            }
+
+        }
 
         if (IsExcluded) continue;
 
@@ -437,6 +481,22 @@ sf::Vector2f GameEssentialsGlobals::CollisionCheckCollider(Collider* collider, s
     }
     return (collisionOff);
 }
+void GameEssentialsGlobals::ResetState() {
+    for (auto& ga : WorldRoot->GetChildren())
+    {
+        ga->Destroy();
+        std::cout << "DESTROYED!!";
+    }
+    GameObjectContainer.clear();
+    QueuedObjectsToDelete.clear();
+    RenderLayers.clear();
+    
+   
 
+
+    //QueuedObjectsToDelete += GameObjectContainer;
+    //GameObjectContainer.clear();
+    //WorldRoot = new Gameobject();
+}
 
 

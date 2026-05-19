@@ -8,6 +8,7 @@
 #include "Collider.h"
 #include "SpriteRendererComponent.h"
 #include "Renderable.h"
+#include "Scene.h";
 
 //#include "PlayerController.h"
 
@@ -37,6 +38,42 @@ static class GameEssentialsGlobals
 public:
 
 	static std::unordered_map<Collider*, std::vector<Collider*>> BroadPhasePairs;
+
+	static Scene* ActiveScene;
+	static Scene* NextScene;
+
+	static ResourceHandler Rh;
+
+	static bool DelayFrame; 
+
+	static void LoadScene(Scene* SceneLoaded, std::string Data = "")
+	{
+		if (ActiveScene != nullptr)
+		{
+			delete ActiveScene;
+			
+
+		}
+		ResetState();
+		DelayFrame = true;
+		ActiveScene = SceneLoaded;
+		ActiveScene->Init(Data);
+
+		
+		//ActiveScene = SceneLoaded;
+		//ActiveScene->Init(Data);
+	}
+
+	static void DelayLoad() 
+	{
+		ActiveScene = NextScene;
+		NextScene = nullptr;
+		
+	}
+	
+	static void ForceClear();
+
+	static void ResetState();
 
 	static void RemoveRB(size_t id);
 
