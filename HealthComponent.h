@@ -31,7 +31,7 @@ public:
     {
         for (auto& a : ExplosionPoints) {
 
-            Gameobject* Explosion = GameEssentialsGlobals::Rh.InstansiatePrefab("Explosion");
+            Gameobject* Explosion = GameEssentialsGlobals::LocalRh->InstansiatePrefab("Explosion");
             if (Explosion != nullptr)
             {
                 Explosion->SetParent(GameObject);
@@ -67,7 +67,7 @@ class BulletComponent :
 {
 public:
     float Damage = 1;
-    float Speed = 10;
+    float Speed = 100* 6;
     std::vector<sf::Vector2f> ExplosionPoints;
 
 
@@ -96,7 +96,7 @@ public:
         if (Damage <= 0)
         {
             GameObject->Destroy();
-            Gameobject* Explosion = GameEssentialsGlobals::Rh.InstansiatePrefab(Explosionstr);
+            Gameobject* Explosion = GameEssentialsGlobals::LocalRh->InstansiatePrefab(Explosionstr);
             if (Explosion != nullptr)
             {
                 Explosion->MoveTo(GameObject->getWorldPos());
@@ -111,8 +111,9 @@ public:
 
 class GunComponent : public Component
 {
+public:
     std::string BulletPrefab;
-    float bcd = 0.2f;
+    float bcd = 0.f;
     float c = 0;
 
     void FireGun(sf::Vector2f Dir) 
@@ -120,7 +121,7 @@ class GunComponent : public Component
         if (c > 0) return;
         c = bcd;
 
-        Gameobject* Explosion = GameEssentialsGlobals::Rh.InstansiatePrefab(BulletPrefab);
+        Gameobject* Explosion = GameEssentialsGlobals::LocalRh->InstansiatePrefab(BulletPrefab);
         if (Explosion != nullptr)
         {
             Explosion->MoveTo(GameObject->getWorldPos());
@@ -131,8 +132,24 @@ class GunComponent : public Component
     }
     ~GunComponent() = default;
 
+    std::unique_ptr<Component> CloneComponent() override
+    {
+        return std::make_unique<GunComponent>(*this);
+    }
+
     void OnUpdate(float dt) override 
     {
         c -= dt;
     }
+};
+
+class BasicGunComponent : public GunComponent 
+{
+public:
+    //BasicGunComponent();
+    std::unique_ptr<Component> CloneComponent() override
+    {
+        return std::make_unique<BasicGunComponent>(*this);
+    }
+    ~BasicGunComponent() = default;
 };

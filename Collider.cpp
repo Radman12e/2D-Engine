@@ -23,7 +23,7 @@ void Collider::Disable()
 {
     if (this->Enabled == false) return;
     this->Enabled = false;
-    GameEssentialsGlobals::RemoveCollider(id);
+    GameEssentialsGlobals::RemoveCollider(this);
     //std::cout << "RemoveCollider";
 }
 

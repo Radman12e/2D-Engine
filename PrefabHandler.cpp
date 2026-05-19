@@ -1,5 +1,5 @@
 #include "PrefabHandler.h"
-#include "string"
+#include <string>
 #include <SFML/Graphics.hpp>
 #include "Gameobject.h"
 #include <SFML/Audio.hpp>
@@ -23,8 +23,12 @@ Gameobject* ResourceHandler::InstansiatePrefab(std::string NameID)
         std::cout << "Prefab not found: " << NameID << "\n";
         return nullptr;
     }
+    auto t = Prefabs[NameID]->Clone();
+    t->Enable();
+    t->MoveTo(Prefabs[NameID]->getWorldPos());
+    std::cout << "PrefabFound!";
+    return t;
 
-    return Prefabs[NameID]->Clone();
 }
 
 sf::Texture* ResourceHandler::InitTexture(std::string NameID, std::string Path)

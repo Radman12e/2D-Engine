@@ -26,6 +26,8 @@ private:
 
 	bool Enabled = true;
 
+	//bool StartEnabled = true;
+
 	bool Started = false;
 
 protected:
@@ -92,7 +94,7 @@ public:
 
 	sf::Transformable& GetTransform();
 
-	const std::vector<Gameobject*>& GetChildren() const;
+	std::vector<Gameobject*> GetChildren() ;
 
 	Gameobject* AddChild(Gameobject* Child);
 
@@ -206,15 +208,16 @@ public:
 
 			clone->components.push_back(std::move(newComp));
 		}
-
+		clone->SetParent(this->Parent);
 		
-		for (Gameobject* child : Children)
+		for (Gameobject* child : GetChildren())
 		{
 			Gameobject* childClone = child->Clone();
-			clone->AddChild(childClone);
+			childClone->SetParent(clone);
+			childClone->Enable();
 		}
 
-		clone->SetParent(this->Parent);
+		
 
 		return clone;
 	}

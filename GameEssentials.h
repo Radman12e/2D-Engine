@@ -44,6 +44,8 @@ public:
 
 	static ResourceHandler Rh;
 
+	static ResourceHandler* LocalRh;;
+
 	static bool DelayFrame; 
 
 	static void LoadScene(Scene* SceneLoaded, std::string Data = "")

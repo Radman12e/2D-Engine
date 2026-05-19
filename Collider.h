@@ -136,7 +136,8 @@ public:
     std::unique_ptr<Component> CloneComponent() override
     {
         auto c = std::make_unique<Collider>(*this);
-        c->SetupFromClone();
+        if (this->Enabled)
+            c->SetupFromClone();
 
         return c;
     }

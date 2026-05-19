@@ -4,7 +4,11 @@ void PlayerShipController::OnUpdate(float dt)
 {
 	//Component::OnUpdate(dt);
 	if (this->Enabled == false) return;
-
+	if (Setup1 == false) 
+	{
+		Setup1 = true;
+		Setup();
+	}
 	sf::Vector2f MovementResolve = {0,0};
 
 	if (WHeld) MovementResolve.y -= 80 * SpeedMulti;
@@ -84,6 +88,29 @@ void PlayerShipController::OnDPressed(InputArgs args)
 
 }
 
+void PlayerShipController::OnSpacePressed(InputArgs args)
+{
+	if (args.phase == InputPhase::Started)
+	{
+		if (PeaShooter != nullptr) 
+		{
+			PeaShooter->BulletPrefab = "bulletP";
+			PeaShooter->FireGun({ 1,0 }); //Fires right!
+			
+		}
+		SpaceHeld = true;
+		GameEssentialsGlobals::EventH.FireEvent("Shoot");
+	}
+	else if (args.phase == InputPhase::Ended)
+	{
+		SpaceHeld = false;
+		
+	}
+
+}
+
+
+
 void PlayerShipController::OnAlive()
 {
 	//std::cout << "StartedComp!!--------------------------";
@@ -110,10 +137,16 @@ void PlayerShipController::OnAlive()
 			this->OnDPressed(IA);
 		};
 
+	std::function<void(InputArgs IA)> OnSpacePressedfn = [this](InputArgs IA)
+		{
+			this->OnSpacePressed(IA);
+		};
+
 	this->bindEvent(sf::Keyboard::Key::W, OnWPressedfn);
 	this->bindEvent(sf::Keyboard::Key::A, OnAPressedfn);
 	this->bindEvent(sf::Keyboard::Key::D, OnDPressedfn);
 	this->bindEvent(sf::Keyboard::Key::S, OnSPressedfn);
+	this->bindEvent(sf::Keyboard::Key::Space, OnSpacePressedfn);
 
 	//GameEssentialsGlobals::InputEventH.BindEvent(sf::Keyboard::Key::W, OnWPressedfn);
 	//GameEssentialsGlobals::InputEventH.BindEvent(sf::Keyboard::Key::D, OnWPressedfn2);

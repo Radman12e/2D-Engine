@@ -35,6 +35,10 @@ void SceneTest::SetupScene(std::string data){
 
     ResourceHandler* SceneRh = &GameEssentialsGlobals::Rh;
 
+    ResourceHandler LocalRh;
+    GameEssentialsGlobals::LocalRh = &LocalRh;
+
+
     sf::View view({ 0,0 }, { 384, 256 });
     view.setCenter({ 190 ,200 });
 
@@ -98,7 +102,25 @@ void SceneTest::SetupScene(std::string data){
         std::cout << children->Name << ",";
     }
 
+    //--------------------------------------------------------------------- Bullet Prefab ----------------------------------
+    
+    Gameobject* BulletPea = new Gameobject();
+    BulletPea->Name = "bullet";
+    sf::IntRect BulletRect({ 0,0 }, {17,4});
+    sf::Texture* BulletTex = SceneRh->InitTexture("bulletP", "Assets/Bulletplr.png");
+    BulletPea->AddComponent<SpriteRendererComponent>(BulletTex, BulletRect, 10);
+    BulletPea->AddComponent<BulletComponent>();
+    Collider* bpcollider = BulletPea->AddComponent<Collider>();
+   
+    bpcollider->Layer = "Player";
+    bpcollider->ExcludedLayers = { "Player", "LevelBounds" };
+    BulletPea->AddComponent<Rigidbody>();
+    bpcollider->SetupCollider();
+    
+    LocalRh.InitPrefab("bulletP", BulletPea);
 
+
+    //--------------------------------------------------------------------- Bullet Prefab ----------------------------------
     //SpaceBackground
 
 
@@ -107,15 +129,13 @@ void SceneTest::SetupScene(std::string data){
 
     Gameobject* Test2 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
     Test2->Name = "Test2";
-
+   
 
 
     Gameobject* Test4 = new Gameobject(sf::Vector2f(), sf::Angle(), true, nullptr);
     Test4->Name = "Test4";
 
     PlayerShipController* tc = Test->AddComponent<PlayerShipController>();
-
-
     tc->Enabled = true;
 
 
@@ -172,6 +192,7 @@ void SceneTest::SetupScene(std::string data){
     Gameobject* ShootPoint = new Gameobject();
     ShootPoint->SetParent(Test);
     ShootPoint->SetlocalPosition({ 23,0 });
+    ShootPoint->AddComponent<BasicGunComponent>();
     //ShootPoint->AddComponent<SpriteRendererComponent>(texture, rect);
 
     sf::Texture* Forcetx = SceneRh->InitTexture("ForceUpgrade1", "Assets/Force16x19.png");
@@ -470,11 +491,21 @@ void SceneTest::SetupScene(std::string data){
     //{
     //    std::cout << children->Name << ",";
     //}
+   
 
+    //Test->Disable();
+    //Test3->Clone();
 
     //Test->Destroy();
     //ParalaxHandler->Clone();
     //ParalaxHandler->Destroy();
+    LocalRh.InitPrefab("plr", Test);
+   
+    //Test->SetlocalPosition({ 0,-100 });
+
+    Gameobject* ga = LocalRh.InstansiatePrefab("plr");
+    //ga->MoveTo({ 0,0 });
+    
 
     std::cout << "\n\nFound Componnet TestComponent: " << Test->HasComponent<TestComponent>();
 

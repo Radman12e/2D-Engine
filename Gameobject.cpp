@@ -201,6 +201,10 @@ void Gameobject::Disable()
 	{
 		component->Disable();
 	}
+	for (auto& c : GetDescendants()) 
+	{
+		c->Disable();
+	}
 }
 
 sf::Transformable& Gameobject::GetTransform()
@@ -208,7 +212,7 @@ sf::Transformable& Gameobject::GetTransform()
 	return transform;
 }
 
-const std::vector<Gameobject*>& Gameobject::GetChildren() const
+std::vector<Gameobject*> Gameobject::GetChildren()
 {
 	return Children;
 }

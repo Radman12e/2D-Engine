@@ -30,6 +30,8 @@ std::vector<std::vector<Renderable*>> RenderLayers;
 Scene* GameEssentialsGlobals::ActiveScene = nullptr;
 ResourceHandler GameEssentialsGlobals::Rh;
 
+ResourceHandler* GameEssentialsGlobals::LocalRh = nullptr;
+
 void GameEssentialsGlobals::AddSpriteToRenderLayer(Renderable* sprite, int layerIndex)
 {
     while (RenderLayers.size() <= layerIndex)
