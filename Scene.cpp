@@ -256,9 +256,37 @@ void SceneTest::SetupScene(std::string data){
     AnimCompEe->AddAnimation(Eamse, "ex");
     AnimCompEe->PlayAnim("ex");
     //--------------------------------------------------------------
+    //LocalRh.InitPrefab("Explosion", ExplosionTest);
+
+
+
+    //--------------------MiniExplosion---------------------------------
+    Gameobject* MiniExplosion = ExplosionTest->Clone();
+    sf::Texture* texture2em = SceneRh->InitTexture("Explosionmini", "Assets/BulletExplosionBlueSmall.png");
+    MiniExplosion->RemoveComponent<SpriteRendererComponent>();
+    sf::IntRect e1rect1em({ 0,0 }, { 17,8 });
+    MiniExplosion->AddComponent<SpriteRendererComponent>(texture2em,e1rect1em);
+
+    //sf::IntRect e1rect1em({ 0,0 }, { 17,8 });
+    sf::IntRect e1rect2em({ 0,0 }, { 17,8 });
+    sf::IntRect e1rect3em({ 0,8 }, { 17,8 });
+    sf::IntRect e1rect4em({ 0,16 }, { 17,8 });
+    sf::IntRect e1rect5em({ 0,32 }, { 17,8 });
+    sf::IntRect e1rect7em({ 0,0 }, { 0,0 });
+    AnimationFrame Eam0em = { e1rect1em, 4 };
+    AnimationFrame Eam1em = { e1rect2em, 4 };
+    AnimationFrame Eam2em = { e1rect3em, 4 };
+    AnimationFrame Eam3em = { e1rect4em, 4 };
+    AnimationFrame Eam4em = { e1rect5em, 4 };
+    AnimationFrame Eam6em = { e1rect7em, 4 };
+    Animationstrip Eamsem = { {Eam0em,Eam1em,Eam2em,Eam3em,Eam4em,Eam6em,Eam6em }, false };
+
+    MiniExplosion->GetComponent<AnimatorComponent>()->StopAnim();
+    MiniExplosion->GetComponent<AnimatorComponent>()->AddAnimation(Eamsem, "ex");
+    MiniExplosion->GetComponent<AnimatorComponent>()->PlayAnim("ex");
+
+    LocalRh.InitPrefab("miniExplosion", MiniExplosion);
     LocalRh.InitPrefab("Explosion", ExplosionTest);
-
-
     //UI START--------------------------------------------------------------
 
 

@@ -69,7 +69,7 @@ void Rigidbody::OnPhysicsUpdate(float dt)
             {
                 
                 other->GetGameObject()->OnTriggerEnter(c);
-                std::cout << "Trigger!!";
+                //std::cout << "Trigger!!";
             }
             else
             {

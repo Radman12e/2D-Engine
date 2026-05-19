@@ -26,7 +26,7 @@ Gameobject* ResourceHandler::InstansiatePrefab(std::string NameID)
     auto t = Prefabs[NameID]->Clone();
     t->Enable();
     t->MoveTo(Prefabs[NameID]->getWorldPos());
-    std::cout << "PrefabFound!";
+    //std::cout << "PrefabFound!";
     return t;
 
 }

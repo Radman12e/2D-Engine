@@ -8,7 +8,7 @@ class HealthComponent :
     public Component
 {
 public:
-    float Health = 10;
+    float Health = 1;
     std::vector<sf::Vector2f> ExplosionPoints = { {0,0} };
     float PlayHitEffect = 0;
    
