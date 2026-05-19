@@ -8,9 +8,9 @@ class HealthComponent :
     public Component
 {
 public:
-    float Health = 1;
-    std::vector<sf::Vector2f> ExplosionPoints;
-    bool PlayHitEffect = false;
+    float Health = 10;
+    std::vector<sf::Vector2f> ExplosionPoints = { {0,0} };
+    float PlayHitEffect = 0;
    
     HealthComponent() {};
     ~HealthComponent() = default;
@@ -26,6 +26,7 @@ public:
         {
             Death();
         }
+        PlayHitEffect = 10;
     }
     void Death() 
     {
@@ -48,15 +49,14 @@ public:
         {
             SpriteRendererComponent* src = GameObject->GetComponent<SpriteRendererComponent>();
             if (src == nullptr) return;
-            PlayHitEffect = false;
-            src->Sprite.setColor(sf::Color(255, 255, 255, 200));
+            PlayHitEffect --;
+            src->Sprite.setColor(sf::Color(255, 0, 0, 255));
         }
         else
         {
             SpriteRendererComponent* src = GameObject->GetComponent<SpriteRendererComponent>();
             if (src == nullptr) return;
-            PlayHitEffect = false;
-            src->Sprite.setColor(sf::Color(255, 255, 255, 200));
+            src->Sprite.setColor(sf::Color(255, 255, 255, 255));
         }
     }
 
@@ -68,7 +68,7 @@ class BulletComponent :
 public:
     float Damage = 1;
     float Speed = 100* 6;
-    std::vector<sf::Vector2f> ExplosionPoints;
+    //std::vector<sf::Vector2f> ExplosionPoints;
 
 
     std::string Explosionstr = "miniExplosion";
@@ -79,7 +79,7 @@ public:
         return std::make_unique<BulletComponent>(*this);
     }
 
-    void OnCollisionEntered(collision& CollisionObject) override
+    void OnTriggerEntered(collision& CollisionObject) override
     {
         auto c = CollisionObject.rb->GetGameObject()->GetComponent<HealthComponent>();
         if (c != nullptr)
@@ -95,13 +95,16 @@ public:
         }
         if (Damage <= 0)
         {
-            GameObject->Destroy();
+            
             Gameobject* Explosion = GameEssentialsGlobals::LocalRh->InstansiatePrefab(Explosionstr);
             if (Explosion != nullptr)
             {
                 Explosion->MoveTo(GameObject->getWorldPos());
             }
+            //GameObject->Disable();
+            GameObject->Destroy();
         }
+        
     }
 
 

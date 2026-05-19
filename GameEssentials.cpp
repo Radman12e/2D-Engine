@@ -425,7 +425,7 @@ sf::Vector2f GameEssentialsGlobals::CollisionCheckRB(Rigidbody* rb)
 
 sf::Vector2f GameEssentialsGlobals::CollisionCheckCollider(Collider* collider, std::vector<ColliderStruct> excludedColliders, Rigidbody* rb)
 {
-
+   
     sf::Vector2f collisionOff = { 0,0 };
     for (Collider* coll : BroadPhasePairs[collider])
     {
@@ -474,7 +474,7 @@ sf::Vector2f GameEssentialsGlobals::CollisionCheckCollider(Collider* collider, s
         }
         else if (collisionOffTemp.length() > 0 && (!collider->IsTrigger && !coll->IsTrigger))
         {
-            // std::cout << "NON TRIGGERS";
+            std::cout << "NON TRIGGERS";
             collisionOff += collisionOffTemp;
             coll->GetGameObject()->OnCollisionEntered(c);
         }

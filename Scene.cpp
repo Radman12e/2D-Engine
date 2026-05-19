@@ -111,11 +111,13 @@ void SceneTest::SetupScene(std::string data){
     BulletPea->AddComponent<SpriteRendererComponent>(BulletTex, BulletRect, 10);
     BulletPea->AddComponent<BulletComponent>();
     Collider* bpcollider = BulletPea->AddComponent<Collider>();
+    
    
     bpcollider->Layer = "Player";
     bpcollider->ExcludedLayers = { "Player", "LevelBounds" };
     BulletPea->AddComponent<Rigidbody>();
     bpcollider->SetupCollider();
+    bpcollider->IsTrigger = true;
     
     LocalRh.InitPrefab("bulletP", BulletPea);
 
@@ -242,17 +244,19 @@ void SceneTest::SetupScene(std::string data){
     sf::IntRect e1rect4e({ 48 * 3,0 }, { 48,48 });
     sf::IntRect e1rect5e({ 48 * 4,0 }, { 48,48 });
     sf::IntRect e1rect6e({ 48 * 5,0 }, { 48,48 });
+    sf::IntRect e1rect7e({ 0,0 }, { 0,0 });
     AnimationFrame Eam0e = { e1rect1e, 10 };
     AnimationFrame Eam1e = { e1rect2e, 10 };
     AnimationFrame Eam2e = { e1rect3e, 10 };
     AnimationFrame Eam3e = { e1rect4e, 10 };
     AnimationFrame Eam4e = { e1rect5e, 10 };
     AnimationFrame Eam5e = { e1rect6e, 10 };
-    Animationstrip Eamse = { {Eam0e,Eam1e,Eam2e,Eam3e,Eam4e,Eam5e}, true };
+    AnimationFrame Eam6e = { e1rect7e, 10 };
+    Animationstrip Eamse = { {Eam0e,Eam1e,Eam2e,Eam3e,Eam4e,Eam5e,Eam6e }, false };
     AnimCompEe->AddAnimation(Eamse, "ex");
     AnimCompEe->PlayAnim("ex");
     //--------------------------------------------------------------
-
+    LocalRh.InitPrefab("Explosion", ExplosionTest);
 
 
     //UI START--------------------------------------------------------------
@@ -397,7 +401,7 @@ void SceneTest::SetupScene(std::string data){
     Animationstrip Eams = { {Eam0,Eam1,Eam2,Eam3,Eam4}, true };
     AnimCompE->AddAnimation(Eams, "idle");
     AnimCompE->PlayAnim("idle");
-
+    Test3->AddComponent<HealthComponent>();
 
     //Enemy2
 
@@ -428,15 +432,16 @@ void SceneTest::SetupScene(std::string data){
 
 
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 50; i++)
     {
         Gameobject* aaaaaa = Test3->Clone();
         //Gameobject* EClone2 = Test3->Clone();
         //EClone2->MoveTo(sf::Vector2f(100, 400));
-        float x = rand() % 10000;  // width
-        float y = rand() % 10000;  // height
+        float x = (rand() % 300);  // width
+        float y = (rand() % 100) - 100;  // height
 
-        aaaaaa->MoveTo(sf::Vector2f(x, y));
+        aaaaaa->MoveTo(sf::Vector2f(x, y) + Test2->getWorldPos());
+        
         //EClone2->Destroy();
     }
 

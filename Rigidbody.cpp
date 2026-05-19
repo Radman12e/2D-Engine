@@ -65,14 +65,17 @@ void Rigidbody::OnPhysicsUpdate(float dt)
 
             collision c = { other, myCol, this };
 
-            if (myCol->IsTrigger || other->IsTrigger)
+            if (myCol->IsTrigger == true || other->IsTrigger == true)
             {
+                
                 other->GetGameObject()->OnTriggerEnter(c);
+                std::cout << "Trigger!!";
             }
             else
             {
                 totalCorrection += offset;
                 other->GetGameObject()->OnCollisionEntered(c);
+                
             }
         }
     }

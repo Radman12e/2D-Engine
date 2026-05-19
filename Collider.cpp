@@ -56,7 +56,7 @@ void Collider::OnAlive()
 
 Collider::~Collider()
 {
-    GameEssentialsGlobals::RemoveCollider(id);
+    GameEssentialsGlobals::RemoveCollider(this);
 }
 
 void Collider::OnUpdate(float dt)

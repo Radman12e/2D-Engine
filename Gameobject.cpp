@@ -4,6 +4,7 @@
 
 void Gameobject::Destroy()
 {
+	Disable();
 	QueueForDestroy = true;
 	if (this == GameEssentialsGlobals::WorldRoot)
 		return;
@@ -190,7 +191,7 @@ void Gameobject::Enable()
 	{
 		component->Enable();
 	}
-
+	
 }
 
 void Gameobject::Disable()
@@ -326,8 +327,9 @@ void Gameobject::SetlocalPosition(sf::Vector2f LocalPos)
 
 void Gameobject::OnCollisionEntered(collision& CollisionObject)
 {
-
-	std::vector<Gameobject*> a = GetChildren();
+	if (!Enabled) return;
+	std::vector<Gameobject*> a = GetDescendants();
+	a.push_back(this);
 	for (Gameobject* c : a)
 	{
 
@@ -349,8 +351,9 @@ void Gameobject::OnCollisionEntered(collision& CollisionObject)
 
 void Gameobject::OnCollisionExited(collision& CollisionObject)
 {
-
-	std::vector<Gameobject*> a = GetChildren();
+	if (!Enabled) return;
+	std::vector<Gameobject*> a = GetDescendants();
+	a.push_back(this);
 	for (Gameobject* c : a)
 	{
 
@@ -372,8 +375,9 @@ void Gameobject::OnCollisionExited(collision& CollisionObject)
 
 void Gameobject::OnTriggerEnter(collision& CollisionObject)
 {
-
-	std::vector<Gameobject*> a = GetChildren();
+	if (!Enabled) return;
+	std::vector<Gameobject*> a = GetDescendants();
+	a.push_back(this);
 	for (Gameobject* c : a)
 	{
 
@@ -383,7 +387,7 @@ void Gameobject::OnTriggerEnter(collision& CollisionObject)
 		{
 
 
-			comp->OnCollisionExited(CollisionObject);
+			comp->OnTriggerEntered(CollisionObject);
 
 
 
@@ -394,8 +398,9 @@ void Gameobject::OnTriggerEnter(collision& CollisionObject)
 }
 void Gameobject::OnTriggerExited(collision& CollisionObject)
 {
-
-	std::vector<Gameobject*> a = GetChildren();
+	if (!Enabled) return;
+	std::vector<Gameobject*> a = GetDescendants();
+	a.push_back(this);
 	for (Gameobject* c : a)
 	{
 
@@ -405,7 +410,7 @@ void Gameobject::OnTriggerExited(collision& CollisionObject)
 		{
 
 
-			comp->OnCollisionExited(CollisionObject);
+			comp->OnTriggerExited(CollisionObject);
 
 
 
