@@ -39,6 +39,8 @@ public:
 
 	static std::unordered_map<Collider*, std::vector<Collider*>> BroadPhasePairs;
 
+	static std::vector<Gameobject*> PendingSpawnObjects;
+
 	static Scene* ActiveScene;
 	static Scene* NextScene;
 

@@ -1,7 +1,8 @@
 #pragma once
 #include "Component.h"
 #include "GameEssentials.h"
-
+#include "AnimatorComponent.h"
+#include <cmath>
 
 
 class HealthComponent :
@@ -155,4 +156,72 @@ public:
         return std::make_unique<BasicGunComponent>(*this);
     }
     ~BasicGunComponent() = default;
+};
+
+
+class BeamUIRelay : public Component
+{
+public:
+    bool Setup1 = false;
+    float MaxSize = 80;
+    float CurrentProgress = 0;
+    float TimeForBigBeam = 1;
+    float TimeForMediumBeam = 1;
+
+    bool FullLastFrame = false;
+    bool Held = false;
+
+    void OnUpdate(float dt) override 
+    {
+        if (!Setup1) 
+        {
+            Setup();
+        }
+        if (Held) 
+        {
+            CurrentProgress += dt;
+        }
+        if (CurrentProgress >= TimeForBigBeam) 
+        {
+            CurrentProgress = TimeForBigBeam;
+        }
+        if (FullLastFrame == false && CurrentProgress >= TimeForBigBeam)
+        {
+            GameObject->GetComponent<AnimatorComponent>()->PlayAnim("ChargedFull");
+            FullLastFrame = true;
+        }
+        int s1 = (CurrentProgress / TimeForBigBeam) * MaxSize;
+        int s = MaxSize - ((MaxSize - (s1) / 2));
+        GameObject->GetChildren()[0]->GetComponent<SpriteRendererComponent>()->SetRect({ {s,0},{s1,15} });
+
+        //posx = (maxsize - x) / 2mah
+    }
+
+    void Setup() 
+    {
+        Setup1 = true;
+        std::function<void()> OnBeamChargeStart = [this]()
+            {
+                this->Held = true;
+                //std::cout << "HELD!!!";
+            };
+        std::function<void()> OnBeamChargeEnd = [this]()
+            {
+                this->Held = false;
+                FullLastFrame = false;
+                GameObject->GetComponent<AnimatorComponent>()->PlayAnim("idle");
+                CurrentProgress = 0;
+            };
+        this->bindEvent("ShootStart", OnBeamChargeStart);
+        this->bindEvent("ShootEnd", OnBeamChargeEnd);
+        //std::cout << "\n\n\nSETUP!!!!\n\n\n";
+    }
+
+    std::unique_ptr<Component> CloneComponent() override
+    {
+        return std::make_unique<BeamUIRelay>(*this);
+    }
+    ~BeamUIRelay() = default;
+
+
 };

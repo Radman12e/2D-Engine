@@ -32,6 +32,10 @@ ResourceHandler GameEssentialsGlobals::Rh;
 
 ResourceHandler* GameEssentialsGlobals::LocalRh = nullptr;
 
+
+std::vector<Gameobject*>  GameEssentialsGlobals::PendingSpawnObjects = std::vector<Gameobject*>();
+
+
 void GameEssentialsGlobals::AddSpriteToRenderLayer(Renderable* sprite, int layerIndex)
 {
     while (RenderLayers.size() <= layerIndex)
@@ -187,7 +191,7 @@ void GameEssentialsGlobals::ForceClear()
 
 Gameobject* GameEssentialsGlobals::InstansiateGameObject(Gameobject* gameObject)
 {
-    GameObjectContainer.push_back(gameObject);
+    PendingSpawnObjects.push_back(gameObject);
 
     return gameObject;
 
@@ -320,6 +324,13 @@ void GameEssentialsGlobals::OnGameTick()
     {
         gameObject->OnLateUpdate((TimeSinceUpdate / 1000000.0f) * Timescale);
     }
+
+    for (auto* obj : PendingSpawnObjects)
+    {
+        GameObjectContainer.push_back(obj);
+    }
+
+    PendingSpawnObjects.clear();
 
     Renderwindow->display();
 

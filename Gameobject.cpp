@@ -55,6 +55,11 @@ void Gameobject::OnUpdate(float dt)
 	if (!Enabled) return;
 	for (auto& component : components)
 	{
+		if (!component)
+		{
+			std::cout << "NULL COMPONENT FOUND\n";
+			continue;
+		}
 		component->OnTrueUpdate(dt);
 		//component->OnUpdate(dt);
 	}
@@ -73,6 +78,11 @@ void Gameobject::OnLateUpdate(float dt)
 	if (!Enabled) return;
 	for (auto& component : components)
 	{
+		if (!component)
+		{
+			std::cout << "NULL COMPONENT FOUND\n";
+			continue;
+		}
 		component->OnLateUpdate(dt);
 		//component->OnUpdate(dt);
 	}
@@ -83,6 +93,11 @@ void Gameobject::OnPhysicsUpdate(float dt)
 	if (!Enabled) return;
 	for (auto& component : components)
 	{
+		if (!component)
+		{
+			std::cout << "NULL COMPONENT FOUND\n";
+			continue;
+		}
 		component->OnPhysicsUpdate(dt);
 	}
 }

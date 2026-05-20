@@ -317,8 +317,11 @@ void SceneTest::SetupScene(std::string data){
     Gameobject* BeamCharge = new Gameobject();
 
     sf::Texture* TexBeam2 = SceneRh->InitTexture("BeamChargeMiddle", "Assets/BeamChageMiddle.png");
-    sf::IntRect rectBeam2({ 0,0 }, { 80,15 });
+    //sf::IntRect rectBeam2({ 0,0 }, { 80,15 });
+    sf::IntRect rectBeam2({ 0,0 }, { 60,15 }); //80 = 0, 60 = -10, 50 = -15 posx = (maxsize - x)/2
+
     BeamCharge->AddComponent<SpriteRendererComponent>(TexBeam2, rectBeam2);
+    
     //End
 
 
@@ -330,6 +333,7 @@ void SceneTest::SetupScene(std::string data){
     sf::IntRect rectBeam({ 0,0 }, { 90,15 });
     BeamHolder->AddComponent<SpriteRendererComponent>(TexBeam, rectBeam);
     AnimatorComponent* BeamAnimComponent = BeamHolder->AddComponent<AnimatorComponent>();
+    BeamHolder->AddComponent <BeamUIRelay>();
 
     //Animation clip forPlayer
     sf::IntRect BeamChargeR1({ 0,0 }, { 90,15 });
@@ -346,7 +350,7 @@ void SceneTest::SetupScene(std::string data){
     BeamAnimComponent->PlayAnim("idle");
 
     //BeamHolderFin
-
+    
 
     //Heart
     Gameobject* Heart = new Gameobject();
@@ -398,6 +402,8 @@ void SceneTest::SetupScene(std::string data){
     Heart2->SetlocalPosition({ -140, 110 });
     Heart3->SetlocalPosition({ -160, 110 });
 
+    BeamCharge->SetlocalPosition({ -10,0 });
+
 
     //SET UP GAME UI --------------------------------------------------------------
 
@@ -411,6 +417,8 @@ void SceneTest::SetupScene(std::string data){
     AnimatorComponent* AnimCompE = Test3->AddComponent<AnimatorComponent>();
     Collider* collider2 = Test3->AddComponent<Collider>();
     collider2->SetupCollider();
+    collider2->Layer = "Enemy";
+    collider2->ExcludedLayers = { "Enemy", "LevelBounds"};
     Rigidbody* rb2 = Test3->AddComponent<Rigidbody>();
     Test3->MoveTo(sf::Vector2f(200, 300));
 
@@ -493,7 +501,7 @@ void SceneTest::SetupScene(std::string data){
 
     //SpriteRendererComponent* src100 = Test3->GetComponent<SpriteRendererComponent>();
 
-    std::cout << "\n\n Component found in: " << GameEssentialsGlobals::FindFirstComponent<SpriteRendererComponent>()->GetGameObject()->Name;
+    //std::cout << "\n\n Component found in: " << GameEssentialsGlobals::FindFirstComponent<SpriteRendererComponent>()->GetGameObject()->Name;
 
 
 

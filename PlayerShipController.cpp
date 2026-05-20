@@ -99,11 +99,12 @@ void PlayerShipController::OnSpacePressed(InputArgs args)
 			
 		}
 		SpaceHeld = true;
-		GameEssentialsGlobals::EventH.FireEvent("Shoot");
+		GameEssentialsGlobals::EventH.FireEvent("ShootStart");
 	}
 	else if (args.phase == InputPhase::Ended)
 	{
 		SpaceHeld = false;
+		GameEssentialsGlobals::EventH.FireEvent("ShootEnd");
 		
 	}
 

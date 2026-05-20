@@ -59,6 +59,10 @@ public:
     //returns collision correction for x,y
     sf::Vector2f CheckCollision(Collider* OtherCollider)
     {
+        if (std::find(ExcludedLayers.begin(), ExcludedLayers.end(), OtherCollider->Layer) != ExcludedLayers.end())
+        {
+            return {0,0};
+        }
         if (OtherCollider->typeOfCollider == ColliderType::Box && typeOfCollider == ColliderType::Box)
         {
             return CheckBoxCollision(OtherCollider);
