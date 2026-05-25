@@ -166,7 +166,7 @@ public:
     float MaxSize = 80;
     float CurrentProgress = 0;
     float TimeForBigBeam = 1;
-    float TimeForMediumBeam = 1;
+    float TimeForMediumBeam = 0.5;
 
     bool FullLastFrame = false;
     bool Held = false;
@@ -200,12 +200,12 @@ public:
     void Setup() 
     {
         Setup1 = true;
-        std::function<void()> OnBeamChargeStart = [this]()
+        std::function<void(EventArgs)> OnBeamChargeStart = [this](EventArgs)
             {
                 this->Held = true;
                 //std::cout << "HELD!!!";
             };
-        std::function<void()> OnBeamChargeEnd = [this]()
+        std::function<void(EventArgs)> OnBeamChargeEnd = [this](EventArgs)
             {
                 this->Held = false;
                 FullLastFrame = false;

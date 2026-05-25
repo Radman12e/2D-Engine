@@ -501,7 +501,7 @@ void GameEssentialsGlobals::ResetState() {
         std::cout << "DESTROYED!!";
     }
     GameObjectContainer.clear();
-    QueuedObjectsToDelete.clear();
+    //QueuedObjectsToDelete.clear();
     RenderLayers.clear();
     
    

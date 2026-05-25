@@ -3,7 +3,7 @@
 
 void SpriteRendererComponent::BindToCanvas(UiCanvasComponent* Canvas)
 {
-	std::function<void()> OnSPressedfn = [this]()
+	std::function<void(EventArgs)> OnSPressedfn = [this](EventArgs)
 		{
 			GameEssentialsGlobals::Renderwindow->draw(this->Sprite);
 		};

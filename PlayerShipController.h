@@ -24,6 +24,9 @@ public:
     float BeamHeldTime = 0;
     bool SpaceHeld = false;
 
+    float TimeForMediumBeam = 0.5;
+    float TimeForLargeBeam = 1;
+
     BasicGunComponent* PeaShooter = nullptr;
 
     PlayerShipController() 

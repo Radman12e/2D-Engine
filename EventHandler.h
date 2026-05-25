@@ -4,16 +4,22 @@
 #include <vector>
 #include <SFML/Window.hpp>
 
-
+struct EventArgs
+{
+	std::string S_Data;
+	int Int_Data;
+};
 #pragma once
 class EventHandler
 {
 private:
 	
+	
+
 	struct EventBinding
 	{
 		size_t ID;
-		std::function<void()> Eventfn;
+		std::function<void(EventArgs)> Eventfn;
 	};
 
 	size_t nextId = 0;
@@ -23,7 +29,7 @@ private:
 	
 public:
 
-	size_t BindEvent(std::string str, std::function<void()> func)
+	size_t BindEvent(std::string str, std::function<void(EventArgs)> func)
 	{
 		size_t id = nextId++;
 		Events[str].push_back({ id, std::move(func) });
@@ -41,14 +47,14 @@ public:
 		);
 	}
 
-	void FireEvent(std::string str)
+	void FireEvent(std::string str, EventArgs params = {})
 	{
 		auto it = Events.find(str);
 		if (it == Events.end()) return;
 
 		for (auto& b : Events[str])
 		{
-			if (b.Eventfn) b.Eventfn();
+			if (b.Eventfn) b.Eventfn(params);
 		}
 	}
 

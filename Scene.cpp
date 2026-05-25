@@ -122,6 +122,54 @@ void SceneTest::SetupScene(std::string data){
     LocalRh.InitPrefab("bulletP", BulletPea);
 
 
+
+    Gameobject* MediumBullet = new Gameobject();
+    MediumBullet->Name = "bullet";
+    sf::IntRect BulletRect2({ 0,0 }, { 30,9 });
+    sf::Texture* BulletTex2 = SceneRh->InitTexture("bulletM", "Assets/MediumPlrBullet30x9.png");
+    MediumBullet->AddComponent<SpriteRendererComponent>(BulletTex2, BulletRect2 , 10);
+    auto bc = MediumBullet->AddComponent<BulletComponent>();
+    bc->Damage = 8;
+    Collider* bpcollider2 = MediumBullet->AddComponent<Collider>();
+
+
+    bpcollider2->Layer = "Player";
+    bpcollider2->ExcludedLayers = { "Player", "LevelBounds" };
+    MediumBullet->AddComponent<Rigidbody>();
+    bpcollider2->SetupCollider();
+    bpcollider2->IsTrigger = true;
+
+    LocalRh.InitPrefab("bulletM", MediumBullet);
+
+
+    Gameobject* LargeBullet = new Gameobject();
+    LargeBullet->Name = "bullet";
+    sf::IntRect BulletRect3({ 0,0 }, { 55,17 });
+    sf::IntRect BulletRect3ANIM({ 0,17 }, { 55,17 });
+    sf::Texture* BulletTex3 = SceneRh->InitTexture("bulletL", "Assets/BigProjectile55x17.png");
+    LargeBullet->AddComponent<SpriteRendererComponent>(BulletTex3, BulletRect3, 10);
+    auto bc2 = LargeBullet->AddComponent<BulletComponent>();
+    bc2->Damage = 15;
+    Collider* bpcollider3 = LargeBullet->AddComponent<Collider>();
+
+
+    bpcollider3->Layer = "Player";
+    bpcollider3->ExcludedLayers = { "Player", "LevelBounds" };
+    LargeBullet->AddComponent<Rigidbody>();
+    bpcollider3->SetupCollider();
+    bpcollider3->IsTrigger = true;
+    auto Anim = LargeBullet->AddComponent<AnimatorComponent>();
+    AnimationFrame amLb2 = { BulletRect3, 10 };
+    AnimationFrame amLb3 = { BulletRect3ANIM, 10 };
+    Animationstrip amLbs = { {amLb2,amLb3}, true };
+    Anim->AddAnimation(amLbs, "idle");
+    Anim->PlayAnim("idle");
+
+    LocalRh.InitPrefab("bulletL", LargeBullet);
+   
+
+
+
     //--------------------------------------------------------------------- Bullet Prefab ----------------------------------
     //SpaceBackground
 
@@ -340,7 +388,7 @@ void SceneTest::SetupScene(std::string data){
     sf::IntRect BeamChargeR2({ 0,15 }, { 90,15 });
     AnimationFrame BeamChargeF1 = { BeamChargeR1, 10 };
     AnimationFrame BeamChargeF2 = { BeamChargeR2, 10 };
-    Animationstrip ChargedFullAnim = { {BeamChargeF1,BeamChargeF2}, true };
+    Animationstrip ChargedFullAnim = { {BeamChargeF2,BeamChargeF1}, true };
     Animationstrip ChargedIdleAnim = { {BeamChargeF1}, true };
 
 
@@ -464,6 +512,13 @@ void SceneTest::SetupScene(std::string data){
     AnimCompGA->AddAnimation(IdleGA, "idle");
     AnimCompGA->AddAnimation(UpGA, "up");
     AnimCompGA->PlayAnim("idle");
+    auto hpga = GreenAlien->AddComponent<HealthComponent>();
+
+    colliderGA->Layer = "Enemy";
+    colliderGA->ExcludedLayers = { "Enemy", "LevelBounds" };
+    hpga->Health = 40;
+    //hpga->ExplosionPoints = { {30,30},{-30,-30},{0,0},{std::rand,-30} };
+
 
 
 
@@ -497,6 +552,8 @@ void SceneTest::SetupScene(std::string data){
 
     Collider* collider = Test->AddComponent<Collider>();
     collider->SetupCollider();
+    collider->Layer = "Player";
+    collider->ExcludedLayers = { "Player"};
     Rigidbody* rb = Test->AddComponent<Rigidbody>();
 
     //SpriteRendererComponent* src100 = Test3->GetComponent<SpriteRendererComponent>();

@@ -48,7 +48,8 @@ protected:
 	
 
 
-	size_t bindEvent(std::string Key, std::function<void()> fn);
+	size_t bindEvent(std::string Key, std::function<void(EventArgs)> fn);
+
 
 	size_t bindEvent(sf::Keyboard::Key Key, std::function<void(InputArgs)> fn);
 

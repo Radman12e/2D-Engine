@@ -18,6 +18,11 @@ void PlayerShipController::OnUpdate(float dt)
 
 	GameObject->GetComponent<Rigidbody>()->Velocity = MovementResolve;
 
+	if (SpaceHeld) 
+	{
+		BeamHeldTime += dt;
+	}
+
 	//std::cout << "\n TICK: " << dt;
 
 }
@@ -104,7 +109,23 @@ void PlayerShipController::OnSpacePressed(InputArgs args)
 	else if (args.phase == InputPhase::Ended)
 	{
 		SpaceHeld = false;
+		if (BeamHeldTime > TimeForLargeBeam && PeaShooter != nullptr)
+		{
+			PeaShooter->BulletPrefab = "bulletL";
+			PeaShooter->FireGun({ 1,0 });
+			PeaShooter->BulletPrefab = "bulletP";
+		}
+		else if (BeamHeldTime > TimeForMediumBeam && PeaShooter != nullptr)
+		{
+			PeaShooter->BulletPrefab = "bulletM";
+			PeaShooter->FireGun({ 1,0 });
+			PeaShooter->BulletPrefab = "bulletP";
+		}
+
+		
+		BeamHeldTime = 0;
 		GameEssentialsGlobals::EventH.FireEvent("ShootEnd");
+	
 		
 	}
 

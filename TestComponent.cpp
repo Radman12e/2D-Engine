@@ -102,7 +102,7 @@ void TestComponent::OnAlive()
 	this->bindEvent(sf::Keyboard::Key::A, OnAPressedfn);
 	this->bindEvent(sf::Keyboard::Key::D, OnDPressedfn);
 	this->bindEvent(sf::Keyboard::Key::S, OnSPressedfn);
-	this->bindEvent("TestEvent1", EventTest);
+	//this->bindEvent("TestEvent1", EventTest);
 
 	//GameEssentialsGlobals::InputEventH.BindEvent(sf::Keyboard::Key::W, OnWPressedfn);
 	//GameEssentialsGlobals::InputEventH.BindEvent(sf::Keyboard::Key::D, OnWPressedfn2);

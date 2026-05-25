@@ -11,7 +11,7 @@ void Collider::SetupCollider(ColliderType CT, bool isTrigger)
         RectOffset = sf::Vector2f((Temp->getRect().size) / 2);
         Radius = (Temp->getRect().size / 2).x;
     }
-    std::cout << "Collider madep2!";
+    //std::cout << "Collider madep2!";
     id = GameEssentialsGlobals::AddCollider(this);
     std::cout << "Collider made!";
     

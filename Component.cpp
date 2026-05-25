@@ -71,9 +71,9 @@ void Component::UnbindAllEvents()
 	}
 }
 
-size_t Component::bindEvent(std::string Key, std::function<void()> fn)
+size_t Component::bindEvent(std::string Key, std::function<void(EventArgs)> fn)
 {
-
+	//InputArgs IA = {};
 	size_t ID = GameEssentialsGlobals::EventH.BindEvent(Key, fn);
 
 	BasicEvents.push_back({ Key,ID });
