@@ -155,6 +155,7 @@
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SideScrollerHandler.cpp" />
+    <ClCompile Include="SoundComponent.cpp" />
     <ClCompile Include="SpriteRendererComponent.cpp" />
     <ClCompile Include="TestComponent.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
@@ -280,6 +281,8 @@
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SideScrollerHandler.h" />
+    <ClInclude Include="SoundClass.h" />
+    <ClInclude Include="SoundComponent.h" />
     <ClInclude Include="SpriteRendererComponent.h" />
     <ClInclude Include="TestComponent.h" />
     <ClInclude Include="TextRenderer.h" />
