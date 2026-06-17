@@ -1,4 +1,4 @@
-#include "Component.h"
+#pragma once
 #include "Component.h"
 #include <iostream>
 #include "EventHandler.h"

@@ -119,64 +119,61 @@ void Gameobject::OnAlive()
 	}
 }
 
+
 Gameobject::Gameobject()
+{
+	this->transform = sf::Transformable();
+	this->Enabled = true;
+
+	OnAlive(); 
+
+	GameEssentialsGlobals::InstansiateGameObject(this);
+	this->SetParent(GameEssentialsGlobals::WorldRoot);
+}
+
+Gameobject::Gameobject(bool Enabled)
+{
+	this->transform = sf::Transformable();
+	this->Enabled = Enabled;
+
+	if (Enabled)
 	{
-		this->transform = sf::Transformable();
-		this->Enabled = true;
-
-		if (Enabled)
-		{
-			OnAlive();
-		}
-
-		GameEssentialsGlobals::InstansiateGameObject(this);
-		this->SetParent(GameEssentialsGlobals::WorldRoot);
-
+		OnAlive();
 	}
 
-Gameobject::Gameobject(bool Enabled = true)
+	GameEssentialsGlobals::InstansiateGameObject(this);
+	this->SetParent(GameEssentialsGlobals::WorldRoot);
+}
+
+Gameobject::Gameobject(sf::Transformable transform, bool Enabled)
+{
+	this->transform = transform;
+	this->Enabled = Enabled;
+
+	if (Enabled)
 	{
-		this->transform = sf::Transformable();
-		this->Enabled = Enabled;
-
-		if (Enabled)
-		{
-			OnAlive();
-		}
-
-		GameEssentialsGlobals::InstansiateGameObject(this);
-		this->SetParent(GameEssentialsGlobals::WorldRoot);
+		OnAlive();
 	}
+	GameEssentialsGlobals::InstansiateGameObject(this);
+	this->SetParent(GameEssentialsGlobals::WorldRoot);
+}
 
-Gameobject::Gameobject(sf::Transformable transform, bool Enabled = true)
-	{
-		this->transform = transform;
-		this->Enabled = Enabled;
 
-		if (Enabled)
-		{
-			OnAlive();
-		}
-		GameEssentialsGlobals::InstansiateGameObject(this);
-		this->SetParent(GameEssentialsGlobals::WorldRoot);
-	}
-
-Gameobject::Gameobject(sf::Vector2f position = sf::Vector2f(0,0), sf::Angle rotation = sf::Angle::Zero, bool Enabled = true, Gameobject* parent = nullptr)
+Gameobject::Gameobject(sf::Vector2f position, sf::Angle rotation, bool Enabled, Gameobject* parent)
 {
 	this->transform = sf::Transformable();
 	transform.setPosition(position);
 	transform.rotate(rotation);
 	this->Enabled = Enabled;
 
-	if (parent != nullptr) 
+	if (parent != nullptr)
 	{
 		this->SetParent(parent);
 	}
-	else 
+	else
 	{
 		this->SetParent(GameEssentialsGlobals::WorldRoot);
 	}
-
 
 	if (Enabled)
 	{

@@ -28,7 +28,7 @@ public:
 		{
 			if (soundPtr != nullptr)
 			{
-				//c2->Sounds[key] = std::make_unique<Sound>(soundPtr.get()->Dir);
+				c2->Sounds[key] = std::make_unique<Sound>(soundPtr.get()->Dir);
 			}
 		
 		}

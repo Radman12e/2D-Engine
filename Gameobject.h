@@ -73,18 +73,19 @@ public:
 
 	void OnLateUpdate(float dt);
 	
-	Gameobject();
+	//Gameobject();
 
 	~Gameobject() 
 	{
 		//std::cout << "DESTROYOBJECT!!!";
 	}
+	
 
+	Gameobject();
 	Gameobject(bool Enabled);
-
 	Gameobject(sf::Transformable transform, bool Enabled);
 
-	Gameobject(sf::Vector2f position, sf::Angle rotation, bool Enabled, Gameobject* parent);
+	Gameobject(sf::Vector2f position, sf::Angle rotation = sf::Angle::Zero, bool Enabled = true, Gameobject* parent = nullptr);
 
 	void Ready();
 

@@ -333,6 +333,8 @@ void SceneTest::SetupScene(std::string data){
     MiniExplosion->GetComponent<AnimatorComponent>()->AddAnimation(Eamsem, "ex");
     MiniExplosion->GetComponent<AnimatorComponent>()->PlayAnim("ex");
 
+    std::unique_ptr<Sound> ExSound = std::make_unique<Sound>("Assets/explosionSound.wav");
+    ExplosionTest->AddComponent<SoundComponent>()->AddSound(std::move(ExSound), "default");
     LocalRh.InitPrefab("miniExplosion", MiniExplosion);
     LocalRh.InitPrefab("Explosion", ExplosionTest);
     //UI START--------------------------------------------------------------
