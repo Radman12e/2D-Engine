@@ -1,17 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "Gameobject.h"
 #include "Component.h"
-#include "TestComponent.h"
 #include "GameEssentials.h"
-#include <iostream>
-#include "SpriteRendererComponent.h"
-#include "AnimatorComponent.h"
-#include "CameraComponent.h"
-#include "UiCanvasComponent.h"
-#include "TextRenderer.h"
-#include "ParalaxScrollingHandler.h"
-#include "PlayerShipController.h"
-#include "SideScrollerHandler.h"
 #include "Scene.h";
 /*
     This version of the SFML "hello world" is statically linked, you may wish to try the dynamically linked version as well.
@@ -29,7 +19,7 @@ int WinMain()
 
     //-------------------------- Must be at the end!! --------------------------
 
-    sf::RenderWindow window(sf::VideoMode({ 384, 256 }), "F-type", sf::State::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode({ 384, 256 }), "Engine test", sf::State::Fullscreen);
     window.setFramerateLimit(120);
 
     auto icon = sf::Image{};
