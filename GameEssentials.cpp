@@ -498,11 +498,15 @@ void GameEssentialsGlobals::ResetState() {
     for (auto& ga : WorldRoot->GetChildren())
     {
         ga->Destroy();
-        std::cout << "DESTROYED!!";
+        //std::cout << "DESTROYED!!";
     }
     GameObjectContainer.clear();
     //QueuedObjectsToDelete.clear();
     RenderLayers.clear();
+
+    Colliders.clear();
+    Rigidbodies.clear();
+    BroadPhasePairs.clear();
     
    
 

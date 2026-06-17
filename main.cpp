@@ -23,11 +23,58 @@ int WinMain()
 #endif
 {
 
-    Scene* ActiveScene2 = new SceneStart();
+   
 
+   
+
+    //-------------------------- Must be at the end!! --------------------------
+
+    sf::RenderWindow window(sf::VideoMode({ 384, 256 }), "F-type", sf::State::Fullscreen);
+    window.setFramerateLimit(120);
+
+    auto icon = sf::Image{};
+    if (icon.loadFromFile("Assets/Spaceship.png"))
+    {
+        window.setIcon({ 23,11 }, icon.getPixelsPtr());
+    }
+
+    
+
+
+    GameEssentialsGlobals::SetRenderWindow(&window);
+
+
+    Scene* ActiveScene2 = new SceneStart();
     GameEssentialsGlobals::LoadScene(ActiveScene2);
     
-    //GameEssentialsGlobals::LoadScene(ActiveScene);
+    
+    while (GameEssentialsGlobals::Renderwindow->isOpen())
+    {
+
+        while (const std::optional event = GameEssentialsGlobals::Renderwindow->pollEvent())
+        {
+            if (event->is<sf::Event::Closed>()) 
+            {
+                
+                GameEssentialsGlobals::Rh.ClearAllResources();
+                GameEssentialsGlobals::Renderwindow->close();
+
+            }
+        }
+
+     
+
+
+        GameEssentialsGlobals::OnGameTick();
+        //std::cout << "Loaded!";
+
+
+
+    }
+   
+    GameEssentialsGlobals::ResetState();
+
+    std::cout << "Shutdown!";
 
     
 }

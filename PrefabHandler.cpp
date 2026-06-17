@@ -151,3 +151,40 @@ ResourceHandler::~ResourceHandler()
         delete mu;
     }
 }
+
+sf::Font* ResourceHandler::GetFont(const std::string& Dir)
+{
+    auto it = Fonts.find(Dir);
+
+    if (it == Fonts.end())
+    {
+        sf::Font* MainFont = new sf::Font(Dir);
+        return MainFont;
+    }
+
+    return it->second;
+}
+
+void ResourceHandler::ClearAllResources()
+{
+    for (auto& [name, gameo] : Prefabs)
+    {
+        gameo->Destroy();
+    }
+    Prefabs.clear();
+
+    for (auto& [name, mu] : MusicTracks)
+    {
+        delete mu;
+    }
+    MusicTracks.clear();
+
+    for (auto& [dir, font] : Fonts)
+    {
+        delete font;
+    }
+    Fonts.clear();
+
+    Textures.clear();
+    SoundBuffers.clear();
+}

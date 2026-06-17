@@ -16,6 +16,9 @@ class ResourceHandler
 
 	std::unordered_map<std::string, sf::SoundBuffer> SoundBuffers = {};
 	std::unordered_map<std::string, sf::Music*> MusicTracks = {};
+
+	std::unordered_map<std::string, sf::Font*> Fonts = {};
+
 public:
 
 	void InitPrefab(std::string NameID, Gameobject* GameObjectPre);
@@ -38,6 +41,8 @@ public:
 
 	sf::Music* GetMusic(const std::string& NameID);
 
+	sf::Font* GetFont(const std::string& Dir);
 
+	void ClearAllResources();
 };
 

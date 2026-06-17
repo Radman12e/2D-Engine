@@ -12,7 +12,7 @@ void MainMenuHandler::OnAlive()
 		{
 			//GameEssentialsGlobals::Renderwindow->close();
 			NextScene = new SceneTest();
-			Trans = true;
+			GameEssentialsGlobals::LoadScene(NextScene);
 		};
 	
 

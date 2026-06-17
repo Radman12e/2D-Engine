@@ -36,14 +36,16 @@ void SceneTest::SetupScene(std::string data){
     ResourceHandler* SceneRh = &GameEssentialsGlobals::Rh;
 
     ResourceHandler LocalRh;
-    GameEssentialsGlobals::LocalRh = &LocalRh;
+    GameEssentialsGlobals::LocalRh = SceneRh;
+
+
 
 
     sf::View view({ 0,0 }, { 384, 256 });
     view.setCenter({ 190 ,200 });
 
-    sf::Font MainFont("Assets/r-type.ttf");
-    MainFont.setSmooth(false);
+    sf::Font* MainFont = SceneRh->GetFont("Assets/r-type.ttf");
+    MainFont->setSmooth(false);
     //MainFont.
 
     Gameobject* ParalaxHandler = new Gameobject();
@@ -119,7 +121,7 @@ void SceneTest::SetupScene(std::string data){
     bpcollider->SetupCollider();
     bpcollider->IsTrigger = true;
     
-    LocalRh.InitPrefab("bulletP", BulletPea);
+    SceneRh->InitPrefab("bulletP", BulletPea);
 
 
 
@@ -139,7 +141,7 @@ void SceneTest::SetupScene(std::string data){
     bpcollider2->SetupCollider();
     bpcollider2->IsTrigger = true;
 
-    LocalRh.InitPrefab("bulletM", MediumBullet);
+    SceneRh->InitPrefab("bulletM", MediumBullet);
 
 
     Gameobject* LargeBullet = new Gameobject();
@@ -165,7 +167,7 @@ void SceneTest::SetupScene(std::string data){
     Anim->AddAnimation(amLbs, "idle");
     Anim->PlayAnim("idle");
 
-    LocalRh.InitPrefab("bulletL", LargeBullet);
+    SceneRh->InitPrefab("bulletL", LargeBullet);
    
 
 
@@ -335,8 +337,8 @@ void SceneTest::SetupScene(std::string data){
 
     std::unique_ptr<Sound> ExSound = std::make_unique<Sound>("Assets/explosionSound.wav");
     ExplosionTest->AddComponent<SoundComponent>()->AddSound(std::move(ExSound), "default");
-    LocalRh.InitPrefab("miniExplosion", MiniExplosion);
-    LocalRh.InitPrefab("Explosion", ExplosionTest);
+    SceneRh->InitPrefab("miniExplosion", MiniExplosion);
+    SceneRh->InitPrefab("Explosion", ExplosionTest);
     //UI START--------------------------------------------------------------
 
 
@@ -349,7 +351,7 @@ void SceneTest::SetupScene(std::string data){
     Gameobject* BeamText = new Gameobject();
 
 
-    TextRenderer* testtext = BeamText->AddComponent<TextRenderer>(&MainFont, "BEAM", 20);
+    TextRenderer* testtext = BeamText->AddComponent<TextRenderer>(MainFont, "BEAM", 20);
 
     testtext->text.setStyle(sf::Text::Bold);
 
@@ -613,73 +615,32 @@ void SceneTest::SetupScene(std::string data){
     GameEssentialsGlobals::OutputSceneGraph(Root);
     //GameEssentialsGlobals::InputService->Init();
 
-    sf::Vector2 v2(10, 10);
-
-    sf::RenderWindow window(sf::VideoMode({ 384, 256 }), "F-type", sf::State::Fullscreen);
-    window.setFramerateLimit(120);
-
-    auto icon = sf::Image{};
-    if (icon.loadFromFile("Assets/Spaceship.png"))
-    {
-        window.setIcon({ 23,11 }, icon.getPixelsPtr());
-    }
 
 
-   
-
-    window.setView(CameraComp->CameraView);
-
-    GameEssentialsGlobals::SetRenderWindow(&window);
-
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    GameEssentialsGlobals::Renderwindow->setView(CameraComp->CameraView);
     //src->Sprite = shape.spr;
 
     GameEssentialsGlobals::StartGame();
 
     
 
-    while (GameEssentialsGlobals::Renderwindow->isOpen())
-    {
-        //std::cout << "\n\TICK: \n";
-        while (const std::optional event = GameEssentialsGlobals::Renderwindow->pollEvent())
-        {
-            if (event->is<sf::Event::Closed>())
-                GameEssentialsGlobals::Renderwindow->close();
-        }
+   
 
-        //window.clear();
-
-        //window.draw(shape);
-        //window.display();
-
-
-        GameEssentialsGlobals::OnGameTick();
-        //GameEssentialsGlobals::OnPhysicsTick();
-
-        //SceneTest TestScene;
-
-        //TestScene.Init();
-
-
-    }
-    
-    //delete this;
-
-    }
+ }
 
 void SceneStart::SetupScene(std::string Params)
 {
     //EssentialSetup!! ------------------------------------------------------------------------
 
 
-    ResourceHandler* SceneRh = new ResourceHandler();
+    ResourceHandler* SceneRh = &GameEssentialsGlobals::Rh;
 
     sf::View view({ 0,0 }, { 384, 256 });
 
 
-    sf::Font MainFont("Assets/r-type.ttf");
-    MainFont.setSmooth(false);
+    sf::Font* MainFont = SceneRh->GetFont("Assets/r-type.ttf");
+    MainFont->setSmooth(false);
+
 
     Gameobject* UiCanvas = new Gameobject();
 
@@ -773,7 +734,7 @@ void SceneStart::SetupScene(std::string Params)
 
 
     Gameobject* TitleText = new Gameobject();
-    TextRenderer* TitleTxt = TitleText->AddComponent<TextRenderer>(&MainFont, "F TYPE", 1);
+    TextRenderer* TitleTxt = TitleText->AddComponent<TextRenderer>(MainFont, "F TYPE", 1);
     TitleTxt->text.setFillColor(sf::Color(180, 210, 255));
     TitleTxt->text.setStyle(sf::Text::Style::Bold);
     //TitleTxt->text.setStyle(sf::Text::Style::Underlined);
@@ -783,7 +744,7 @@ void SceneStart::SetupScene(std::string Params)
     //------------------------- Start text-----------------------------
 
     Gameobject* Starttext = new Gameobject();
-    TextRenderer* Starttxt = Starttext->AddComponent<TextRenderer>(&MainFont, "Press ENTER to start.", 2);
+    TextRenderer* Starttxt = Starttext->AddComponent<TextRenderer>(MainFont, "Press ENTER to start.", 2);
     Starttxt->text.setFillColor(sf::Color(180, 210, 255));
     Starttxt->text.setCharacterSize(10);
     //TitleTxt->text.setStyle(sf::Text::Style::Underlined);
@@ -793,53 +754,17 @@ void SceneStart::SetupScene(std::string Params)
     MainMenuHandler* mm = UiCanvas->AddComponent<MainMenuHandler>();
 
 
-
     
     
+    
 
-    //-------------------------- Must be at the end!! --------------------------
-
-    sf::RenderWindow window(sf::VideoMode({ 384, 256 }), "F-type", sf::State::Fullscreen);
-    window.setFramerateLimit(120);
-
-    auto icon = sf::Image{};
-    if (icon.loadFromFile("Assets/Spaceship.png"))
-    {
-        window.setIcon({ 23,11 }, icon.getPixelsPtr());
-    }
-
-    window.setView(CameraComp->CameraView);
-
-
-    GameEssentialsGlobals::SetRenderWindow(&window);
+    GameEssentialsGlobals::Renderwindow->setView(CameraComp->CameraView);
 
     GameEssentialsGlobals::StartGame();
 
 
 
-    while (GameEssentialsGlobals::Renderwindow->isOpen() && mm->Trans == false)
-    {
-     
-        while (const std::optional event = GameEssentialsGlobals::Renderwindow->pollEvent())
-        {
-            if (event->is<sf::Event::Closed>())
-                GameEssentialsGlobals::Renderwindow->close();
-        }
-
-        
-
-
-        GameEssentialsGlobals::OnGameTick();
-        
-
-
-    }
-
-    if (mm->Trans && mm->NextScene != nullptr)
-    {
-        GameEssentialsGlobals::Renderwindow->close();
-        GameEssentialsGlobals::LoadScene(mm->NextScene);
-    }
+    
 
 
 }
