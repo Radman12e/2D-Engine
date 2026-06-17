@@ -100,7 +100,7 @@ void PlayerShipController::OnSpacePressed(InputArgs args)
 		if (PeaShooter != nullptr) 
 		{
 			PeaShooter->BulletPrefab = "bulletP";
-			PeaShooter->FireGun({ 1,0 }); //Fires right!
+			PeaShooter->FireGun({ 1,0 }, "assets/ShootImproved.wav"); //Fires right!
 			
 		}
 		SpaceHeld = true;

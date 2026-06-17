@@ -3,6 +3,8 @@
 #include "GameEssentials.h"
 #include "AnimatorComponent.h"
 #include <cmath>
+#include "SoundClass.h"
+#include "SoundComponent.h"
 
 
 class HealthComponent :
@@ -39,7 +41,9 @@ public:
                 Explosion->SetParent(GameObject);
                 Explosion->SetlocalPosition(a);
                 Explosion->SetParent(GameEssentialsGlobals::WorldRoot);
+                Explosion->GetComponent<SoundComponent>()->PlaySound("default");
             }
+           
         }
         GameObject->Destroy();
     }
@@ -119,11 +123,24 @@ public:
     std::string BulletPrefab;
     float bcd = 0.f;
     float c = 0;
+    Sound* ShootSound = nullptr;
+    
 
-    void FireGun(sf::Vector2f Dir) 
+    void FireGun(sf::Vector2f Dir, std::string ShootSound2 = "")
     {
         if (c > 0) return;
         c = bcd;
+
+        if (ShootSound2 != "" && ShootSound == nullptr)
+        {
+            ShootSound = new Sound(ShootSound2);
+            ShootSound->GetSound()->setVolume(50);
+            std::cout << "PlaySound!";
+
+
+        }
+        ShootSound->GetSound()->setPitch(((std::rand() % 50) + 50) / 100.f);
+        if (ShootSound != nullptr) ShootSound->playSound();
 
         Gameobject* Explosion = GameEssentialsGlobals::LocalRh->InstansiatePrefab(BulletPrefab);
         if (Explosion != nullptr)
@@ -134,7 +151,10 @@ public:
         }
 
     }
-    ~GunComponent() = default;
+    ~GunComponent() 
+    {
+        delete ShootSound;
+    }
 
     std::unique_ptr<Component> CloneComponent() override
     {

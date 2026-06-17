@@ -7,25 +7,38 @@ class Sound
 {
 private:
     sf::SoundBuffer* buffer;
-    sf::Sound* soundTest;
     std::unique_ptr<sf::Sound> Audio = nullptr;
 public:
     bool SoundLoaded = false;
     
-
+    std::string Dir = "";
 
     Sound(std::string dir)
     {
+        Dir = dir;
         buffer = GameEssentialsGlobals::Rh.InitSound(dir, dir);
         if (buffer == nullptr) return;
         SoundLoaded = true;
         Audio = std::make_unique<sf::Sound>(*buffer);
     }
-    ~Sound() = default;
+
+    ~Sound() 
+    {
+        if (Audio != nullptr && Audio.get()) 
+        {
+            Audio->stop();
+        }
+    }
 
     void playSound() 
     {
         if (Audio != nullptr && SoundLoaded) Audio->play();
+
+    }
+
+    void stopSound()
+    {
+        if (Audio != nullptr && SoundLoaded) Audio->stop();
 
     }
 
